@@ -1,12 +1,11 @@
 
-import sys 
+import sys
 from pprint import pprint
-from .aux import ProcessAux 
-from .aux import SetDecadeLimits
-from GraphData3 import pl
-from GraphData3 import configs 
-from GraphData3 import np 
-from matplotlib import ticker 
+from .helper import SetDecadeLimits
+from graphdata import plt
+from graphdata import configs
+from graphdata import np
+from matplotlib import ticker
 
 def ProcessData1D(x,y,auxDict,**kwargs):
   auxDict = ProcessCmdLineOpts(auxDict,**kwargs)
@@ -154,10 +153,10 @@ def AuxPlotLabel1D(auxDict):
 
   if 'ylim' in auxDict:
     ylim = auxDict['ylim']
-    pl.ylim(ylim)
+    plt.ylim(ylim)
 
-  pl.xlabel(xstr)
-  pl.ylabel(ystr)
+  plt.xlabel(xstr)
+  plt.ylabel(ystr)
 
   if(configs.G['title'] == 'on'):
     titstr = ""
@@ -174,11 +173,11 @@ def AuxPlotLabel1D(auxDict):
         val = float(auxDict['pval'])/float(configs.G['pdimscale'])
         titstr = titstr + str("%0.2f" % val) + ' (' + \
         str(configs.G['pdimscale_str']) + str(auxDict['punit_str']) + ")"
-    pl.title(titstr)
+    plt.title(titstr)
 
 def AuxPlotLabelLL1D(auxDict):
   AuxPlotLabel1D(auxDict)
-  ax = pl.gca()
+  ax = plt.gca()
 #  ax.xaxis.set_major_locator(ticker.LogLocator(numticks=6))
 #  ax.yaxis.set_major_locator(ticker.LogLocator(numticks=6))
   ax.xaxis.set_major_locator(ticker.LogLocator(numdecs=6))

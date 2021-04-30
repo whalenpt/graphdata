@@ -6,13 +6,13 @@ from matplotlib import ticker
 from mpl_toolkits.mplot3d.axes3d import Axes3D 
 from matplotlib import cm 
 
-from .aux import GetData2D 
-from .aux import GetDataL_2D 
+from .helper import GetData2D 
+from .helper import GetDataL_2D 
 from .shared2D import ProcessData2D 
 
-from GraphData3 import pl
-from GraphData3 import configs 
-from GraphData3 import np 
+from graphdata import plt
+from graphdata import configs 
+from graphdata import np 
 
 def Surface(*args,**kwargs):
   """
@@ -63,7 +63,7 @@ def Surface(*args,**kwargs):
   """
 
   width,height = _SurfaceSize(*args)
-  fig = pl.figure(figsize=(width,height))
+  fig = plt.figure(figsize=(width,height))
   x,y,Z,auxDict = GetData2D(*args)
   x,y,Z,auxDict = ProcessData2D(x,y,Z,auxDict)
   if 'square' in kwargs:
@@ -78,8 +78,8 @@ def Surface(*args,**kwargs):
   ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs.G["cmap"]),linewidth=0,antialiased=True,shade=True) 
   AuxSurfaceLabel(ax,ang1,ang2,auxDict)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   return p 
 
 def SurfaceH(*args):
@@ -137,7 +137,7 @@ def SurfaceH(*args):
   X,Y = np.meshgrid(x,y)
   ang1,ang2 = GetView(*args)
   width,height = _SurfaceSize(*args)
-  fig = pl.figure("SurfaceH",figsize=(width,height))
+  fig = plt.figure("SurfaceH",figsize=(width,height))
   fig.clf()
   ax = fig.gca(projection='3d')
   ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
@@ -145,8 +145,8 @@ def SurfaceH(*args):
   ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs.G["cmap"]),linewidth=0,antialiased=True,shade=True) 
   AuxSurfaceLabel(ax,ang1,ang2,auxDict)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   return p  
 
 def Wire(*args):
@@ -200,7 +200,7 @@ def Wire(*args):
   """
 
   width,height = _WireSize(*args)
-  fig = pl.figure(figsize=(width,height))
+  fig = plt.figure(figsize=(width,height))
   x,y,Z,auxDict = GetData2D(*args)
   x,y,Z,auxDict = ProcessData2D(x,y,Z,auxDict)
   X,Y = np.meshgrid(x,y)
@@ -211,8 +211,8 @@ def Wire(*args):
   ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   surf = ax.plot_wireframe(X,Y,Z,rstride=1,cstride=1,color='black') 
   AuxSurfaceLabel(ax,ang1,ang2,auxDict)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   return surf 
 
 def WireH(*args):
@@ -272,7 +272,7 @@ def WireH(*args):
   X,Y = np.meshgrid(x,y)
   ang1,ang2 = GetView(*args)
   width,height = _WireSize(*args)
-  fig = pl.figure("WireH",figsize=(width,height))
+  fig = plt.figure("WireH",figsize=(width,height))
   fig.clf()
   ax = fig.gca(projection='3d')
   ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
@@ -280,8 +280,8 @@ def WireH(*args):
   ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   surf = ax.plot_wireframe(X,Y,Z,rstride=1,cstride=1,color='black') 
   AuxSurfaceLabel(ax,ang1,ang2,auxDict)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   return surf 
 
 def GetView(*args):

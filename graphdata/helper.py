@@ -9,9 +9,9 @@ import re
 import sys 
 import subprocess
 import operator
-from GraphData3 import pl
-from GraphData3 import configs 
-from GraphData3 import np 
+from graphdata import plt
+from graphdata import configs 
+from graphdata import np 
 
 # Load Data truncates off imaginary values if present
 def LoadData1D(fileName):

@@ -11,13 +11,13 @@ import math
 import fnmatch
 import matplotlib.gridspec as gridspec
 from operator import itemgetter
-from GraphData3 import pl
-from GraphData3 import np 
-from GraphData3 import configs 
+from graphdata import plt
+from graphdata import np 
+from graphdata import configs 
 from numpy import linalg as LA
-from .aux import LoadData1D
-from .aux import LoadData2D
-from .aux import LoadParams
+from .helper import LoadData1D
+from .helper import LoadData2D
+from .helper import LoadParams
 from pprint import pprint
 from matplotlib import ticker 
 from .Settings.figsets import figsize_and_margins 
@@ -54,93 +54,93 @@ def ConvergeH(fileName,yexact,ctype='cstep'):
   x,y,auxDict = ConvergeData(fileName,yexact,ctype)
   width,height = ConvSize()
   fsize,margins = figsize_and_margins(plotsize=(width,height))
-  labs = pl.get_figlabels() 
+  labs = plt.get_figlabels() 
 
   if ctype == 'cstep':
     if "CSTEP" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("CSTEP",figsize=fsize)
-    pl.xlabel('Relative time step')
-    pl.ylabel('Relative error')
+    plt.figure("CSTEP",figsize=fsize)
+    plt.xlabel('Relative time step')
+    plt.ylabel('Relative error')
   elif ctype == 'speed':
     if "SPEED" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("SPEED",figsize=fsize)
-    pl.xlabel('Computer time (s)')
-    pl.ylabel('Relative error')
+    plt.figure("SPEED",figsize=fsize)
+    plt.xlabel('Computer time (s)')
+    plt.ylabel('Relative error')
   elif ctype == 'relerr':
     if "RELERR" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("RELERR",figsize=fsize)
-    pl.xlabel('Tolerance ($\epsilon_{rel}$)')
-    pl.ylabel('Relative error')
+    plt.figure("RELERR",figsize=fsize)
+    plt.xlabel('Tolerance ($\epsilon_{rel}$)')
+    plt.ylabel('Relative error')
   elif ctype == 'coeff':
     if "COEFF" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("COEFF",figsize=fsize)
-    pl.xlabel('ETD coefficient cost (s)')
-    pl.ylabel('Relative error')
+    plt.figure("COEFF",figsize=fsize)
+    plt.xlabel('ETD coefficient cost (s)')
+    plt.ylabel('Relative error')
   elif ctype == 'coeff2':
     if "COEFF2" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("COEFF2",figsize=fsize)
-    pl.xlabel('Tolerance ($\epsilon_{rel}$)')
-    pl.ylabel('ETD coefficient cost (s)')
+    plt.figure("COEFF2",figsize=fsize)
+    plt.xlabel('Tolerance ($\epsilon_{rel}$)')
+    plt.ylabel('ETD coefficient cost (s)')
   elif ctype == 'stages':
     if "STAGES" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("STAGES",figsize=fsize)
-    pl.xlabel('RK stage evaluation cost (s)')
-    pl.ylabel('Relative error')
+    plt.figure("STAGES",figsize=fsize)
+    plt.xlabel('RK stage evaluation cost (s)')
+    plt.ylabel('Relative error')
   elif ctype == 'stages2':
     if "STAGES2" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("STAGES2",figsize=fsize)
-    pl.xlabel('Tolerance ($\epsilon_{rel}$)')
-    pl.ylabel('RK stage evaluation cost (s)')
+    plt.figure("STAGES2",figsize=fsize)
+    plt.xlabel('Tolerance ($\epsilon_{rel}$)')
+    plt.ylabel('RK stage evaluation cost (s)')
   elif ctype == 'incrf':
     if "INCRF" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("INCRF",figsize=fsize)
-    pl.xlabel('Expansion floor')
-    pl.ylabel('Computer time (s)')
+    plt.figure("INCRF",figsize=fsize)
+    plt.xlabel('Expansion floor')
+    plt.ylabel('Computer time (s)')
 
   elif ctype == 'decrf':
     if "DECRF" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("DECRF",figsize=fsize)
-    pl.xlabel('Compression ceiling')
-    pl.ylabel('Computer time (s)')
+    plt.figure("DECRF",figsize=fsize)
+    plt.xlabel('Compression ceiling')
+    plt.ylabel('Computer time (s)')
   elif ctype == 'modecutoff':
     if "MODECUTOFF" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("MODECUTOFF",figsize=fsize)
-    pl.xlabel('Contour evaluation cutoff mode')
-    pl.ylabel('Relative error')
+    plt.figure("MODECUTOFF",figsize=fsize)
+    plt.xlabel('Contour evaluation cutoff mode')
+    plt.ylabel('Relative error')
 
   if ctype != 'incrf' and ctype != 'decrf':
-    pl.loglog(x,y,configs.LS,markersize=4)
-    ax = pl.gca()
+    plt.loglog(x,y,configs.LS,markersize=4)
+    ax = plt.gca()
     ax.xaxis.set_major_locator(ticker.LogLocator(numticks=6))
     ax.yaxis.set_major_locator(ticker.LogLocator(numticks=6))
 #    ax.xaxis.set_major_locator(ticker.LogLocator(numdecs=6))
@@ -152,11 +152,11 @@ def ConvergeH(fileName,yexact,ctype='cstep'):
     ax.yaxis.grid(b =
         True,which='major',linestyle=':',linewidth=0.1,dashes=(1,2))
   elif ctype == 'incrf' or ctype == 'decrf':
-    pl.plot(x,y,configs.LS,markersize=4)
+    plt.plot(x,y,configs.LS,markersize=4)
 
-  pl.hold(True) 
-  pl.ion()
-  pl.show()
+  plt.hold(True) 
+  plt.ion()
+  plt.show()
 #  configs.SetLS(LSkey)
 
 def TableP(fileName,yexact,pName):
@@ -315,42 +315,42 @@ def Converge(fileName,yexact,ctype='cstep'):
   x,y,auxDict = ConvergeData(fileName,yexact,ctype)
   width,height = ConvSize()
   fsize,margins = figsize_and_margins(plotsize=(width,height))
-  p = pl.figure(figsize=fsize)
+  p = plt.figure(figsize=fsize)
   configs.DefaultLS()
   if ctype == 'cstep':
-    pl.xlabel('Relative time step')
-    pl.ylabel('Relative error')
+    plt.xlabel('Relative time step')
+    plt.ylabel('Relative error')
   elif ctype == 'speed':
-    pl.xlabel('Computer time (s)')
-    pl.ylabel('Relative error')
+    plt.xlabel('Computer time (s)')
+    plt.ylabel('Relative error')
   elif ctype == 'relerr':
-    pl.xlabel('Tolerance ($\epsilon_{rel}$)')
-    pl.ylabel('Relative error')
+    plt.xlabel('Tolerance ($\epsilon_{rel}$)')
+    plt.ylabel('Relative error')
   elif ctype == 'coeff':
-    pl.xlabel('ETD coefficient cost (s)')
-    pl.ylabel('Relative error')
+    plt.xlabel('ETD coefficient cost (s)')
+    plt.ylabel('Relative error')
   elif ctype == 'coeff2':
-    pl.xlabel('Tolerance ($\epsilon_{rel}$)')
-    pl.ylabel('ETD coefficient cost (s)')
+    plt.xlabel('Tolerance ($\epsilon_{rel}$)')
+    plt.ylabel('ETD coefficient cost (s)')
   elif ctype == 'stages':
-    pl.xlabel('RK stage evaluation cost (s)')
-    pl.ylabel('Relative error')
+    plt.xlabel('RK stage evaluation cost (s)')
+    plt.ylabel('Relative error')
   elif ctype == 'stages2':
-    pl.xlabel('Tolerance ($\epsilon_{rel}$)')
-    pl.ylabel('RK stage evaluation cost (s)')
+    plt.xlabel('Tolerance ($\epsilon_{rel}$)')
+    plt.ylabel('RK stage evaluation cost (s)')
   elif ctype == 'incrf':
-    pl.xlabel('Expansion floor')
-    pl.ylabel('Computer time (s)')
+    plt.xlabel('Expansion floor')
+    plt.ylabel('Computer time (s)')
   elif ctype == 'decrf':
-    pl.xlabel('Compression ceiling')
-    pl.ylabel('Computer time (s)')
+    plt.xlabel('Compression ceiling')
+    plt.ylabel('Computer time (s)')
   elif ctype == 'modecutoff':
-    pl.xlabel('Contour evaluation cutoff mode')
-    pl.ylabel('Relative error')
+    plt.xlabel('Contour evaluation cutoff mode')
+    plt.ylabel('Relative error')
 
   if ctype != 'incrf' and ctype != 'decrf':
-    pl.loglog(x,y,configs.LS,markersize=4)
-    ax = pl.gca()
+    plt.loglog(x,y,configs.LS,markersize=4)
+    ax = plt.gca()
     ax.xaxis.set_major_locator(ticker.LogLocator(numticks=6))
     ax.yaxis.set_major_locator(ticker.LogLocator(numticks=6))
 #    ax.xaxis.set_major_locator(ticker.LogLocator(numdecs=6))
@@ -362,14 +362,14 @@ def Converge(fileName,yexact,ctype='cstep'):
     ax.yaxis.grid(b =
         True,which='major',linestyle=':',linewidth=0.1,dashes=(1,2))
   elif ctype == 'incrf' or ctype == 'decrf':
-    pl.plot(x,y,configs.LS,markersize=4)
+    plt.plot(x,y,configs.LS,markersize=4)
 
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   configs.SetLS(LSkey)
 
 def ConvergeD(fileName,yexact,ctype='cstep'):
-  labs = pl.get_figlabels() 
+  labs = plt.get_figlabels() 
   if "ConvergeH" not in labs:
     configs.DefaultLS()
   else:
@@ -377,34 +377,34 @@ def ConvergeD(fileName,yexact,ctype='cstep'):
   x1,err1,auxDict1 = ConvergeData(fileName,yexact,'vrel')
   x2,err2,auxDict2 = ConvergeData(fileName,yexact,'speed')
   gs = gridspec.GridSpec(1,2,width_ratios=[1,1])
-  ax1 = pl.subplot(gs[0])
-  ax1 = pl.loglog(x1,err1,configs.LS,markersize=2)
-  pl.grid(b = True,which='major',linestyle=':')
-  pl.grid(b = True,which='minor',linestyle=':')
-  ax2 = pl.subplot(gs[1])
-  ax2 = pl.loglog(x2,err2,configs.LS,markersize=2)
-  pl.grid(b = True,which='major',linestyle=':')
-  pl.grid(b = True,which='minor',linestyle=':')
-  pl.ion()
-  pl.show()
+  ax1 = plt.subplot(gs[0])
+  ax1 = plt.loglog(x1,err1,configs.LS,markersize=2)
+  plt.grid(b = True,which='major',linestyle=':')
+  plt.grid(b = True,which='minor',linestyle=':')
+  ax2 = plt.subplot(gs[1])
+  ax2 = plt.loglog(x2,err2,configs.LS,markersize=2)
+  plt.grid(b = True,which='major',linestyle=':')
+  plt.grid(b = True,which='minor',linestyle=':')
+  plt.ion()
+  plt.show()
 
 
 def ConvergeHRS(fileName,yexact):
   h,err,auxDict = ConvergeData(fileName,yexact)
-  pl.semilogy(h,err,configs.LS,markersize=4)
-  pl.grid(b = True,which='major',linestyle=':')
-  pl.grid(b = True,which='minor',linestyle=':')
-  pl.hold(True) 
+  plt.semilogy(h,err,configs.LS,markersize=4)
+  plt.grid(b = True,which='major',linestyle=':')
+  plt.grid(b = True,which='minor',linestyle=':')
+  plt.hold(True) 
   ConvPlotLabelH(auxDict,h,err)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   configs.ToggleLS()
 
 def ConvergeO(fileName,yexact,order,alpha=0.5):
 
   width,height = ConvSize()
   fsize,margins = figsize_and_margins(plotsize=(width,height))
-  pl.figure("ConvergeO",figsize=fsize)
+  plt.figure("ConvergeO",figsize=fsize)
   h,err,auxDict = ConvergeData(fileName,yexact)
   sz = len(h)
   indx = np.floor(alpha*sz) 
@@ -420,16 +420,16 @@ def ConvergeO(fileName,yexact,order,alpha=0.5):
   err = err[:-1]
 
   configs.DefaultLS()
-  pl.loglog(h,err,'k-d',hord,ordVec,'g-*',markersize=6)
-  pl.grid(b = True,which='major',linestyle=':')
-  pl.grid(b = True,which='minor',linestyle=':')
+  plt.loglog(h,err,'k-d',hord,ordVec,'g-*',markersize=6)
+  plt.grid(b = True,which='major',linestyle=':')
+  plt.grid(b = True,which='minor',linestyle=':')
   ConvPlotLabel(auxDict,h,err)
 
-  pl.xlim([0.95*h[-1],1.05*h[0]])
-  pl.ylim([0.5*err[-1],2*err[0]])
-  pl.legend(['Method Error','Order = '+ str(order)],loc='best')
-  pl.ion()
-  pl.show()
+  plt.xlim([0.95*h[-1],1.05*h[0]])
+  plt.ylim([0.5*err[-1],2*err[0]])
+  plt.legend(['Method Error','Order = '+ str(order)],loc='best')
+  plt.ion()
+  plt.show()
 
 
 def ConvergeData(fileName,yexact,ctype='cstep'):
@@ -648,30 +648,30 @@ def ConvergeData(fileName,yexact,ctype='cstep'):
 
 def Speed(fileName,yexact):
   speed,err,auxDict = SpeedData(fileName,yexact)
-  pl.figure()
+  plt.figure()
   configs.DefaultLS()
-  pl.loglog(speed,err,configs.LS,markersize=4)
-  pl.grid(b = True,which='major',linestyle=':')
-  pl.grid(b = True,which='minor',linestyle=':')
+  plt.loglog(speed,err,configs.LS,markersize=4)
+  plt.grid(b = True,which='major',linestyle=':')
+  plt.grid(b = True,which='minor',linestyle=':')
   SpeedPlotLabel(auxDict,speed,err)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
 
 def SpeedH(fileName,yexact):
-  labs = pl.get_figlabels() 
+  labs = plt.get_figlabels() 
   if "SpeedH" not in labs:
     configs.DefaultLS()
   else:
     configs.ToggleLS()
   speed,err,auxDict = SpeedData(fileName,yexact)
-  pl.figure("SpeedH")
-  pl.loglog(speed,err,configs.LS,markersize=4)
-  pl.grid(b = True,which='major',linestyle=':')
-  pl.grid(b = True,which='minor',linestyle=':')
-  pl.hold(True) 
+  plt.figure("SpeedH")
+  plt.loglog(speed,err,configs.LS,markersize=4)
+  plt.grid(b = True,which='major',linestyle=':')
+  plt.grid(b = True,which='minor',linestyle=':')
+  plt.hold(True) 
   SpeedPlotLabelH(auxDict,speed,err)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   configs.ToggleLS()
 
 
@@ -731,9 +731,9 @@ def ConvPlotLabel(auxDict,h,err):
     ystr = ystr + ' at ' + '$' + auxDict['plabel'] + ' = ' + auxDict['pval'] + '$'
   elif 'pval' in auxDict and 'plabel' not in auxDict:
     ystr = ystr + ' at ' + auxDict['pval']
-  pl.xlim([0.7*h[-1],1.3*h[0]])
-  pl.xlabel(xstr)
-  pl.ylabel(ystr)
+  plt.xlim([0.7*h[-1],1.3*h[0]])
+  plt.xlabel(xstr)
+  plt.ylabel(ystr)
 
 def SpeedPlotLabel(auxDict,speed,err):
   xstr = ""
@@ -747,9 +747,9 @@ def SpeedPlotLabel(auxDict,speed,err):
   elif 'pval' in auxDict and 'plabel' not in auxDict:
     ystr = ystr + ' at ' + auxDict['pval']
 
-  pl.xlim([0.8*speed[-1],1.2*speed[0]])
-  pl.xlabel(xstr)
-  pl.ylabel(ystr)
+  plt.xlim([0.8*speed[-1],1.2*speed[0]])
+  plt.xlabel(xstr)
+  plt.ylabel(ystr)
 
 def ConvPlotLabelH(auxDict,h,err):
   xstr = ""
@@ -762,8 +762,8 @@ def ConvPlotLabelH(auxDict,h,err):
     ystr = ystr + ' at ' + '$' + auxDict['plabel'] + ' = ' + auxDict['pval'] + '$'
   elif 'pval' in auxDict and 'plabel' not in auxDict:
     ystr = ystr + ' at ' + auxDict['pval']
-  pl.xlabel(xstr)
-  pl.ylabel(ystr)
+  plt.xlabel(xstr)
+  plt.ylabel(ystr)
 
 def SpeedPlotLabelH(auxDict,speed,err):
   xstr = ""
@@ -777,8 +777,8 @@ def SpeedPlotLabelH(auxDict,speed,err):
   elif 'pval' in auxDict and 'plabel' not in auxDict:
     ystr = ystr + ' at ' + auxDict['pval']
 
-  pl.xlabel(xstr)
-  pl.ylabel(ystr)
+  plt.xlabel(xstr)
+  plt.ylabel(ystr)
 
 def ConvSize():
   width = float(configs.G['ConvergeWidth'])
@@ -787,30 +787,30 @@ def ConvSize():
 
 def Speed(fileName,yexact):
   speed,err,auxDict = SpeedData(fileName,yexact)
-  pl.figure()
+  plt.figure()
   configs.DefaultLS()
-  pl.loglog(speed,err,configs.LS,markersize=4)
-  pl.grid(b = True,which='major',linestyle=':')
-  pl.grid(b = True,which='minor',linestyle=':')
+  plt.loglog(speed,err,configs.LS,markersize=4)
+  plt.grid(b = True,which='major',linestyle=':')
+  plt.grid(b = True,which='minor',linestyle=':')
   SpeedPlotLabel(auxDict,speed,err)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
 
 def SpeedH(fileName,yexact):
-  labs = pl.get_figlabels() 
+  labs = plt.get_figlabels() 
   if "SpeedH" not in labs:
     configs.DefaultLS()
   else:
     configs.ToggleLS()
   speed,err,auxDict = SpeedData(fileName,yexact)
-  pl.figure("SpeedH")
-  pl.loglog(speed,err,configs.LS,markersize=4)
-  pl.grid(b = True,which='major',linestyle=':')
-  pl.grid(b = True,which='minor',linestyle=':')
-  pl.hold(True) 
+  plt.figure("SpeedH")
+  plt.loglog(speed,err,configs.LS,markersize=4)
+  plt.grid(b = True,which='major',linestyle=':')
+  plt.grid(b = True,which='minor',linestyle=':')
+  plt.hold(True) 
   SpeedPlotLabelH(auxDict,speed,err)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   configs.ToggleLS()
 
 
@@ -989,69 +989,69 @@ def Converge2DH(fileName,yexact,ctype='cstep'):
   x,y,auxDict = ConvergeData2D(fileName,yexact,ctype)
   width,height = ConvSize()
   fsize,margins = figsize_and_margins(plotsize=(width,height))
-  labs = pl.get_figlabels() 
+  labs = plt.get_figlabels() 
   if ctype == 'cstep':
     if "CSTEP" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("CSTEP",figsize=fsize)
-    pl.xlabel('Relative time step')
-    pl.ylabel('Relative error')
+    plt.figure("CSTEP",figsize=fsize)
+    plt.xlabel('Relative time step')
+    plt.ylabel('Relative error')
   elif ctype == 'speed':
     if "SPEED" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("SPEED",figsize=fsize)
-    pl.xlabel('Computer time (s)')
-    pl.ylabel('Relative error')
+    plt.figure("SPEED",figsize=fsize)
+    plt.xlabel('Computer time (s)')
+    plt.ylabel('Relative error')
   elif ctype == 'relerr':
     if "RELERR" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("RELERR",figsize=fsize)
-    pl.xlabel('Tolerance ($\epsilon_{rel}$)')
-    pl.ylabel('Relative error')
+    plt.figure("RELERR",figsize=fsize)
+    plt.xlabel('Tolerance ($\epsilon_{rel}$)')
+    plt.ylabel('Relative error')
   elif ctype == 'coeff':
     if "COEFF" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("COEFF",figsize=fsize)
-    pl.xlabel('ETD coefficient cost (s)')
-    pl.ylabel('Relative error')
+    plt.figure("COEFF",figsize=fsize)
+    plt.xlabel('ETD coefficient cost (s)')
+    plt.ylabel('Relative error')
   elif ctype == 'stages':
     if "STAGES" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("STAGES",figsize=fsize)
-    pl.xlabel('RK stage evaluation cost (s)')
-    pl.ylabel('Relative error')
+    plt.figure("STAGES",figsize=fsize)
+    plt.xlabel('RK stage evaluation cost (s)')
+    plt.ylabel('Relative error')
   elif ctype == 'incrf':
     if "INCRF" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("INCRF",figsize=fsize)
-    pl.xlabel('Expansion floor')
-    pl.ylabel('Computer time (s)')
+    plt.figure("INCRF",figsize=fsize)
+    plt.xlabel('Expansion floor')
+    plt.ylabel('Computer time (s)')
 
   elif ctype == 'decrf':
     if "DECRF" not in labs:
       configs.DefaultLS()
     else:
       configs.ToggleLS()
-    pl.figure("DECRF",figsize=fsize)
-    pl.xlabel('Compression ceiling')
-    pl.ylabel('Computer time (s)')
+    plt.figure("DECRF",figsize=fsize)
+    plt.xlabel('Compression ceiling')
+    plt.ylabel('Computer time (s)')
 
 
   if ctype == 'cstep' or ctype == 'speed' or ctype == 'relerr' or ctype == 'coeff' or ctype == 'stages':
-    pl.loglog(x,y,configs.LS,markersize=4)
-    ax = pl.gca()
+    plt.loglog(x,y,configs.LS,markersize=4)
+    ax = plt.gca()
     #ax.xaxis.set_major_locator(ticker.LogLocator(numticks=6))
     #ax.yaxis.set_major_locator(ticker.LogLocator(numticks=6))
     ax.xaxis.set_major_locator(ticker.LogLocator(numdecs=6))
@@ -1063,11 +1063,11 @@ def Converge2DH(fileName,yexact,ctype='cstep'):
     ax.yaxis.grid(b =
         True,which='major',linestyle=':',linewidth=0.1,dashes=(1,2))
   elif ctype == 'incrf' or ctype == 'decrf':
-    pl.plot(x,y,configs.LS,markersize=4)
+    plt.plot(x,y,configs.LS,markersize=4)
 
-  pl.hold(True) 
-  pl.ion()
-  pl.show()
+  plt.hold(True) 
+  plt.ion()
+  plt.show()
 
 
 

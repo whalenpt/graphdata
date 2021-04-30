@@ -28,10 +28,10 @@
 ##
 ##rc('text',usetex=True)
 ##rc('font',**{'family':'serif','serif':['Computer Modern']})
-##pl.rcParams['lines.markersize'] = 2
-##pl.rcParams['axes.labelsize'] = 'large' 
-##pl.rcParams['font.weight'] = 'bold' 
-##pl.rcParams['font.size'] = 16 
+##plt.rcParams['lines.markersize'] = 2
+##plt.rcParams['axes.labelsize'] = 'large' 
+##plt.rcParams['font.weight'] = 'bold' 
+##plt.rcParams['font.size'] = 16 
 #
 ##def ProcessData2D(x,y,z,auxDict):
 ##
@@ -159,25 +159,25 @@
 ##  return (x,y,z,xmin,xmax,ymin,ymax,zmin,zmax)
 #
 #def Contour2D(fileID,num = 0,simNum = 0):
-#  pl.clf()
+#  plt.clf()
 #  file = GetPlotFile(fileID,num,simNum)
 #  if not file:
 #    return False
 #  auxDict,xmin,xmax,ymin,ymax,zmin,zmax,xscale,yscale,zscale,title = AuxContour(file)
 #  AuxContourLabel(auxDict,xmin,xmax,ymin,ymax,xscale,yscale,title)
-#  pl.ion()
-#  pl.show()
+#  plt.ion()
+#  plt.show()
 #  return True
 #
 #def MovieContour2D(fileID,simNum = 0):
-#  pl.clf()
+#  plt.clf()
 #  fileList = []
 #  numList = GetNumListMovie2D(fileID)
 #  print numList
 #  for num in numList:
 #    Contour2D(fileID,num,simNum)
 #    fName = str(fileID) + "_" + str(num) + '.png' 
-#    pl.savefig(fName)
+#    plt.savefig(fName)
 #    fileList.append(fName)
 #    print fName
 #  try:
@@ -278,23 +278,23 @@
 #
 #  X,Y = np.meshgrid(x,y)
 #  if(auxDict['logz'] == 'logz'):
-#    CS = pl.contourf(X,Y,z,locator=ticker.LogLocator())
+#    CS = plt.contourf(X,Y,z,locator=ticker.LogLocator())
 #  else:
-#    CS = pl.contourf(X,Y,z)
-#  CB = pl.colorbar()
+#    CS = plt.contourf(X,Y,z)
+#  CB = plt.colorbar()
 #
 ##  vmin = vmax/10.0
 ##  v = np.linspace(vmin,vmax,10,endpoint = 'true')
 ##  pprint(v)
 ##  if 'zscale' in auxDict:
 ##    if(configs.G["scale"] == 'nonDim'):
-##      CB = pl.colorbar(ticks=v,format='%0.2f')
+##      CB = plt.colorbar(ticks=v,format='%0.2f')
 ##    else:
-##      CB = pl.colorbar(ticks=v,format='%0.2e')
+##      CB = plt.colorbar(ticks=v,format='%0.2e')
 ##  else:
-##    CB = pl.colorbar()
+##    CB = plt.colorbar()
 #
-#  pl.hold(True)
+#  plt.hold(True)
 #
 #  if 'legend' in auxDict:
 #    title.append(auxDict['legend'])
@@ -310,12 +310,12 @@
 #    xstr = xstr + auxDict['xlabel'] + '[' + auxDict["xscale_str"] + ']' 
 #    ystr = ystr + auxDict['ylabel'] + '[' + auxDict["yscale_str"] + ']' 
 ##    zstr = zstr + auxDict['zlabel'] + '[' + auxDict["zscale_str"] + ']' 
-##    pl.zlim([zmin,zmax])
+##    plt.zlim([zmin,zmax])
 #  elif(configs.G['scale'] == 'noscale'):
 #    xstr = xstr + auxDict['xlabel'] + '[' + auxDict["xunit_str"] + ']' 
 #    ystr = ystr + auxDict['ylabel'] + '[' + auxDict["yunit_str"] + ']' 
 ##    zstr = zstr + auxDict['zlabel'] + '[' + auxDict["zunit_str"] + ']' 
-##    pl.zlim([zmin*zscale,zmax*zscale])
+##    plt.zlim([zmin*zscale,zmax*zscale])
 #  elif(configs.G['scale'] == 'dimscale'):
 #    if 'xscale' in auxDict:
 #      xstr = xstr + auxDict['xlabel'] + "[" + configs.G['xdimscale_str'] + auxDict["xunit_str"] + "]" 
@@ -328,8 +328,8 @@
 #
 #  xstr = '$' + xstr + '$'
 #  ystr = '$' + ystr + '$'
-#  pl.xlabel(xstr)
-#  pl.ylabel(ystr)
+#  plt.xlabel(xstr)
+#  plt.ylabel(ystr)
 #
 #  if(configs.G['title'] == 'on'):
 #    titstr = ""
@@ -346,22 +346,22 @@
 #        val = float(auxDict['pval'])/float(configs.G['pdimscale'])
 #        titstr = titstr + str(val) + ' [$' + configs.G['pdimscale_str'] + str(auxDict['punit_str']) + '$]'
 #      
-#    pl.title(titstr)
+#    plt.title(titstr)
 #     
 ##  if(configs.G['legend'] == 'on'):
-##    pl.legend(title,loc='best')
+##    plt.legend(title,loc='best')
 #
 ##
 ##def MultiPlotH1D(fileID,num = 0):
 ##  fileList = GetMultiPlotFileList(fileID,num)
 ##  auxDict,xmin,xmax,ymin,ymax,xscale,yscale,titleList = AuxMultiPlot1D(fileList)
 ##  AuxPlotLabel1D(auxDict,xmin,xmax,ymin,ymax,xscale,yscale,titleList)
-##  pl.ion()
-##  pl.show()
+##  plt.ion()
+##  plt.show()
 ##  return True
 ##
 ##def MultiPlot1D(fileID,num = 0):
-##  pl.clf()
+##  plt.clf()
 ##  return MultiPlotH1D(fileID,num)
 ##
 ##def GetNumListMovie1D(fileID):
@@ -386,13 +386,13 @@
 ##
 ##def MultiMovie1D(fileID):
 ##
-##  pl.clf()
+##  plt.clf()
 ##  fileList = []
 ##  numList = GetNumListMovie1D(fileID)
 ##  for num in numList:
 ##    MultiPlot1D(fileID,num)
 ##    fName = str(fileID) + "_" + str(num) + '.png' 
-##    pl.savefig(fName)
+##    plt.savefig(fName)
 ##    fileList.append(fName)
 ##  try:
 ##    print fileList

@@ -1,15 +1,15 @@
 
 #from shared1D import AuxPlotLabel1D 
 from .shared1D import ProcessData1D 
-from .aux import GenFileList 
-from .aux import GetData1D 
-from .aux import GetDataFileInfo
-from .aux import GenFileList
-from .aux import ProcessAux
-from .aux import GetSimNums
-from .aux import GetRepFileList
-from .aux import LoadData1D
-from .aux import LoadParams
+from .helper import GenFileList 
+from .helper import GetData1D 
+from .helper import GetDataFileInfo
+from .helper import GenFileList
+from .helper import ProcessAux
+from .helper import GetSimNums
+from .helper import GetRepFileList
+from .helper import LoadData1D
+from .helper import LoadParams
 from matplotlib import ticker 
 from mpl_toolkits.mplot3d.axes3d import Axes3D 
 from matplotlib import cm 
@@ -17,9 +17,9 @@ from .plot1D import _PlotSize
 import os 
 import sys 
 import glob
-from GraphData3 import pl
-from GraphData3 import configs 
-from GraphData3 import np 
+from graphdata import plt
+from graphdata import configs 
+from graphdata import np 
 from pprint import pprint
 
 def Max(*args):
@@ -92,16 +92,16 @@ def Max(*args):
         xvec.append(repNum)
    
   configs.DefaultLS()
-  pl.figure()
-  pl.plot(xvec,yvec,configs.LS)
-#  pl.plot(x,y,'b--',dashes = (4,2))
-  pl.plot(xvec,yvec,'b--',dashes = (2,1))
+  plt.figure()
+  plt.plot(xvec,yvec,configs.LS)
+#  plt.plot(x,y,'b--',dashes = (4,2))
+  plt.plot(xvec,yvec,'b--',dashes = (2,1))
   auxDict = ProcessAux(fileList[0])
   AuxMaxLabel(auxDict)
   if 'legend' in auxDict:
-    pl.legend(['$'+str(auxDict["legend"])+'$'],loc='best')
-  pl.ion()
-  pl.show()
+    plt.legend(['$'+str(auxDict["legend"])+'$'],loc='best')
+  plt.ion()
+  plt.show()
   return yvec 
 
 def MaxH(*args):
@@ -171,7 +171,7 @@ def MaxH(*args):
       else:
         xvec.append(repNum)
  
-  labs = pl.get_figlabels() 
+  labs = plt.get_figlabels() 
   if "MaxH" not in labs:
     configs.DefaultLS()
     if 'legend' in auxDict:
@@ -181,27 +181,27 @@ def MaxH(*args):
     if 'legend' in auxDict:
       configs.AddLegend('$'+str(auxDict["legend"])+'$')
   width,height = _PlotSize(*args)
-  p = pl.figure("MaxH",figsize=(width,height))
+  p = plt.figure("MaxH",figsize=(width,height))
   print(width,height)
   if len(args) < 4:
-    pl.plot(xvec,yvec,configs.LS)
+    plt.plot(xvec,yvec,configs.LS)
   else:
-    pl.plot(xvec,yvec,str(args[3]))
+    plt.plot(xvec,yvec,str(args[3]))
 
-  pl.hold(True) 
+  plt.hold(True) 
 
-#  pl.plot(xvec,yvec,'k.')
-#  pl.plot(xvec,yvec,'cd',markersize=1,fillconfigsyle='full',markerfacecolor='c',markeredgecolor='c')
-#  pl.plot(xvec,yvec,'g-.',dashes = (7,4,3,4))
-#  pl.plot(xvec,yvec,'b--',dashes = (2,1))
-#  pl.plot(xvec,yvec,'r')
-#  pl.plot(xvec,yvec,configs.LS)
+#  plt.plot(xvec,yvec,'k.')
+#  plt.plot(xvec,yvec,'cd',markersize=1,fillconfigsyle='full',markerfacecolor='c',markeredgecolor='c')
+#  plt.plot(xvec,yvec,'g-.',dashes = (7,4,3,4))
+#  plt.plot(xvec,yvec,'b--',dashes = (2,1))
+#  plt.plot(xvec,yvec,'r')
+#  plt.plot(xvec,yvec,configs.LS)
   auxDict = ProcessAux(fileList[0])
   AuxMaxLabel(auxDict)
   if configs.LegendList:
-    pl.legend(configs.LegendList,loc='best')
-  pl.ion()
-  pl.show()
+    plt.legend(configs.LegendList,loc='best')
+  plt.ion()
+  plt.show()
   return p 
 
 def AuxMaxLabel(auxDict):
@@ -226,8 +226,8 @@ def AuxMaxLabel(auxDict):
       zstr = zstr + auxDict['ylabel'] + "[$" + configs.G['ydimscale_str'] + auxDict["yunit_str"] + "$]" 
 
   print(ystr)
-  pl.xlabel(ystr)
-  pl.ylabel(zstr)
+  plt.xlabel(ystr)
+  plt.ylabel(zstr)
 
 def MaxEvolveS(*args):
 
@@ -300,14 +300,14 @@ def MaxEvolveS(*args):
       ycnt = ycnt + 1;
     xcnt = xcnt + 1
 
-  fig = pl.figure()
+  fig = plt.figure()
   ax = fig.gca(projection='3d')
   ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs.G["cmap"]),linewidth=0,antialiased=True,shade=False) 
-  pl.xlim([x[0],x[-1]])
-  pl.ylim([y[0],y[-1]])
+  plt.xlim([x[0],x[-1]])
+  plt.ylim([y[0],y[-1]])
 
   ystr = ""
   zstr = ""
@@ -362,9 +362,9 @@ def MaxEvolveS(*args):
   ax.yaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
   ax.zaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
 
-  pl.ion()
-  pl.show()
-  pl.tight_layout()
+  plt.ion()
+  plt.show()
+  plt.tight_layout()
   print(max_x) 
   print(max_y)
   print(max_z)
@@ -443,14 +443,14 @@ def MaxMaxEvolveS(*args):
         max_z = zmaxsim 
       Z[i,j] = zmaxsim 
 
-  fig = pl.figure()
+  fig = plt.figure()
   ax = fig.gca(projection='3d')
   ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs.G["cmap"]),linewidth=0,antialiased=True,shade=False) 
-#  pl.xlim([x[0],x[-1]])
-#  pl.ylim([y[0],y[-1]])
+#  plt.xlim([x[0],x[-1]])
+#  plt.ylim([y[0],y[-1]])
 
   ystr = ""
   zstr = ""
@@ -492,9 +492,9 @@ def MaxMaxEvolveS(*args):
   ax.yaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
   ax.zaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
 
-  pl.ion()
-  pl.show()
-  pl.tight_layout()
+  plt.ion()
+  plt.show()
+  plt.tight_layout()
   print(max_x) 
   print(max_y)
   print(max_z)

@@ -1,13 +1,13 @@
 
 import os 
-from .aux import GenMovie
-from .aux import GetDataFileInfo
-from .aux import GenFileList
-from .aux import MovLength
+from .helper import GenMovie
+from .helper import GetDataFileInfo
+from .helper import GenFileList
+from .helper import MovLength
 import sys 
-from GraphData3 import pl
-from GraphData3 import configs 
-from GraphData3 import np 
+from graphdata import plt
+from graphdata import configs 
+from graphdata import np 
 from .contour2D import ContourHF
 from .contour2D import ContourHLF
 
@@ -36,8 +36,8 @@ def ProcessMovieF(fileList,*args,**kwargs):
     ContourHF(fileID,repNum,*args,**kwargs)
     imgFile = 'ContourF_' + fileID + '_' + str(repNum) + '.png'
     imageList.append(imgFile)
-    pl.savefig(imgFile)
-  pl.close()
+    plt.savefig(imgFile)
+  plt.close()
   if not imageList:
     print("No images generated in ProcessMovie. ")  
     sys.exit()
@@ -50,8 +50,8 @@ def ProcessMovieLF(fileList,*args,**kwargs):
     ContourHLF(fileID,repNum,*args,**kwargs)
     imgFile = 'ContourLF_' + fileID + '_' + str(repNum) + '.png'
     imageList.append(imgFile)
-    pl.savefig(imgFile)
-  pl.close()
+    plt.savefig(imgFile)
+  plt.close()
   if not imageList:
     print("No images generated in ProcessMovie. ")  
     sys.exit()

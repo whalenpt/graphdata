@@ -1,12 +1,12 @@
 
 import os 
-from .aux import GenMovie
-from .aux import GetDataFileInfo
-from .aux import GenFileList
+from .helper import GenMovie
+from .helper import GetDataFileInfo
+from .helper import GenFileList
 import sys 
-from GraphData3 import pl
-from GraphData3 import configs 
-from GraphData3 import np 
+from graphdata import plt
+from graphdata import configs 
+from graphdata import np 
 from .surface import SurfaceH
 from .surface import WireH
 
@@ -94,8 +94,8 @@ def ProcessMovie(fileList,*args):
     SurfaceH(fileID,repNum,*args)
     imgFile = 'Surface_' + fileID + str(repNum) + '.png'
     imageList.append(imgFile)
-    pl.savefig(imgFile)
-  pl.close()
+    plt.savefig(imgFile)
+  plt.close()
   if not imageList:
     print("No images generated in ProcessMovie. ")  
     sys.exit()
@@ -192,8 +192,8 @@ def ProcessMovieW(fileList,*args):
     WireH(fileID,repNum,*args)
     imgFile = 'Wire_' + fileID + '_' + str(repNum) + '.png'
     imageList.append(imgFile)
-    pl.savefig(imgFile)
-  pl.close()
+    plt.savefig(imgFile)
+  plt.close()
   if not imageList:
     print("No images generated in ProcessMovie. ")  
     sys.exit()
@@ -202,17 +202,17 @@ def ProcessMovieW(fileList,*args):
 
 #def ProcessMovieL(fileList,*args):
 #  imageList = []
-#  pl.clf()
+#  plt.clf()
 #  configs.DefaultLS()
 #  for file in fileList: 
 #    fileID,repNum = GetDataFileInfo(file) 
 #    SurfaceL(fileID,repNum,*args)
 #    imgFile = fileID + '_' + str(repNum) + '.png'
 #    imageList.append(imgFile)
-#    pl.savefig(imgFile)
-#    pl.clf()
+#    plt.savefig(imgFile)
+#    plt.clf()
 #    configs.DefaultLS()
-#  pl.close()
+#  plt.close()
 #  if not imageList:
 #    print "No images generated in ProcessMovie. "  
 #    sys.exit()

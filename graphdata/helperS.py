@@ -8,12 +8,12 @@ import os
 import string
 import re
 import sys 
-from GraphData3 import pl
-from GraphData3 import configs 
-from GraphData3 import np 
-from .aux import GenFileList
-from .aux import SortNumericStringList
-from .aux import fmtcols
+from graphdata import plt
+from graphdata import configs 
+from graphdata import np 
+from .helper import GenFileList
+from .helper import SortNumericStringList
+from .helper import fmtcols
 
 def GenFileListS(*args):
   fileID = '' 

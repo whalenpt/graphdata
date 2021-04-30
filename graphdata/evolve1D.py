@@ -7,16 +7,16 @@ from matplotlib.colors import LightSource
 
 from .shared1D import ProcessData1D 
 from pprint import pprint
-from .aux import ProcessAux 
-from .aux import GenFileList
-from .aux import GetDataFileInfo
-from .aux import GetData1D 
-from .aux import GenFileList
-from .aux import GenMovie
-from .aux import MovLength
-from GraphData3 import pl
-from GraphData3 import configs 
-from GraphData3 import np 
+from .helper import ProcessAux 
+from .helper import GenFileList
+from .helper import GetDataFileInfo
+from .helper import GetData1D 
+from .helper import GenFileList
+from .helper import GenMovie
+from .helper import MovLength
+from graphdata import plt
+from graphdata import configs 
+from graphdata import np 
 
 def Evolve(*args,**kwargs):
   """
@@ -108,7 +108,7 @@ def Evolve(*args,**kwargs):
     width = array[0]
     height = array[1]
 
-  fig = pl.figure(figsize=(width,height))
+  fig = plt.figure(figsize=(width,height))
   ax = fig.add_subplot(1,1,1,projection = '3d')
   ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
@@ -136,12 +136,12 @@ def Evolve(*args,**kwargs):
     auxDict['view'] = [57,-57]
 
 
-  pl.xlim([x[0],x[-1]])
-  pl.ylim([ymin,ymax])
+  plt.xlim([x[0],x[-1]])
+  plt.ylim([ymin,ymax])
   AuxEvolveLabel(ax,auxDict)
-  pl.ion()
-  pl.show()
-  pl.tight_layout()
+  plt.ion()
+  plt.show()
+  plt.tight_layout()
   return ax
 
 def AuxEvolveLabel(ax,auxDict):
@@ -208,16 +208,16 @@ def EvolveR(*args,**kwargs):
   ax.axis('off')
   ax.view_init(elev,0)
   ax.set_title('view = (' + str(elev) + ',0)')
-  pl.draw()
-  pl.savefig('EvolveR_0.png')
+  plt.draw()
+  plt.savefig('EvolveR_0.png')
   imageList = ['EvolveR_0.png']
 
   for angle in range(incr,360,incr):
     ax.view_init(elev,angle)
     ax.set_title('view = (' + str(elev) + ',' + str(angle) + ')')
-    pl.draw()
+    plt.draw()
     imageFile = 'EvolveR_' + str(angle) + '.png'
-    pl.savefig(imageFile)
+    plt.savefig(imageFile)
     imageList.append(imageFile)
 
   print(imageList)
@@ -290,7 +290,7 @@ def EvolveL(*args,**kwargs):
     width = array[0]
     height = array[1]
 
-  fig = pl.figure(figsize=(width,height))
+  fig = plt.figure(figsize=(width,height))
   ax = fig.add_subplot(1,1,1,projection = '3d')
   ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
@@ -310,12 +310,12 @@ def EvolveL(*args,**kwargs):
     auxDict['zlim'] = ylim
   auxDict['ylim'] = [ymin,ymax]
 
-  pl.tight_layout()
-  pl.xlim([x[0],x[-1]])
-  pl.ylim([ymin,ymax])
+  plt.tight_layout()
+  plt.xlim([x[0],x[-1]])
+  plt.ylim([ymin,ymax])
   AuxEvolveLabel(ax,auxDict)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   return ax
 
 def EvolveM(*args,**kwargs):
@@ -365,14 +365,14 @@ def EvolveM(*args,**kwargs):
 
   width = float(configs.G['EvolveWidth'])
   height = float(configs.G['EvolveHeight'])
-  fig = pl.figure(figsize=(width,height))
+  fig = plt.figure(figsize=(width,height))
   fig.clf()
   ax = fig.add_subplot(1,1,1,projection = '3d')
   wframe = ax.plot_wireframe(X, Y, Z, rstride=1, cstride=1,color='black')
-  pl.xlim([x[0],x[-1]])
+  plt.xlim([x[0],x[-1]])
   AuxSurfaceLabel(ax,auxDict)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   return True
 
 
@@ -422,18 +422,18 @@ def EvolveS(*args,**kwargs):
 
   X,Y = np.meshgrid(y,x)
   width,height = _SurfaceSize(*args)
-  fig = pl.figure(figsize=(width,height))
+  fig = plt.figure(figsize=(width,height))
   ang1,ang2 = GetView(*args)
   ax = fig.gca(projection='3d')
   ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs.G["cmap"]),linewidth=0,antialiased=True,shade=True) 
-  pl.xlim([y[0],y[-1]])
-  pl.ylim([x[0],x[-1]])
+  plt.xlim([y[0],y[-1]])
+  plt.ylim([x[0],x[-1]])
   AuxSurfaceLabel(ax,auxDict)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   return True
 
 def AuxSurfaceLabel(ax,auxDict):
@@ -557,15 +557,15 @@ def EvolveLS(*args,**kwargs):
     count = count + 1
 
   X,Y = np.meshgrid(y,x)
-  fig = pl.figure(figsize=(float(configs.G['EvolveWidth']),float(configs.G['EvolveHeight'])))
+  fig = plt.figure(figsize=(float(configs.G['EvolveWidth']),float(configs.G['EvolveHeight'])))
   fig.clf()
   ax = fig.gca(projection='3d')
   surf = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=cm.jet,linewidth=0,antialiased=False) 
   AuxSurfaceLabel(ax,auxDict)
-  pl.xlim([y[0],y[-1]])
-  pl.ylim([x[0],x[-1]])
-  pl.ion()
-  pl.show()
+  plt.xlim([y[0],y[-1]])
+  plt.ylim([x[0],x[-1]])
+  plt.ion()
+  plt.show()
   return True
 
 def GetContourData(*args):
@@ -629,11 +629,11 @@ def EvolveC(*args):
   (X,Y,Z,auxDict) = GetContourData(*args)
   width = 6;
   height = 8;
-  fig = pl.figure(figsize=(width,height))
-  CS = pl.contourf(Y,X,Z,200,interpolation='bicubic')
+  fig = plt.figure(figsize=(width,height))
+  CS = plt.contourf(Y,X,Z,200,interpolation='bicubic')
   AuxContourLabel(CS,auxDict)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   return True
 
 def EvolveI(*args):
@@ -641,14 +641,14 @@ def EvolveI(*args):
   width = 6;
   height = 8;
   lightS = LightSource(azdeg=0,altdeg=5)
-  rgb = lightS.shade(Z,pl.cm.hot)
-  fig = pl.figure(figsize=(width,height))
-  ax = pl.subplot(111)
+  rgb = lightS.shade(Z,plt.cm.hot)
+  fig = plt.figure(figsize=(width,height))
+  ax = plt.subplot(111)
   #im = ax.imshow(rgb,aspect='auto',interpolation='bicubic')
   im = ax.imshow(rgb,aspect='auto',interpolation='bicubic')
 #  AuxContourLabel(CS,auxDict)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   return True
 
 
@@ -739,12 +739,12 @@ def EvolveB(*args,**kwargs):
     count = count + 1
 
   X,Y = np.meshgrid(x,y)
-  pl.figure(figsize=(float(configs.G['EvolveWidth']),float(configs.G['EvolveHeight'])))
-  CS = pl.contour(X,Y,Z,6,colors='k')
+  plt.figure(figsize=(float(configs.G['EvolveWidth']),float(configs.G['EvolveHeight'])))
+  CS = plt.contour(X,Y,Z,6,colors='k')
   AuxContourLabel(CS,auxDict)
-  pl.clabel(CS,fontsize=9,inline=1,fmt='%0.02e')
-  pl.ion()
-  pl.show()
+  plt.clabel(CS,fontsize=9,inline=1,fmt='%0.02e')
+  plt.ion()
+  plt.show()
   return True
 
 def EvolveLB(*args,**kwargs):
@@ -799,12 +799,12 @@ def EvolveLB(*args,**kwargs):
     count = count + 1
 
   X,Y = np.meshgrid(x,y)
-  pl.figure(figsize=(float(configs.G['EvolveWidth']),float(configs.G['EvolveHeight'])))
-  CS = pl.contour(X,Y,Z,colors = 'k',locator=ticker.LogLocator())
+  plt.figure(figsize=(float(configs.G['EvolveWidth']),float(configs.G['EvolveHeight'])))
+  CS = plt.contour(X,Y,Z,colors = 'k',locator=ticker.LogLocator())
   AuxContourLabel(CS,auxDict)
-  pl.clabel(CS,fontsize=9,inline=1,fmt='%0.02e')
-  pl.ion()
-  pl.show()
+  plt.clabel(CS,fontsize=9,inline=1,fmt='%0.02e')
+  plt.ion()
+  plt.show()
   return True
 
 
@@ -846,7 +846,7 @@ def GetView(*args):
 
 
 #def EvolveContour(fileID,evolveNum = 40,simNum = 0):
-#  pl.clf()
+#  plt.clf()
 #  configs.DefaultLS()
 #  fileList = GetEvolveFileList(fileID,evolveNum,simNum)
 #  if not fileList:
@@ -902,10 +902,10 @@ def GetView(*args):
 #
 #  ymin = np.amin(y); ymax = np.amax(y) 
 #  X,Y = np.meshgrid(x,y)
-#  CS = pl.contourf(X,Y,Z)
+#  CS = plt.contourf(X,Y,Z)
 #  AuxContourLabel(auxDict,CS,xmin,xmax,ymin,ymax,xscale,yscale)
-#  pl.ion()
-#  pl.show()
+#  plt.ion()
+#  plt.show()
 #  return True
 
 

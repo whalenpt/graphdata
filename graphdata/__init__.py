@@ -3,9 +3,9 @@ __author__ = """Patrick Whalen"""
 __email__ = 'whalenpt@gmail.com'
 __version__ = '0.0.1'
 
-from matplotlib import rc,rcParams 
+from matplotlib import rc,rcParams
 import matplotlib as mpl
-import matplotlib.pylab as pl 
+import matplotlib.pyplot as plt
 import numpy as np
 
 global configs
@@ -25,7 +25,7 @@ newbonemap = mpl.colors.LinearSegmentedColormap.from_list('bone',
    [(0.81234674617027558, 0.87990196078431371, 0.87990193376227044),
        (0.4392156862745098, 0.48412986868103691, 0.56421558822309559),
   (0.12009803921568628, 0.12009799222075436, 0.16709292412617219) ])
-pl.register_cmap(cmap = newbonemap)
+plt.register_cmap(cmap = newbonemap)
 mpl.colors.colorConverter.colors['f'] = (0.0/256,0.0/256,205.0/256)
 mpl.colors.colorConverter.colors['t'] = (105.0/256,105.0/256,105.0/256)
 
@@ -34,7 +34,7 @@ cdict = {'blue': ((0.0, 0.0, 0.0), (0.74, 0.0, 0.0), (1.0, 0.7, 0.7)),
  'red': ((0.0, 0.0416, 0.0416), (0.365079, 1.0, 1.0), (1.0, 1.0, 1.0))}
 
 newhotmap = mpl.colors.LinearSegmentedColormap('hot',cdict)
-pl.register_cmap(cmap = newhotmap)
+plt.register_cmap(cmap = newhotmap)
 
 
 from .plot1D import Plot 
@@ -50,10 +50,10 @@ from .plot1D import LogLogF
 from .plot1D import LogLogHF
 from .mov1D import PlotM
 from .mov1D import PlotLM
-from .aux import LoadData1D
-from .aux import LoadData2D
-from .aux import LoadComplexData1D
-from .aux import GenFileList
+from .helper import LoadData1D
+from .helper import LoadData2D
+from .helper import LoadComplexData1D
+from .helper import GenFileList
 from .evolve1D import Evolve
 from .evolve1D import EvolveL
 from .evolve1D import EvolveC
@@ -72,7 +72,7 @@ from .movContour2D import ContourFM
 from .movContour2D import ContourLFM
 from .surface import Surface
 from .surface import SurfaceH
-from .surface import Wire 
+from .surface import Wire
 from .surface import WireH
 from .movSurface import SurfaceM
 from .movSurface import WireM

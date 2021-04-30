@@ -3,11 +3,11 @@ import glob
 import string
 from pprint import pprint
 
-from .aux import SortNumericStringList
-from .aux import GetMovieCommand
-from .aux import fmtcols
-from .aux import GetPlotFile 
-from .aux import ProcessAux 
+from .helper import SortNumericStringList
+from .helper import GetMovieCommand
+from .helper import fmtcols
+from .helper import GetPlotFile 
+from .helper import ProcessAux 
 
 from .shared1D import AuxPlotLabel1D 
 from .shared1D import ProcessData1D 
@@ -29,23 +29,23 @@ def GetMultiPlotFileList(fileID,num = 0):
   return fileList
 
 def MultiPlot(fileID,num = 0):
-  pl.clf()
+  plt.clf()
   configs.DefaultLS()
   fileList = GetMultiPlotFileList(fileID,num)
   auxDict,xmin,xmax,ymin,ymax,xscale,yscale,titleList = AuxMultiPlot1D(fileList)
   AuxPlotLabel1D(auxDict,xmin,xmax,ymin,ymax,xscale,yscale,titleList)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   return True
 
 def MultiPlotL(fileID,num = 0):
-  pl.clf()
+  plt.clf()
   configs.DefaultLS()
   fileList = GetMultiPlotFileList(fileID,num)
   auxDict,xmin,xmax,ymin,ymax,xscale,yscale,titleList = AuxMultiLogPlot1D(fileList)
   AuxPlotLabel1D(auxDict,xmin,xmax,ymin,ymax,xscale,yscale,titleList)
-  pl.ion()
-  pl.show()
+  plt.ion()
+  plt.show()
   return True
 
 def AuxMultiPlot1D(fileList):
@@ -90,8 +90,8 @@ def AuxMultiPlot1D(fileList):
         elif(configs.G["scale"] == 'dimscale'):
           y = y/float(configs.G['ydimscale'])
       
-      pl.plot(x,y,configs.LS[count])
-      pl.hold(True) 
+      plt.plot(x,y,configs.LS[count])
+      plt.hold(True) 
       titleList.append(auxDict["legend"])
       count  = count + 1
 
@@ -152,8 +152,8 @@ def AuxMultiLogPlot1D(fileList):
         elif(configs.G["scale"] == 'dimscale'):
           y = y/float(configs.G['ydimscale'])
       
-      pl.semilogy(x,y,configs.LS[count])
-      pl.hold(True) 
+      plt.semilogy(x,y,configs.LS[count])
+      plt.hold(True) 
       titleList.append(auxDict["legend"])
       count  = count + 1
 

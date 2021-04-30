@@ -1,11 +1,11 @@
 
 import sys
 from pprint import pprint
-from .aux import ProcessAux 
-from .aux import SetDecadeLimits
-from GraphData3 import pl
-from GraphData3 import configs 
-from GraphData3 import np 
+from .helper import ProcessAux 
+from .helper import SetDecadeLimits
+from graphdata import plt
+from graphdata import configs 
+from graphdata import np 
 
 def ProcessData2D(x,y,z,auxDict,**kwargs):
   auxDict = ProcessCmdLineOpts(auxDict,**kwargs)

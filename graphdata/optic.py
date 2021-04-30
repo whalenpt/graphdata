@@ -5,16 +5,16 @@ import shutil
 import glob
 import os 
 import string
-from GraphData3 import pl
-from GraphData3 import configs 
-from GraphData3 import np 
-from .aux import SortNumericStringList 
-from .aux import ProcessAux
-from .aux import LoadData1D
-from .aux import LoadData2D
-from .aux import GetDataFileInfo 
-from .aux import GetDataFileInfoS
-from .aux import GenFileList
+from graphdata import plt
+from graphdata import configs 
+from graphdata import np 
+from .helper import SortNumericStringList 
+from .helper import ProcessAux
+from .helper import LoadData1D
+from .helper import LoadData2D
+from .helper import GetDataFileInfo 
+from .helper import GetDataFileInfoS
+from .helper import GenFileList
 
 def ConvertData1D(x,y,auxDict,direction):
   if direction == 'ftow':

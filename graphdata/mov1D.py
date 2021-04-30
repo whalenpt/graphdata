@@ -1,13 +1,13 @@
 
 import os 
-from .aux import GenMovie
-from .aux import GetDataFileInfo
-from .aux import GenFileList
-from .aux import MovLength
+from .helper import GenMovie
+from .helper import GetDataFileInfo
+from .helper import GenFileList
+from .helper import MovLength
 import sys 
-from GraphData3 import pl
-from GraphData3 import configs 
-from GraphData3 import np 
+from graphdata import plt
+from graphdata import configs 
+from graphdata import np 
 from .plot1D import PlotH 
 from .plot1D import PlotHL
 
@@ -146,17 +146,17 @@ def PlotLM(*args,**kwargs):
 
 def ProcessMovie(fileList,**kwargs):
   imageList = []
-  pl.clf()
+  plt.clf()
   configs.DefaultLS()
   for file in fileList: 
     fileID,repNum = GetDataFileInfo(file) 
     PlotH(fileID,repNum,**kwargs)
     imgFile = fileID + '_' + str(repNum) + '.png'
     imageList.append(imgFile)
-    pl.savefig(imgFile)
-    pl.clf()
+    plt.savefig(imgFile)
+    plt.clf()
     configs.DefaultLS()
-  pl.close()
+  plt.close()
   if not imageList:
     print("No images generated in ProcessMovie. ")  
     sys.exit()
@@ -164,17 +164,17 @@ def ProcessMovie(fileList,**kwargs):
 
 def ProcessMovieL(fileList,**kwargs):
   imageList = []
-  pl.clf()
+  plt.clf()
   configs.DefaultLS()
   for file in fileList: 
     fileID,repNum = GetDataFileInfo(file) 
     PlotHL(fileID,repNum,**kwargs)
     imgFile = fileID + '_' + str(repNum) + '.png'
     imageList.append(imgFile)
-    pl.savefig(imgFile)
-    pl.clf()
+    plt.savefig(imgFile)
+    plt.clf()
     configs.DefaultLS()
-  pl.close()
+  plt.close()
   if not imageList:
     print("No images generated in ProcessMovie. ")  
     sys.exit()
