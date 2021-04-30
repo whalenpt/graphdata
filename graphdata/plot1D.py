@@ -46,13 +46,18 @@ def Plot(*args,**kwargs):
 
   
   x,y,auxDict = GetData1D(*args)
+  print(x)
   x,y,auxDict = ProcessData1D(x,y,auxDict,**kwargs)
+  print(x)
   width,height = _PlotSize(**kwargs)
   p = plt.figure(figsize=(width,height))
   configs.DefaultLS()
 
   plt.plot(x,y,configs.LS)
   AuxPlotLabel1D(auxDict)
+  print(x)
+  print(x[0])
+  print(x[-1])
   plt.xlim([x[0],x[-1]])
   if 'legend' in auxDict and configs.G['legend'] == 'on':
     plt.legend([str(auxDict["legend"])],loc='best')

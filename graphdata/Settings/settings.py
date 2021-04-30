@@ -33,7 +33,7 @@ class PlotSettings(object):
   def LoadSettings(self):
     self.G = dict()
     defaultDict = {'Points1D': 100,'PointsX_2D':100,'PointsY_2D':100,\
-      'scale':'nonDim','xdimscale':1.0,'ydimscale':1.0,'zdimscale':1.0,\
+      'scale':'noscale','xdimscale':1.0,'ydimscale':1.0,'zdimscale':1.0,\
       'pdimscale':1.0,'xdimscale_str':'','ydimscale_str':'','zdimscale_str':'',\
       'pdimscale_str':'', 'process data':'on',\
       'LSvec':'color','cmap':'hot','title':'on','legend':'on',\

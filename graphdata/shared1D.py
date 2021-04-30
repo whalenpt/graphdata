@@ -10,14 +10,14 @@ from matplotlib import ticker
 def ProcessData1D(x,y,auxDict,**kwargs):
   auxDict = ProcessCmdLineOpts(auxDict,**kwargs)
   if 'mirror horizontal' in auxDict:
-    x = np.hstack([np.flipud(-x),x])
-    y = np.hstack([np.flipud(y),y])
+      x = np.hstack([np.flipud(-x),x])
+      y = np.hstack([np.flipud(y),y])
   if(configs.G["scale"] == 'nonDim'):
-    x,y = ProcessNonDimData1D(x,y,auxDict)
+      x,y = ProcessNonDimData1D(x,y,auxDict)
   elif(configs.G["scale"] == 'dimscale'):
-    x,y = ProcessScaledData1D(x,y,auxDict)
+      x,y = ProcessScaledData1D(x,y,auxDict)
   elif(configs.G["scale"] == 'noscale'):
-    x,y = ProcessNonScaledData1D(x,y,auxDict)
+      x,y = ProcessNonScaledData1D(x,y,auxDict)
   return (x,y,auxDict)
 
 def ProcessCmdLineOpts(auxDict,**kwargs):
