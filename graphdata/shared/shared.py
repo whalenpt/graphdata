@@ -1,5 +1,4 @@
-#!/usr/bin/python
-# Filename: aux.py
+# Filename: shared.py
 
 import shutil 
 import glob
