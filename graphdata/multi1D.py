@@ -1,7 +1,5 @@
 
 import glob
-import string
-from pprint import pprint
 
 from .helper import SortNumericStringList
 from .helper import GetMovieCommand

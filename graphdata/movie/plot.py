@@ -1,15 +1,15 @@
 
 import os 
-from .helper import GenMovie
-from .helper import GetDataFileInfo
-from .helper import GenFileList
-from .helper import MovLength
 import sys 
-from graphdata import plt
-from graphdata import configs 
-from graphdata import np 
-from .plot1D import PlotH 
-from .plot1D import PlotHL
+from ..helper import GenMovie
+from ..helper import GetDataFileInfo
+from ..helper import GenFileList
+from ..helper import MovLength
+from ..graphdata import plt
+from ..graphdata import configs 
+from ..graphdata import np 
+from ..plot1D import PlotH 
+from ..plot1D import PlotHL
 
 
 def PlotM(*args,**kwargs):
