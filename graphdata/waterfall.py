@@ -5,23 +5,17 @@ from mpl_toolkits.mplot3d.axes3d import Axes3D
 from matplotlib import cm 
 from matplotlib.colors import LightSource
 
-from .shared1D import ProcessData1D 
-from pprint import pprint
-from .shared import ProcessAux 
-from .helper import GenFileList
-from .helper import GetDataFileInfo
-from .helper import GetData1D 
-from .helper import GenFileList
-from .helper import MovLength
+from graphdata.shared.shared1D import GetData1D,ProcessData1D
+from graphdata.shared.shared import GenFileList,GetDataFileInfo,ProcessAux
 from graphdata import plt
 from graphdata import configs 
 from graphdata import np 
 
-def Evolve(*args,**kwargs):
+def waterfall(*args,**kwargs):
   """
   Plots the evolution of 1D data in a mesh-like 3D figure. 
 
-  Evolve(fileID,fileRange,plotLimits,evoID):
+  waterfall(fileID,fileRange,plotLimits,evoID):
   Args:
     fileID: ID for data files where files look like fileID_fileNum.dat 
     e.g. if data files for T data are T_0.dat,T_1.dat,T_2.dat,...  then the
@@ -34,12 +28,12 @@ def Evolve(*args,**kwargs):
       maxFileNum:   End file number.  
       If no fileRange is given, then all data files corresponding to the
       fileID are used.  fileRange does not need to specify minFileNum or
-      maxFileNum e.g. Evolve('T',[10]) and Evolve('T',10) evolve 10 evenly
+      maxFileNum e.g. waterfall('T',[10]) and waterfall('T',10) evolve 10 evenly
       spaced data files of fileID 'T' starting with the first available data
       file and ending with the last available data
 
     plotLimits = [minX,maxX,minY,maxY]
-    plotLimits: Specifies the plotting range of the Evolve function data.
+    plotLimits: Specifies the plotting range of the waterfall function data.
       minX:  Minimum x value limit
       maxX:  Maximum x value limit
       minY:  Minimum y value limit
@@ -48,16 +42,16 @@ def Evolve(*args,**kwargs):
       then minimum and maximum graph limits will depend on the minimum and
       maximum data limits of the input and output variables.  plotLimits does
       not need to specify a minimum and maximum y value 
-      e.g. Evolve('T',10,[0 1]) will plot data with an input value between 0
+      e.g. waterfall('T',10,[0 1]) will plot data with an input value between 0
       and 1 
 
     
-    e.g. Evolve('T',[10,0,60],[0,1,-10,10]) will produce an Evolve plot using
+    e.g. waterfall('T',[10,0,60],[0,1,-10,10]) will produce an waterfall plot using
     10 (input,output) data pairs starting with T_0.dat, then going to T_6.dat,
     then to ..., and lastly T_60.dat. The graph will truncate inputs to the
     range of 0 to 1 and plot output in the range of -10 to 10
 
-    e.g. Evolve('R') will produce an Evolve plot using all 'R' fileID data
+    e.g. waterfall('R') will produce an waterfall plot using all 'R' fileID data
     R_0.dat, R_1.dat, ..., R_MAX#.dat
 
     evoID: y-propagated evolution values to use (default is propagation
@@ -100,8 +94,8 @@ def Evolve(*args,**kwargs):
   ymin = np.amin(x1)
   ymax = np.amax(x1)
 
-  width = float(configs._G['EvolveWidth'])
-  height = float(configs._G['EvolveHeight'])
+  width = float(configs._G['WaterfallWidth'])
+  height = float(configs._G['WaterfallHeight'])
   if 'size' in kwargs:
     array = kwargs['size']
     width = array[0]
@@ -137,13 +131,13 @@ def Evolve(*args,**kwargs):
 
   plt.xlim([x[0],x[-1]])
   plt.ylim([ymin,ymax])
-  AuxEvolveLabel(ax,auxDict)
+  AuxWaterfallLabel(ax,auxDict)
   plt.ion()
   plt.show()
   plt.tight_layout()
   return ax
 
-def AuxEvolveLabel(ax,auxDict):
+def AuxWaterfallLabel(ax,auxDict):
   xstr = ""
   ystr = ""
   zstr = ""
@@ -186,11 +180,11 @@ def AuxEvolveLabel(ax,auxDict):
   ax.view_init(view[0],view[1])
 
 
-def EvolveL(*args,**kwargs):
+def waterfallLog(*args,**kwargs):
   """
   Plots the log10(y) evolution of 1D data in a mesh-like 3D figure. 
 
-  EvolveL(fileID,fileRange,plotLimits):
+  waterfallLog(fileID,fileRange,plotLimits):
   Args:
     fileID: ID for data files where files look like fileID_fileNum.dat
       e.g. if data files for T data are T_0.dat,T_1.dat,T_2.dat,...
@@ -203,22 +197,22 @@ def EvolveL(*args,**kwargs):
       maxFileNum:   End file number.  
       If no fileRange is given, then all data files corresponding to the
       fileID are used.  fileRange does not need to specify minFileNum or
-      maxFileNum e.g. Evolve('T',[10]) and Evolve('T',10) evolve 10 evenly
+      maxFileNum e.g. waterfallLog('T',[10]) and waterfallLog('T',10) evolve 10 evenly
       spaced data files of fileID 'T' starting with the first available data
       file and ending with the last available data
 
     plotLimits = [minX,maxX,decades]
-    plotLimits: Specifies the plotting range of the Evolve function data.
+    plotLimits: Specifies the plotting range of the waterfallLog function data.
       minX:  Minimum x value limit
       maxX:  Maximum x value limit
       decades: Number of decades of output to include in log plots
     
-    e.g. Evolve('T',[10,0,60],[0,1,-10,10]) will produce an Evolve plot using
+    e.g. waterfallLog('T',[10,0,60],[0,1,-10,10]) will produce an waterfallLog plot using
     10 (input,output) data pairs starting with T_0.dat, then going to T_6.dat,
     then to ..., and lastly T_60.dat. The graph will truncate inputs to the
     range of 0 to 1 and plot output in the range of -10 to 10
 
-    e.g. Evolve('R') will produce an Evolve plot using all 'R' fileID data
+    e.g. waterfallLog('R') will produce an waterfallLog plot using all 'R' fileID data
     R_0.dat, R_1.dat, ..., R_MAX#.dat
   """
 
@@ -245,8 +239,8 @@ def EvolveL(*args,**kwargs):
   ymin = np.amin(x1)
   ymax = np.amax(x1)
 
-  width = float(configs._G['EvolveWidthL'])
-  height = float(configs._G['EvolveHeightL'])
+  width = float(configs._G['WaterfallWidthL'])
+  height = float(configs._G['WaterfallHeightL'])
   if 'size' in kwargs:
     array = kwargs['size']
     width = array[0]
@@ -275,201 +269,18 @@ def EvolveL(*args,**kwargs):
   plt.tight_layout()
   plt.xlim([x[0],x[-1]])
   plt.ylim([ymin,ymax])
-  AuxEvolveLabel(ax,auxDict)
+  AuxWaterfallLabel(ax,auxDict)
   plt.ion()
   plt.show()
   return ax
 
-def EvolveS(*args,**kwargs):
-  fileList = GenFileList(*args)
-  plotArgs = args[2:]
-  fileLen = len(fileList)
-  count = 0
-  auxDict = dict() 
-  x = []
-  num = 0
-  for file in fileList:
-    auxDict = ProcessAux(file) 
-    if "pscale" in auxDict: 
-      if(configs._G["scale"] == 'nonDim'):
-        x.append(float(auxDict['pval'])/float(auxDict['pscale']))
-      elif(configs._G["scale"] == 'dimscale'):
-        x.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
-      elif(configs._G["scale"] == 'noscale'):
-        x.append(float(auxDict['pval']))
-    else:
-      x.append(num)
-      num = num + 1
 
-  fileID,repNum = GetDataFileInfo(fileList[0]) 
-  y,z,auxDict = GetData1D(fileID,repNum)
-  y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
-  y,z = ProcessEvolvePoints(y,z,50)
-
-  if len(args) > 3:
-    view = args[3]  
-    if len(view) > 0:
-      auxDict['angle1'] = view[0]
-    if len(view) > 1:
-      auxDict['angle2'] = view[1]
-
-  count = 0; 
-  Z = np.zeros((len(x),len(y)))
-  for file in fileList:
-    fileID,repNum = GetDataFileInfo(file) 
-    y,z,auxDict = GetData1D(fileID,repNum)
-    y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
-    y,z = ProcessEvolvePoints(y,z,50)
-    Z[count,:] = z 
-    count = count + 1
-
-  X,Y = np.meshgrid(y,x)
-  width,height = _SurfaceSize(*args)
-  fig = plt.figure(figsize=(width,height))
-  ang1,ang2 = GetView(*args)
-  ax = fig.gca(projection='3d')
-  ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
-  ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
-  ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
-  p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs._G["cmap"]),linewidth=0,antialiased=True,shade=True) 
-  plt.xlim([y[0],y[-1]])
-  plt.ylim([x[0],x[-1]])
-  AuxSurfaceLabel(ax,auxDict)
-  plt.ion()
-  plt.show()
-  return True
-
-def AuxSurfaceLabel(ax,auxDict):
-  xstr = ""
-  ystr = ""
-  zstr = ""
-  if(configs._G['scale'] == 'nonDim'):
-    if 'xscale_str' in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] + '(' + auxDict["xscale_str"] + ')' 
-    elif 'xscale_str' not in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] 
-    if 'pscale_str' in auxDict and 'plabel' in auxDict:
-      ystr = auxDict['plabel'] + '(' + auxDict["pscale_str"] + ')' 
-    elif 'pscale_str' not in auxDict and 'plabel' in auxDict:
-      ystr = auxDict['plabel'] 
-    if 'yscale_str' in auxDict and 'ylabel' in auxDict:
-      zstr =  auxDict['ylabel'] + '(' + auxDict["yscale_str"] + ')' 
-    elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
-      zstr =  auxDict['ylabel'] 
-  elif(configs._G['scale'] == 'noscale'):
-    if 'xunit_str' in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] + '(' + auxDict["xunit_str"] + ')' 
-    elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
-       xstr = auxDict['xlabel']
-    if 'punit_str' in auxDict and 'plabel' in auxDict:
-      ystr = auxDict['plabel']  + '(' + auxDict["punit_str"] + ')' 
-    elif 'punit_str' not in auxDict and 'plabel' in auxDict:
-      ystr = auxDict['plabel'] 
-    if 'yscale_str' in auxDict and 'ylabel' in auxDict:
-      zstr =  auxDict['ylabel'] + '(' + auxDict["yscale_str"] + ')' 
-    elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
-      zstr =  auxDict['ylabel'] 
-  elif(configs._G['scale'] == 'dimscale'):
-    if 'xunit_str' in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] + '(' + configs._G['xdimscale_str'] + auxDict["xunit_str"] + ')' 
-    elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] + " [arb.]" 
-    if 'punit_str' in auxDict and 'plabel' in auxDict:
-      ystr = auxDict['plabel'] + '(' + configs._G['pdimscale_str'] + auxDict["punit_str"] + ')' 
-    elif 'punit_str' not in auxDict and 'plabel' in auxDict:
-      ystr = ystr + auxDict['plabel'] + " [arb.]" 
-    if 'yunit_str' in auxDict and 'ylabel' in auxDict:
-      zstr = auxDict['ylabel'] + '(' + configs._G['ydimscale_str'] + auxDict["yunit_str"] + ')' 
-    elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
-      zstr = auxDict['ylabel'] + " [arb.]" 
-
-  if 'ylim' in auxDict:
-    ylim = auxDict['ylim']
-    ax.set_zlim3d(ylim)
-
-  xstr = '$' + xstr + '$'
-  ystr = '$' + ystr + '$'
-  zstr = '$' + zstr + '$'
-  ax.set_xlabel(xstr)
-  ax.set_ylabel(ystr)
-  ax.set_zlabel(zstr)
-
-  if 'angle1' in auxDict and 'angle2' in auxDict:
-    ax.view_init(auxDict['angle1'],auxDict['angle2'])
-
-  numTicks = int(configs._G['NumberSurfaceTicks'])
-  ax.xaxis.set_major_locator(ticker.LinearLocator(numTicks))
-  ax.yaxis.set_major_locator(ticker.LinearLocator(numTicks))
-  ax.zaxis.set_major_locator(ticker.LinearLocator(4))
-  
-  labelType = str(configs._G['SurfaceTickFormat'])
-  ax.xaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
-  ax.yaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
-  ax.zaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
-
-
-def ProcessEvolvePoints(x,y,numX):
+def ProcessWaterfallPoints(x,y,numX):
   xvals = np.linspace(x[0],x[-1],numX)
   y = np.interp(xvals,x,y)
   x = xvals
   return (x,y)
 
-
-def EvolveLS(*args,**kwargs):
-  fileList = GenFileList(*args)
-  plotArgs = args[2:]
-  fileLen = len(fileList)
-  count = 0
-  auxDict = dict() 
-  x = []
-  num = 0
-  for file in fileList:
-    auxDict = ProcessAux(file) 
-    if "pscale" in auxDict: 
-      if(configs._G["scale"] == 'nonDim'):
-        x.append(float(auxDict['pval'])/float(auxDict['pscale']))
-      elif(configs._G["scale"] == 'dimscale'):
-        x.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
-      elif(configs._G["scale"] == 'noscale'):
-        x.append(float(auxDict['pval']))
-    else:
-      x.append(num)
-      num = num + 1
-
-  fileID,repNum = GetDataFileInfo(fileList[0]) 
-  y,z,auxDict = GetData1D(fileID,repNum)
-  auxDict['decades'] = configs._G['decades']
-  y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
-  y,z = ProcessEvolvePoints(y,z,120)
-
-  if 'view' in kwargs:
-    view = kwargs['view']
-    auxDict['angle1'] = view[0]
-    auxDict['angle2'] = view[1]
-
-  count = 0; 
-  Z = np.zeros((len(x),len(y)))
-  for file in fileList:
-    fileID,repNum = GetDataFileInfo(file) 
-    y,z,auxDict = GetData1D(fileID,repNum)
-    auxDict['decades'] = configs._G['decades']
-    y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
-    y,z = ProcessEvolvePoints(y,z,120)
-    z = np.log10(z)
-    Z[count,:] = z 
-    count = count + 1
-
-  X,Y = np.meshgrid(y,x)
-  fig = plt.figure(figsize=(float(configs._G['EvolveWidth']),float(configs._G['EvolveHeight'])))
-  fig.clf()
-  ax = fig.gca(projection='3d')
-  surf = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=cm.jet,linewidth=0,antialiased=False) 
-  AuxSurfaceLabel(ax,auxDict)
-  plt.xlim([y[0],y[-1]])
-  plt.ylim([x[0],x[-1]])
-  plt.ion()
-  plt.show()
-  return True
 
 def GetContourData(*args):
   fileID = '' 
@@ -484,7 +295,7 @@ def GetContourData(*args):
     fileSpec = args[1]
     fileList = GenFileList(fileID,fileSpec) 
   if not fileList:
-    print("Evolve fileList not generated. ")  
+    print("waterfall fileList not generated. ")  
     return False
 
   plotArgs = args[2:]
@@ -509,7 +320,7 @@ def GetContourData(*args):
   fileID,repNum = GetDataFileInfo(fileList[0]) 
   y,z,auxDict = GetData1D(fileID,repNum,*plotArgs)
   y,z,auxDict = ProcessData1D(y,z,auxDict)
-  y,z = ProcessEvolvePoints(y,z,50)
+  y,z = ProcessWaterfallPoints(y,z,50)
 
   count = 0; 
   Z = np.zeros((len(y),len(x)))
@@ -517,7 +328,7 @@ def GetContourData(*args):
     fileID,repNum = GetDataFileInfo(file) 
     y,z,auxDict = GetData1D(fileID,repNum,*plotArgs)
     y,z,auxDict = ProcessData1D(y,z,auxDict)
-    y,z = ProcessEvolvePoints(y,z,50)
+    y,z = ProcessWaterfallPoints(y,z,50)
     Z[:,count] = z 
     count = count + 1
 
@@ -528,7 +339,7 @@ def GetContourData(*args):
   Z = np.transpose(Z)
   return (X,Y,Z,auxDict)
 
-def EvolveC(*args):
+def WaterfallC(*args):
   (X,Y,Z,auxDict) = GetContourData(*args)
   width = 6;
   height = 8;
@@ -539,7 +350,7 @@ def EvolveC(*args):
   plt.show()
   return True
 
-def EvolveI(*args):
+def WaterfallI(*args):
   (X,Y,Z,auxDict) = GetContourData(*args)
   width = 6;
   height = 8;
@@ -547,9 +358,7 @@ def EvolveI(*args):
   rgb = lightS.shade(Z,plt.cm.hot)
   fig = plt.figure(figsize=(width,height))
   ax = plt.subplot(111)
-  #im = ax.imshow(rgb,aspect='auto',interpolation='bicubic')
   im = ax.imshow(rgb,aspect='auto',interpolation='bicubic')
-#  AuxContourLabel(CS,auxDict)
   plt.ion()
   plt.show()
   return True
@@ -591,7 +400,7 @@ def AuxContourLabel(CS,auxDict):
   CS.ax.set_ylabel(xstr)
 
 
-def EvolveB(*args,**kwargs):
+def WaterfallB(*args,**kwargs):
   fileID = '' 
   fileList = []
   if len(args) == 0:
@@ -604,7 +413,7 @@ def EvolveB(*args,**kwargs):
     fileSpec = args[1]
     fileList = GenFileList(fileID,fileSpec) 
   if not fileList:
-    print("Evolve fileList not generated. ")  
+    print("waterfall fileList not generated. ")  
     return False
 
   plotArgs = args[2:]
@@ -629,7 +438,7 @@ def EvolveB(*args,**kwargs):
   fileID,repNum = GetDataFileInfo(fileList[0]) 
   y,z,auxDict = GetData1D(fileID,repNum)
   y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
-  y,z = ProcessEvolvePoints(y,z,50)
+  y,z = ProcessWaterfallPoints(y,z,50)
 
   count = 0; 
   Z = np.zeros((len(y),len(x)))
@@ -637,12 +446,12 @@ def EvolveB(*args,**kwargs):
     fileID,repNum = GetDataFileInfo(file) 
     y,z,auxDict = GetData1D(fileID,repNum)
     y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
-    y,z = ProcessEvolvePoints(y,z,50)
+    y,z = ProcessWaterfallPoints(y,z,50)
     Z[:,count] = z 
     count = count + 1
 
   X,Y = np.meshgrid(x,y)
-  plt.figure(figsize=(float(configs._G['EvolveWidth']),float(configs._G['EvolveHeight'])))
+  plt.figure(figsize=(float(configs._G['WaterfallWidth']),float(configs._G['WaterfallHeight'])))
   CS = plt.contour(X,Y,Z,6,colors='k')
   AuxContourLabel(CS,auxDict)
   plt.clabel(CS,fontsize=9,inline=1,fmt='%0.02e')
@@ -650,7 +459,7 @@ def EvolveB(*args,**kwargs):
   plt.show()
   return True
 
-def EvolveLB(*args,**kwargs):
+def waterfallLog(*args,**kwargs):
   fileID = '' 
   fileList = []
   if len(args) == 0:
@@ -663,7 +472,7 @@ def EvolveLB(*args,**kwargs):
     fileSpec = args[1]
     fileList = GenFileList(fileID,fileSpec) 
   if not fileList:
-    print("Evolve fileList not generated. ")  
+    print("waterfall fileList not generated. ")  
     return False
 
   plotArgs = args[2:]
@@ -688,7 +497,7 @@ def EvolveLB(*args,**kwargs):
   fileID,repNum = GetDataFileInfo(fileList[0]) 
   y,z,auxDict = GetData(fileID,repNum)
   y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
-  y,z = ProcessEvolvePoints(y,z,50)
+  y,z = ProcessWaterfallPoints(y,z,50)
 
   count = 0; 
   Z = np.zeros((len(y),len(x)))
@@ -697,12 +506,12 @@ def EvolveLB(*args,**kwargs):
     y,z,auxDict = GetData1D(fileID,repNum)
     auxDict['decades'] = configs._G['decades']
     y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
-    y,z = ProcessEvolvePoints(y,z,50)
+    y,z = ProcessWaterfallPoints(y,z,50)
     Z[:,count] = z
     count = count + 1
 
   X,Y = np.meshgrid(x,y)
-  plt.figure(figsize=(float(configs._G['EvolveWidth']),float(configs._G['EvolveHeight'])))
+  plt.figure(figsize=(float(configs._G['WaterfallWidth']),float(configs._G['WaterfallHeight'])))
   CS = plt.contour(X,Y,Z,colors = 'k',locator=ticker.LogLocator())
   AuxContourLabel(CS,auxDict)
   plt.clabel(CS,fontsize=9,inline=1,fmt='%0.02e')

@@ -1,10 +1,61 @@
 
 import sys
-from .helper import SetDecadeLimits
+from graphdata.shared.shared import SetDecadeLimits
 from graphdata import plt
 from graphdata import configs
 from graphdata import np
 from matplotlib import ticker
+
+def LoadData1D(fileName):
+  fileList = glob.glob(fileName)
+  if len(fileList) == 0:
+    print('No files detected: ') 
+    print('Files in directory are: ')
+    dirFiles = os.listdir('.')
+    dirFiles = SortNumericStringList(dirFiles)
+    print(fmtcols(dirFiles,1))
+    sys.exit()
+  auxDict = ProcessAux(fileName) 
+  with open(fileName,'rb') as f:
+    data = np.genfromtxt(f,skip_header=len(auxDict))
+    x = data[:,0]; y = data[:,1];
+  return (x,y,auxDict)
+
+def LoadComplexData1D(fileName):
+  fileList = glob.glob(fileName)
+  if len(fileList) == 0:
+    print('No files detected: ') 
+    print('Files in directory are: ')
+    dirFiles = os.listdir('.')
+    dirFiles = SortNumericStringList(dirFiles)
+    print(fmtcols(dirFiles,1))
+    sys.exit()
+  auxDict = ProcessAux(fileName) 
+  with open(fileName) as f:
+    data = np.genfromtxt(f,skip_header=len(auxDict))
+    x = data[:,0]; yr = data[:,1]; yi = data[:,2];
+  return (x,yr,yi,auxDict)
+
+def GetData1D(*arg):
+  if len(arg) < 2:
+    print("GetData1D requires at least two arguments: the fileID and file# ") 
+    return False
+  fileID = arg[0]
+  num = arg[1]
+  fileID = str(fileID)
+  fileName = fileID + '_' + str(num) + '.dat'
+  print(fileName)
+  x,y,auxDict = LoadData1D(fileName)
+  return (x,y,auxDict)
+
+def GetFileData1D(*arg):
+  if len(arg) < 1:
+    print("GetFileData1D requires at least one arguments: the file name ") 
+    return False
+  fileName = str(arg[0])
+  print(fileName)
+  x,y,auxDict = LoadData1D(fileName)
+  return (x,y,auxDict)
 
 def ProcessData1D(x,y,auxDict,**kwargs):
   auxDict = ProcessCmdLineOpts(auxDict,**kwargs)

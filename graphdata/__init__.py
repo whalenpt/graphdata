@@ -35,7 +35,7 @@ newhotmap = mpl.colors.LinearSegmentedColormap('hot',cdict)
 plt.register_cmap(cmap = newhotmap)
 
 
-from .plot import Plot 
+from graphdata.plot import Plot 
 from .plot import PlotH
 from .plot import PlotL 
 from .plot import PlotHL
@@ -48,9 +48,9 @@ from .plot import LogLogF
 from .plot import LogLogHF
 from .movie.plot import PlotM
 from .movie.plot import PlotLM
-from .shared.shared import LoadData1D
-from .shared.shared import LoadData2D
-from .shared.shared import LoadComplexData1D
+from .shared.shared1D import LoadData1D
+from .shared.shared1D import LoadComplexData1D
+from .shared.shared2D import LoadData2D
 from .shared.shared import GenFileList
 from .evolve import Evolve
 from .evolve import EvolveL

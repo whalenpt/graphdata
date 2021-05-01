@@ -1,11 +1,93 @@
 
 import sys
-from pprint import pprint
-from .helper import ProcessAux 
-from .helper import SetDecadeLimits
+import glob
+import os
+from graphdata.shared.shared import ProcessAux, SortNumericStringList,fmtcols,SetDecadeLimits
 from graphdata import plt
 from graphdata import configs 
 from graphdata import np 
+
+def LoadData2D(file):
+  fileList = glob.glob(file)
+  if len(fileList) == 0:
+    print('No files detected: ') 
+    print('Files in directory are: ')
+    dirFiles = os.listdir('.')
+    dirFiles = SortNumericStringList(dirFiles)
+    print(fmtcols(dirFiles,1))
+    sys.exit()
+
+  auxDict = ProcessAux(file) 
+  with open(file) as f:
+    line = f.readline()
+    while(line.startswith('#')):
+      line = f.readline()
+    nD1,nD2 = line.split()
+    nD1 = int(nD1)
+    nD2 = int(nD2)
+    x = []
+    y = []
+    for i in range(nD1):
+      x.append(float(f.readline()))
+    for i in range(nD2):
+      y.append(float(f.readline()))
+    x = np.array(x)
+    y = np.array(y)
+    z = np.genfromtxt(f)
+    shape = (nD1,nD2)
+    z = z.reshape(shape)
+
+  return (x,y,z,auxDict)
+
+def GetData2D(*arg):
+  if len(arg) < 2:
+    print("GetData2D requires at least two arguments: the fileID and file# ") 
+    return False
+  fileID = arg[0]
+  num = arg[1]
+  fileID = str(fileID)
+  fileName = fileID + '_' + str(num) + '.dat'
+  x,y,z,auxDict = LoadData2D(fileName)
+  if len(arg) > 2:
+    auxDict = SetLimits2D(arg[2],auxDict)
+  return (x,y,z,auxDict)
+
+def SetLimits2D(glist,auxDict):
+  if len(glist) > 0:
+    xmin = glist[0] 
+    auxDict['xmin'] = xmin
+  if len(glist) > 1:
+    xmax = glist[1] 
+    auxDict['xmax'] = xmax
+  if len(glist) > 2:
+    ymin = glist[2] 
+    auxDict['ymin'] = ymin
+  if len(glist) > 3:
+    ymax = glist[3] 
+    auxDict['ymax'] = ymax
+  if len(glist) > 4:
+    zmin = glist[4] 
+    auxDict['zmin'] = zmin
+  if len(glist) > 5:
+    zmax = glist[5] 
+    auxDict['zmax'] = zmax
+  return auxDict
+
+def GetDataLog_2D(*arg):
+  if len(arg) < 2:
+    print("GetData2D requires at least two arguments: the fileID and file# ") 
+    return False
+  fileID = arg[0]
+  num = arg[1]
+  fileID = str(fileID)
+  fileName = fileID + '_' + str(num) + '.dat'
+  print(fileName)
+  x,y,z,auxDict = LoadData2D(fileName)
+  if len(arg) > 2:
+    auxDict = SetLimits2D(arg[2],auxDict)
+
+  return (x,y,z,auxDict)
+
 
 def ProcessData2D(x,y,z,auxDict,**kwargs):
   auxDict = ProcessCmdLineOpts(auxDict,**kwargs)
@@ -172,6 +254,87 @@ def AuxContourLabel(CS,auxDict):
       ystr = auxDict['ylabel'] + " [arb.]" 
   CS.ax.set_xlabel(xstr)
   CS.ax.set_ylabel(ystr)
+
+def GetView(**kwargs):
+
+    if 'elev' in kwargs:
+        elev = kwargs['elev']
+    else:
+        elev = int(configs._G['SurfaceElevation'])
+    if 'azim' in kwargs:
+        azim = kwargs['azim']
+    else:
+        azim = int(configs._G['SurfaceAzimuth'])
+    return elev,azim
+
+
+def AuxAxes3DLabel(ax,auxDict):
+  xstr = ""
+  ystr = ""
+  zstr = ""
+  if(configs._G['scale'] == 'nonDim'):
+    if 'xscale_str' in auxDict and 'xlabel' in auxDict:
+      xstr = auxDict['xlabel'] + '(' + auxDict["xscale_str"] + ')' 
+    elif 'xscale_str' not in auxDict and 'xlabel' in auxDict:
+      xstr = auxDict['xlabel'] 
+    if 'pscale_str' in auxDict and 'plabel' in auxDict:
+      ystr = auxDict['plabel'] + '(' + auxDict["pscale_str"] + ')' 
+    elif 'pscale_str' not in auxDict and 'plabel' in auxDict:
+      ystr = auxDict['plabel'] 
+    if 'yscale_str' in auxDict and 'ylabel' in auxDict:
+      zstr =  auxDict['ylabel'] + '(' + auxDict["yscale_str"] + ')' 
+    elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
+      zstr =  auxDict['ylabel'] 
+  elif(configs._G['scale'] == 'noscale'):
+    if 'xunit_str' in auxDict and 'xlabel' in auxDict:
+      xstr = auxDict['xlabel'] + '(' + auxDict["xunit_str"] + ')' 
+    elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
+       xstr = auxDict['xlabel']
+    if 'punit_str' in auxDict and 'plabel' in auxDict:
+      ystr = auxDict['plabel']  + '(' + auxDict["punit_str"] + ')' 
+    elif 'punit_str' not in auxDict and 'plabel' in auxDict:
+      ystr = auxDict['plabel'] 
+    if 'yscale_str' in auxDict and 'ylabel' in auxDict:
+      zstr =  auxDict['ylabel'] + '(' + auxDict["yscale_str"] + ')' 
+    elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
+      zstr =  auxDict['ylabel'] 
+  elif(configs._G['scale'] == 'dimscale'):
+    if 'xunit_str' in auxDict and 'xlabel' in auxDict:
+      xstr = auxDict['xlabel'] + '(' + configs._G['xdimscale_str'] + auxDict["xunit_str"] + ')' 
+    elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
+      xstr = auxDict['xlabel'] + " [arb.]" 
+    if 'punit_str' in auxDict and 'plabel' in auxDict:
+      ystr = auxDict['plabel'] + '(' + configs._G['pdimscale_str'] + auxDict["punit_str"] + ')' 
+    elif 'punit_str' not in auxDict and 'plabel' in auxDict:
+      ystr = ystr + auxDict['plabel'] + " [arb.]" 
+    if 'yunit_str' in auxDict and 'ylabel' in auxDict:
+      zstr = auxDict['ylabel'] + '(' + configs._G['ydimscale_str'] + auxDict["yunit_str"] + ')' 
+    elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
+      zstr = auxDict['ylabel'] + " [arb.]" 
+
+  if 'ylim' in auxDict:
+    ylim = auxDict['ylim']
+    ax.set_zlim3d(ylim)
+
+  xstr = '$' + xstr + '$'
+  ystr = '$' + ystr + '$'
+  zstr = '$' + zstr + '$'
+  ax.set_xlabel(xstr)
+  ax.set_ylabel(ystr)
+  ax.set_zlabel(zstr)
+
+  if 'elev' in auxDict and 'azim' in auxDict:
+    ax.view_init(auxDict['elev'],auxDict['azim'])
+
+  numTicks = int(configs._G['NumberSurfaceTicks'])
+  ax.xaxis.set_major_locator(ticker.LinearLocator(numTicks))
+  ax.yaxis.set_major_locator(ticker.LinearLocator(numTicks))
+  ax.zaxis.set_major_locator(ticker.LinearLocator(4))
+  
+  labelType = str(configs._G['SurfaceTickFormat'])
+  ax.xaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
+  ax.yaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
+  ax.zaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
 
 
 

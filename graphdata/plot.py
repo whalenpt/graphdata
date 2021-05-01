@@ -2,14 +2,13 @@
 from .shared.shared1D import AuxPlotLabel1D 
 from .shared.shared1D import AuxPlotLabelLL1D 
 from .shared.shared1D import ProcessData1D 
+from .shared.shared1D import GetData1D 
+from .shared.shared1D import GetFileData1D 
 from .shared.shared import GenFileList 
-from .shared.shared import GetData1D 
-from .shared.shared import GetFileData1D 
 import os 
 from graphdata import plt
 from graphdata import np 
 from graphdata import configs 
-from pprint import pprint
 
 def Plot(*args,**kwargs):
   """
@@ -46,18 +45,13 @@ def Plot(*args,**kwargs):
 
   
   x,y,auxDict = GetData1D(*args)
-  print(x)
   x,y,auxDict = ProcessData1D(x,y,auxDict,**kwargs)
-  print(x)
   width,height = _PlotSize(**kwargs)
   p = plt.figure(figsize=(width,height))
   configs.DefaultLS()
 
   plt.plot(x,y,configs.LS)
   AuxPlotLabel1D(auxDict)
-  print(x)
-  print(x[0])
-  print(x[-1])
   plt.xlim([x[0],x[-1]])
   if 'legend' in auxDict and configs._G['legend'] == 'on':
     plt.legend([str(auxDict["legend"])],loc='best')
@@ -110,7 +104,6 @@ def PlotH(*args,**kwargs):
 
   x,y,auxDict = GetData1D(*args)
   x,y,auxDict = ProcessData1D(x,y,auxDict,**kwargs)
-#  y = y/1.0e4
   labs = plt.get_figlabels() 
   if "PlotH" not in labs:
     configs.DefaultLS()

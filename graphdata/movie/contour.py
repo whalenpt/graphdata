@@ -1,21 +1,20 @@
 
 import os 
-from .helper import GenMovie
-from .helper import GetDataFileInfo
-from .helper import GenFileList
-from .helper import MovLength
+from graphdata.movie.movaux import GenMovie
+from graphdata.movie.movaux import MovLength
+from graphdata.shared import GenFileList
 import sys 
 from graphdata import plt
 from graphdata import configs 
 from graphdata import np 
-from .contour2D import ContourHF
-from .contour2D import ContourHLF
+from graphdata.contour import ContourHF
+from graphdata.contour import ContourHLF
 
-def ContourFM(*args,**kwargs):
+def ContourfMovie(*args,**kwargs):
   fileList = GenFileList(*args)
   imageList = ProcessMovieF(fileList,**kwargs)
   fileID = args[0]
-  movName = "ContourF_" + str(fileID)
+  movName = "ContourfMovie_" + str(fileID)
   movLength = MovLength(**kwargs)
   GenMovie(imageList,movName,movLength)
 
@@ -23,7 +22,7 @@ def ContourLFM(*args,**kwargs):
   fileList = GenFileList(*args)
   imageList = ProcessMovieLF(fileList,**kwargs)
   fileID = args[0]
-  movName = "ContourLF_" + str(fileID)
+  movName = "ContourfLogMovie_" + str(fileID)
   movLength = MovLength(**kwargs)
   GenMovie(imageList,movName,movLength)
 

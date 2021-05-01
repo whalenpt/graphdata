@@ -1,7 +1,7 @@
 # Filename: shared.py
 
-import shutil 
 import glob
+import shutil 
 import os 
 import string
 import re
@@ -11,91 +11,6 @@ import operator
 from graphdata import plt
 from graphdata import configs 
 from graphdata import np 
-
-# Load Data truncates off imaginary values if present
-def LoadData1D(fileName):
-  fileList = glob.glob(fileName)
-  if len(fileList) == 0:
-    print('No files detected: ') 
-    print('Files in directory are: ')
-    dirFiles = os.listdir('.')
-    dirFiles = SortNumericStringList(dirFiles)
-    print(fmtcols(dirFiles,1))
-    sys.exit()
-  auxDict = ProcessAux(fileName) 
-  with open(fileName,'rb') as f:
-    data = np.genfromtxt(f,skip_header=len(auxDict))
-    x = data[:,0]; y = data[:,1];
-  return (x,y,auxDict)
-
-def LoadData2D(file):
-  fileList = glob.glob(file)
-  if len(fileList) == 0:
-    print('No files detected: ') 
-    print('Files in directory are: ')
-    dirFiles = os.listdir('.')
-    dirFiles = SortNumericStringList(dirFiles)
-    print(fmtcols(dirFiles,1))
-    sys.exit()
-
-  auxDict = ProcessAux(file) 
-  with open(file) as f:
-    line = f.readline()
-    while(line.startswith('#')):
-      line = f.readline()
-    nD1,nD2 = line.split()
-    nD1 = int(nD1)
-    nD2 = int(nD2)
-    x = []
-    y = []
-    for i in range(nD1):
-      x.append(float(f.readline()))
-    for i in range(nD2):
-      y.append(float(f.readline()))
-    x = np.array(x)
-    y = np.array(y)
-    z = np.genfromtxt(f)
-    shape = (nD1,nD2)
-    z = z.reshape(shape)
-
-  return (x,y,z,auxDict)
-
-def LoadData3D(file):
-  fileList = glob.glob(file)
-  if len(fileList) == 0:
-    print('No files detected: ') 
-    print('Files in directory are: ')
-    dirFiles = os.listdir('.')
-    dirFiles = SortNumericStringList(dirFiles)
-    print(fmtcols(dirFiles,1))
-    sys.exit()
-
-  auxDict = ProcessAux(file) 
-  with open(file) as f:
-    line = f.readline()
-    while(line.startswith('#')):
-      line = f.readline()
-    nD1,nD2,nD3 = line.split()
-    nD1 = int(nD1)
-    nD2 = int(nD2)
-    nD3 = int(nD3)
-    x1 = []
-    x2 = []
-    x3 = []
-    for i in range(nD1):
-      x1.append(float(f.readline()))
-    for i in range(nD2):
-      x2.append(float(f.readline()))
-    for i in range(nD3):
-      x3.append(float(f.readline()))
-    x1 = np.array(x1)
-    x2 = np.array(x2)
-    x3 = np.array(x3)
-    z = np.genfromtxt(f)
-    shape = (nD1,nD2,nD3)
-    z = z.reshape(shape)
-
-  return (x1,x2,x3,z,auxDict)
 
 def LoadParams(file):
   paramDict = dict()
@@ -109,67 +24,6 @@ def LoadParams(file):
         paramDict[key] = val
   return paramDict 
 
-def LoadComplexData1D(fileName):
-  fileList = glob.glob(fileName)
-  if len(fileList) == 0:
-    print('No files detected: ') 
-    print('Files in directory are: ')
-    dirFiles = os.listdir('.')
-    dirFiles = SortNumericStringList(dirFiles)
-    print(fmtcols(dirFiles,1))
-    sys.exit()
-  auxDict = ProcessAux(fileName) 
-  with open(fileName) as f:
-    data = np.genfromtxt(f,skip_header=len(auxDict))
-    x = data[:,0]; yr = data[:,1]; yi = data[:,2];
-  return (x,yr,yi,auxDict)
-
-def GenMovie(fileList,movName,movLength,**kwargs):
-  loops = '3'
-  if 'loops' in kwargs:
-    loops = kwargs['loops']
-  str2 = 'mf://' 
-  for nm in fileList:
-    str2 = str2 + nm + ','
-  str2 = str2[0:-1]
-
-  fps = len(fileList)/float(movLength)
-  str4 = 'type=png:w=800:h=600:fps='+ str(fps)
-  strAvi = movName + '.avi'
-  cdc = 'vcodec=' + str(configs._G['movFormat'])
-  command = ['mencoder',str2,'-mf',str4,
-      '-ovc','lavc','-lavcopts',cdc,'-vf','scale=800:600','-oac','copy',
-             '-o',strAvi]
-  print(command)
-  try:
-    subprocess.call(command)
-    cmd = 'mplayer -loop ' + str(loops) + ' ' + strAvi
-    os.system(cmd)
-    print(str(movName) + ".avi generated.") 
-  except:
-    print(str(movName) + ".avi NOT generated.") 
-
-def GetMovieCommand(fileList,movName,movLength):
-  str2 = 'mf://' 
-  for nm in fileList:
-    str2 = str2 + nm + ','
-  str2 = str2[0:-1]
-  fps = len(fileList)/movLength
-  str4 = 'type=png:w=800:h=600:fps='+ str(fps)
-  strAvi = movName + '.avi'
-  cdc = 'vcodec=' + str(configs._G['movFormat'])
-  command = ('mencoder',str2,'-mf',str4,
-             '-ovc','lavc','-lavcopts',cdc,'-oac','copy',
-             '-o',strAvi)
-  print(command)
-  return command
-
-
-def MovLength(**kwargs):
-  movLength = float(configs._G['movLength'])
-  if 'movLen' in kwargs:
-    movLength = kwargs['movLen']
-  return movLength
 
 def GenFileList(*args):
 
@@ -276,28 +130,6 @@ def GenFileList(*args):
       print("Did not recognize number of arguments in GenFileList. ") 
       return False
 
-
-def GetData1D(*arg):
-  if len(arg) < 2:
-    print("GetData1D requires at least two arguments: the fileID and file# ") 
-    return False
-  fileID = arg[0]
-  num = arg[1]
-  fileID = str(fileID)
-  fileName = fileID + '_' + str(num) + '.dat'
-  print(fileName)
-  x,y,auxDict = LoadData1D(fileName)
-  return (x,y,auxDict)
-
-def GetFileData1D(*arg):
-  if len(arg) < 1:
-    print("GetFileData1D requires at least one arguments: the file name ") 
-    return False
-  fileName = str(arg[0])
-  print(fileName)
-  x,y,auxDict = LoadData1D(fileName)
-  return (x,y,auxDict)
-
 def SetDecadeLimits(decades,y):
   ymax = 10.0*np.amax(y)
   ymin = pow(10,-decades-1)*ymax
@@ -316,67 +148,6 @@ def GetDataFileInfo(fileName):
   for i in range(1,len(splitList)-1):
     fileID = fileID + '_' + str(splitList[i])
   return (fileID,repNum)
-
-def GetDataFileInfoS(fileName):
-  splitList = re.split('[.]',fileName)
-  fName = splitList[0]
-  splitList = re.split('[_]',fName)
-  repNum = splitList[-1] 
-  simNum = splitList[-2] 
-  fileID = splitList[0] 
-  for i in range(1,len(splitList)-2):
-    fileID = fileID + '_' + str(splitList[i])
-  return (fileID,repNum,simNum)
-
-def GetData2D(*arg):
-  if len(arg) < 2:
-    print("GetData2D requires at least two arguments: the fileID and file# ") 
-    return False
-  fileID = arg[0]
-  num = arg[1]
-  fileID = str(fileID)
-  fileName = fileID + '_' + str(num) + '.dat'
-  print(fileName)
-  x,y,z,auxDict = LoadData2D(fileName)
-  if len(arg) > 2:
-    auxDict = SetLimits2D(arg[2],auxDict)
-  return (x,y,z,auxDict)
-
-def SetLimits2D(glist,auxDict):
-  if len(glist) > 0:
-    xmin = glist[0] 
-    auxDict['xmin'] = xmin
-  if len(glist) > 1:
-    xmax = glist[1] 
-    auxDict['xmax'] = xmax
-  if len(glist) > 2:
-    ymin = glist[2] 
-    auxDict['ymin'] = ymin
-  if len(glist) > 3:
-    ymax = glist[3] 
-    auxDict['ymax'] = ymax
-  if len(glist) > 4:
-    zmin = glist[4] 
-    auxDict['zmin'] = zmin
-  if len(glist) > 5:
-    zmax = glist[5] 
-    auxDict['zmax'] = zmax
-  return auxDict
-
-def GetDataL_2D(*arg):
-  if len(arg) < 2:
-    print("GetData2D requires at least two arguments: the fileID and file# ") 
-    return False
-  fileID = arg[0]
-  num = arg[1]
-  fileID = str(fileID)
-  fileName = fileID + '_' + str(num) + '.dat'
-  print(fileName)
-  x,y,z,auxDict = LoadData2D(fileName)
-  if len(arg) > 2:
-    auxDict = SetLimits2D(arg[2],auxDict)
-
-  return (x,y,z,auxDict)
 
 def GetRepNums(fileList):
   repNums = set()
