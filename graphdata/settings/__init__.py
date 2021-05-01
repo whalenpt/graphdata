@@ -1,3 +1,3 @@
 
-__all__ = ['pSets','PlotSettings']
+__all__ = ['PlotSettings']
 

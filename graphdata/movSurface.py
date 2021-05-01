@@ -181,7 +181,7 @@ def MovLength(*args):
   if len(args) > 5:
     movLength = float(args[5])
   else:
-    movLength = float(configs.G['movLength'])
+    movLength = float(configs._G['movLength'])
   return movLength
 
 

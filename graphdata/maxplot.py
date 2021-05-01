@@ -82,11 +82,11 @@ def Max(*args):
       yval = np.amax(np.absolute(y))
       yvec.append(yval)
       if "pscale" in auxDict: 
-        if(configs.G["scale"] == 'nonDim'):
+        if(configs._G["scale"] == 'nonDim'):
           xvec.append(float(auxDict['pval'])/float(auxDict['pscale']))
-        elif(configs.G["scale"] == 'dimscale'):
-          xvec.append(float(auxDict['pval'])/float(configs.G['pdimscale']))
-        elif(configs.G["scale"] == 'noscale'):
+        elif(configs._G["scale"] == 'dimscale'):
+          xvec.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
+        elif(configs._G["scale"] == 'noscale'):
           xvec.append(float(auxDict['pval']))
       else:
         xvec.append(repNum)
@@ -162,11 +162,11 @@ def MaxH(*args):
       yval = np.amax(np.absolute(y))
       yvec.append(yval)
       if "pscale" in auxDict: 
-        if(configs.G["scale"] == 'nonDim'):
+        if(configs._G["scale"] == 'nonDim'):
           xvec.append(float(auxDict['pval'])/float(auxDict['pscale']))
-        elif(configs.G["scale"] == 'dimscale'):
-          xvec.append(float(auxDict['pval'])/float(configs.G['pdimscale']))
-        elif(configs.G["scale"] == 'noscale'):
+        elif(configs._G["scale"] == 'dimscale'):
+          xvec.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
+        elif(configs._G["scale"] == 'noscale'):
           xvec.append(float(auxDict['pval']))
       else:
         xvec.append(repNum)
@@ -207,23 +207,23 @@ def MaxH(*args):
 def AuxMaxLabel(auxDict):
   ystr = ""
   zstr = ""
-  if(configs.G['scale'] == 'nonDim'):
+  if(configs._G['scale'] == 'nonDim'):
     if 'pscale_str' in auxDict and 'plabel' in auxDict:
       ystr = ystr + '$' + auxDict['plabel'] + '$' + '[$' + auxDict["pscale_str"] + '$]' 
     if 'yscale_str' in auxDict and 'ylabel' in auxDict:
       zstr = zstr + '$' + auxDict['ylabel'] + '$' + '[$' + auxDict["yscale_str"] + '$]' 
-  elif(configs.G['scale'] == 'noscale'):
+  elif(configs._G['scale'] == 'noscale'):
     if 'punit_str' in auxDict and 'plabel' in auxDict:
       ystr = ystr + auxDict['plabel'] + '[$' + auxDict["punit_str"] + '$]' 
     if 'yunit_str' in auxDict and 'ylabel' in auxDict:
       zstr = zstr + auxDict['ylabel'] + '[$' + auxDict["yunit_str"] + '$]' 
-  elif(configs.G['scale'] == 'dimscale'):
+  elif(configs._G['scale'] == 'dimscale'):
     if 'punit_str' in auxDict and 'plabel' in auxDict:
-      ystr = auxDict['plabel'] + "[$" + configs.G['pdimscale_str'] + auxDict["punit_str"] + "$]" 
+      ystr = auxDict['plabel'] + "[$" + configs._G['pdimscale_str'] + auxDict["punit_str"] + "$]" 
     elif 'plabel' in auxDict:
       ystr = auxDict['plabel'] + " [arb.]" 
     if 'yunit_str' in auxDict and 'ylabel' in auxDict:
-      zstr = zstr + auxDict['ylabel'] + "[$" + configs.G['ydimscale_str'] + auxDict["yunit_str"] + "$]" 
+      zstr = zstr + auxDict['ylabel'] + "[$" + configs._G['ydimscale_str'] + auxDict["yunit_str"] + "$]" 
 
   print(ystr)
   plt.xlabel(ystr)
@@ -245,11 +245,11 @@ def MaxEvolveS(*args):
   for file in fileList:
     auxDict = ProcessAux(file) 
     if "pscale" in auxDict: 
-      if(configs.G["scale"] == 'nonDim'):
+      if(configs._G["scale"] == 'nonDim'):
         y.append(float(auxDict['pval'])/float(auxDict['pscale']))
-      elif(configs.G["scale"] == 'dimscale'):
-        y.append(float(auxDict['pval'])/float(configs.G['pdimscale']))
-      elif(configs.G["scale"] == 'noscale'):
+      elif(configs._G["scale"] == 'dimscale'):
+        y.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
+      elif(configs._G["scale"] == 'noscale'):
         y.append(float(auxDict['pval']))
     else:
       y.append(num)
@@ -305,13 +305,13 @@ def MaxEvolveS(*args):
   ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
-  p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs.G["cmap"]),linewidth=0,antialiased=True,shade=False) 
+  p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs._G["cmap"]),linewidth=0,antialiased=True,shade=False) 
   plt.xlim([x[0],x[-1]])
   plt.ylim([y[0],y[-1]])
 
   ystr = ""
   zstr = ""
-  if(configs.G['scale'] == 'nonDim'):
+  if(configs._G['scale'] == 'nonDim'):
     if 'pscale_str' in auxDict and 'plabel' in auxDict:
       ystr = auxDict['plabel'] + '(' + auxDict["pscale_str"] + ')' 
     elif 'pscale_str' not in auxDict and 'plabel' in auxDict:
@@ -320,7 +320,7 @@ def MaxEvolveS(*args):
       zstr =  auxDict['ylabel'] + '(' + auxDict["yscale_str"] + ')' 
     elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
       zstr =  auxDict['ylabel'] 
-  elif(configs.G['scale'] == 'noscale'):
+  elif(configs._G['scale'] == 'noscale'):
     if 'punit_str' in auxDict and 'plabel' in auxDict:
       ystr = auxDict['plabel']  + '(' + auxDict["punit_str"] + ')' 
     elif 'punit_str' not in auxDict and 'plabel' in auxDict:
@@ -329,13 +329,13 @@ def MaxEvolveS(*args):
       zstr =  auxDict['ylabel'] + '(' + auxDict["yscale_str"] + ')' 
     elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
       zstr =  auxDict['ylabel'] 
-  elif(configs.G['scale'] == 'dimscale'):
+  elif(configs._G['scale'] == 'dimscale'):
     if 'punit_str' in auxDict and 'plabel' in auxDict:
-      ystr = auxDict['plabel'] + '(' + configs.G['pdimscale_str'] + auxDict["punit_str"] + ')' 
+      ystr = auxDict['plabel'] + '(' + configs._G['pdimscale_str'] + auxDict["punit_str"] + ')' 
     elif 'punit_str' not in auxDict and 'plabel' in auxDict:
       ystr = ystr + auxDict['plabel'] + " [arb.]" 
     if 'yunit_str' in auxDict and 'ylabel' in auxDict:
-      zstr = auxDict['ylabel'] + '(' + configs.G['ydimscale_str'] + auxDict["yunit_str"] + ')' 
+      zstr = auxDict['ylabel'] + '(' + configs._G['ydimscale_str'] + auxDict["yunit_str"] + ')' 
     elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
       zstr = auxDict['ylabel'] + " [arb.]" 
 
@@ -352,12 +352,12 @@ def MaxEvolveS(*args):
     ax.view_init(auxDict['angle1'],auxDict['angle2'])
 
   ax.view_init(39,-52)
-  numTicks = int(configs.G['NumberSurfaceTicks'])
+  numTicks = int(configs._G['NumberSurfaceTicks'])
   ax.xaxis.set_major_locator(ticker.LinearLocator(numTicks))
   ax.yaxis.set_major_locator(ticker.LinearLocator(numTicks))
   ax.zaxis.set_major_locator(ticker.LinearLocator(4))
   
-  labelType = str(configs.G['SurfaceTickFormat'])
+  labelType = str(configs._G['SurfaceTickFormat'])
   ax.xaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
   ax.yaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
   ax.zaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
@@ -448,25 +448,25 @@ def MaxMaxEvolveS(*args):
   ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
-  p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs.G["cmap"]),linewidth=0,antialiased=True,shade=False) 
+  p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs._G["cmap"]),linewidth=0,antialiased=True,shade=False) 
 #  plt.xlim([x[0],x[-1]])
 #  plt.ylim([y[0],y[-1]])
 
   ystr = ""
   zstr = ""
-  if(configs.G['scale'] == 'nonDim'):
+  if(configs._G['scale'] == 'nonDim'):
     if 'yscale_str' in auxDict and 'ylabel' in auxDict:
       zstr =  auxDict['ylabel'] + '(' + auxDict["yscale_str"] + ')' 
     elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
       zstr =  auxDict['ylabel'] 
-  elif(configs.G['scale'] == 'noscale'):
+  elif(configs._G['scale'] == 'noscale'):
     if 'yscale_str' in auxDict and 'ylabel' in auxDict:
       zstr =  auxDict['ylabel'] + '(' + auxDict["yscale_str"] + ')' 
     elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
       zstr =  auxDict['ylabel'] 
-  elif(configs.G['scale'] == 'dimscale'):
+  elif(configs._G['scale'] == 'dimscale'):
     if 'yunit_str' in auxDict and 'ylabel' in auxDict:
-      zstr = auxDict['ylabel'] + '(' + configs.G['ydimscale_str'] + auxDict["yunit_str"] + ')' 
+      zstr = auxDict['ylabel'] + '(' + configs._G['ydimscale_str'] + auxDict["yunit_str"] + ')' 
     elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
       zstr = auxDict['ylabel'] + " [arb.]" 
 
@@ -482,12 +482,12 @@ def MaxMaxEvolveS(*args):
     ax.view_init(auxDict['angle1'],auxDict['angle2'])
 
   ax.view_init(39,-52)
-  numTicks = int(configs.G['NumberSurfaceTicks'])
+  numTicks = int(configs._G['NumberSurfaceTicks'])
   ax.xaxis.set_major_locator(ticker.LinearLocator(numTicks))
   ax.yaxis.set_major_locator(ticker.LinearLocator(numTicks))
   ax.zaxis.set_major_locator(ticker.LinearLocator(4))
   
-  labelType = str(configs.G['SurfaceTickFormat'])
+  labelType = str(configs._G['SurfaceTickFormat'])
   ax.xaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
   ax.yaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
   ax.zaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))

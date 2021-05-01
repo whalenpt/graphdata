@@ -44,44 +44,44 @@
 ##  xmin = 0.0
 ##  xmax = 0.0
 ##  if(auxDict['xcordID'] == 'T'):
-##    xmin = float(configs.G["minT"])
-##    xmax = float(configs.G["maxT"])
+##    xmin = float(configs._G["minT"])
+##    xmax = float(configs._G["maxT"])
 ##  elif(auxDict['xcordID'] == 'ST'):
-##    xmin = float(configs.G["minST"])
-##    xmax = float(configs.G["maxST"])
+##    xmin = float(configs._G["minST"])
+##    xmax = float(configs._G["maxST"])
 ##  elif(auxDict['xcordID'] == 'Z'):
-##    xmin = float(configs.G["minZ"])
-##    xmax = float(configs.G["maxZ"])
+##    xmin = float(configs._G["minZ"])
+##    xmax = float(configs._G["maxZ"])
 ##  elif(auxDict['xcordID'] == 'X'):
-##    xmin = float(configs.G["minX"])
-##    xmax = float(configs.G["maxX"])
+##    xmin = float(configs._G["minX"])
+##    xmax = float(configs._G["maxX"])
 ##
 ##  ymin = 0.0
 ##  ymax = 0.0
 ##  if(auxDict['ycordID'] == 'R'):
-##    ymin = float(configs.G["minR"])
-##    ymax = float(configs.G["maxR"])
+##    ymin = float(configs._G["minR"])
+##    ymax = float(configs._G["maxR"])
 ##  elif(auxDict['ycordID'] == 'ST'):
-##    ymin = float(configs.G["minST"])
-##    ymax = float(configs.G["maxST"])
+##    ymin = float(configs._G["minST"])
+##    ymax = float(configs._G["maxST"])
 ##  elif(auxDict['ycordID'] == 'SR'):
-##    ymin = float(configs.G["minSR"])
-##    ymax = float(configs.G["maxSR"])
+##    ymin = float(configs._G["minSR"])
+##    ymax = float(configs._G["maxSR"])
 ##  elif(auxDict['ycordID'] == 'Z'):
-##    ymin = float(configs.G["minZ"])
-##    ymax = float(configs.G["maxZ"])
+##    ymin = float(configs._G["minZ"])
+##    ymax = float(configs._G["maxZ"])
 ##  elif(auxDict['ycordID'] == 'Y'):
-##    ymin = float(configs.G["minY"])
-##    ymax = float(configs.G["maxY"])
+##    ymin = float(configs._G["minY"])
+##    ymax = float(configs._G["maxY"])
 ##
 ##  zmin = 0.0
 ##  zmax = 0.0
 ##  if(auxDict['zcordID'] == 'I'):
 ##    zmin = 0.0
-##    zmax = float(configs.G["maxI"])
+##    zmax = float(configs._G["maxI"])
 ##  elif(auxDict['zcordID'] == 'E'):
-##    zmin = -np.sqrt(float((configs.G["maxI"])))
-##    zmax = np.sqrt(float((configs.G["maxI"])))
+##    zmin = -np.sqrt(float((configs._G["maxI"])))
+##    zmax = np.sqrt(float((configs._G["maxI"])))
 ##  elif(auxDict['zcordID'] == 'AU'):
 ##    zmin = np.amin(z)
 ##    zmax = np.amax(z)
@@ -105,17 +105,17 @@
 ##  nx = len(x)
 ##  indxStep = 1;
 ##  if(auxDict['xcordID'] == 'T'):
-##    if nx > int(configs.G["Nt_2D"]):
-##      indxStep = int(np.ceil(float(nx)/int(configs.G["Nt_2D"])))
+##    if nx > int(configs._G["Nt_2D"]):
+##      indxStep = int(np.ceil(float(nx)/int(configs._G["Nt_2D"])))
 ##  elif(auxDict['xcordID'] == 'X'):
-##    if nx > int(configs.G["Nx_2D"]):
-##      indxStep = int(np.ceil(float(nx)/int(configs.G["Nx_2D"])))
+##    if nx > int(configs._G["Nx_2D"]):
+##      indxStep = int(np.ceil(float(nx)/int(configs._G["Nx_2D"])))
 ##  elif(auxDict['xcordID'] == 'SR'):
-##    if nx > int(configs.G["Nsr_2D"]):
-##      indxStep = int(np.ceil(float(nx)/int(configs.G["Nsr_2D"])))
+##    if nx > int(configs._G["Nsr_2D"]):
+##      indxStep = int(np.ceil(float(nx)/int(configs._G["Nsr_2D"])))
 ##  elif(auxDict['xcordID'] == 'SX'):
-##    if nx > int(configs.G["Nsx_2D"]):
-##      indxStep = int(np.ceil(float(nx)/int(configs.G["Nsx_2D"])))
+##    if nx > int(configs._G["Nsx_2D"]):
+##      indxStep = int(np.ceil(float(nx)/int(configs._G["Nsx_2D"])))
 ##
 ##  x = x[0:nx:indxStep]
 ##  z = z[0:nx:indxStep,:]
@@ -123,17 +123,17 @@
 ##  ny = len(y)
 ##  indxStep = 1;
 ##  if(auxDict['ycordID'] == 'R'):
-##    if ny > int(0.5*int(configs.G["Nr_2D"])):
-##      indxStep = int(np.ceil(float(ny)/int(configs.G["Nr_2D"])))
+##    if ny > int(0.5*int(configs._G["Nr_2D"])):
+##      indxStep = int(np.ceil(float(ny)/int(configs._G["Nr_2D"])))
 ##  elif(auxDict['ycordID'] == 'Y'):
-##    if ny > int(configs.G["Ny_2D"]):
-##      indxStep = int(np.ceil(float(ny)/int(configs.G["Ny_2D"])))
+##    if ny > int(configs._G["Ny_2D"]):
+##      indxStep = int(np.ceil(float(ny)/int(configs._G["Ny_2D"])))
 ##  elif(auxDict['ycordID'] == 'ST'):
-##    if ny > int(configs.G["Nconfigs_2D"]):
-##      indxStep = int(np.ceil(float(ny)/int(configs.G["Nconfigs_2D"])))
+##    if ny > int(configs._G["Nconfigs_2D"]):
+##      indxStep = int(np.ceil(float(ny)/int(configs._G["Nconfigs_2D"])))
 ##  elif(auxDict['ycordID'] == 'SY'):
-##    if ny > int(configs.G["Nsy_2D"]):
-##      indxStep = int(np.ceil(float(ny)/int(configs.G["Nsy_2D"])))
+##    if ny > int(configs._G["Nsy_2D"]):
+##      indxStep = int(np.ceil(float(ny)/int(configs._G["Nsy_2D"])))
 ##
 ##  y = y[0:ny:indxStep];
 ##  z = z[:,0:ny:indxStep]
@@ -145,14 +145,14 @@
 ##
 ##  if(auxDict['logz'] == 'logz'):
 ##    Imax = np.max(z)
-##    mxI = float(configs.G["maxI"])
+##    mxI = float(configs._G["maxI"])
 ##    if(auxDict['zcordID'] == 'AU'):
 ##      z = mxI*z/Imax
-##      indxNew = z < pow(10,float(configs.G["minDec"]))*mxI
-##      z[indxNew] = pow(10,float(configs.G["minDec"]))*mxI
+##      indxNew = z < pow(10,float(configs._G["minDec"]))*mxI
+##      z[indxNew] = pow(10,float(configs._G["minDec"]))*mxI
 ##    else:
-##      indxNew = z < mxI*pow(10,float(configs.G["minDec"]))
-##      z[indxNew] = pow(10,float(configs.G["minDec"]))*mxI
+##      indxNew = z < mxI*pow(10,float(configs._G["minDec"]))
+##      z[indxNew] = pow(10,float(configs._G["minDec"]))*mxI
 ##
 ##
 ##  z = np.transpose(z)
@@ -194,15 +194,15 @@
 #  pprint(auxDict)
 #  z = np.genfromtxt('Zdiconfigsance2D.dat')
 #  numList = np.arange(np.size(z))
-#  indxMax = z/float(auxDict["pscale"]) <= float(configs.G["maxZ"]) 
+#  indxMax = z/float(auxDict["pscale"]) <= float(configs._G["maxZ"]) 
 #  numList = numList[indxMax]
 #  z = z[indxMax]
-#  indxMin =  z/float(auxDict["pscale"]) >= float(configs.G["minZ"]) 
+#  indxMin =  z/float(auxDict["pscale"]) >= float(configs._G["minZ"]) 
 #  numList = numList[indxMin]
 #  z = z[indxMin]
 #  sz = len(numList)
-#  if sz > int(configs.G['mov2D']):
-#    indxStep = round(float(sz)/int(configs.G['mov1D']))
+#  if sz > int(configs._G['mov2D']):
+#    indxStep = round(float(sz)/int(configs._G['mov1D']))
 #    if indxStep == 0:
 #      indxStep = 1
 #    numList = numList[0:sz:indxStep]
@@ -242,7 +242,7 @@
 #  auxDict = ProcessAux(file)
 #  x,y,z = LoadFileData2D(file)
 #  x,y,z,xmin,xmax,ymin,ymax,zmin,zmax = ProcessData2D(x,y,z,auxDict)
-#  if(configs.G["scale"] == 'nonDim'):
+#  if(configs._G["scale"] == 'nonDim'):
 #    if "xscale" in auxDict:
 #      xscale = float(auxDict['xscale'])
 #    if "yscale" in auxDict:
@@ -252,23 +252,23 @@
 #      vmax = zmax
 #    if 'pscale' in auxDict:
 #      pscale = float(auxDict['pscale'])
-#  elif(configs.G["scale"] == 'dimscale'):
+#  elif(configs._G["scale"] == 'dimscale'):
 #    if 'xscale' in auxDict:
 #      if(auxDict['xcordID'] == 'ST'):
-#        xscale = 1.0/float(configs.G['xdimscale'])
+#        xscale = 1.0/float(configs._G['xdimscale'])
 #      else:
-#        xscale = float(configs.G['xdimscale'])
+#        xscale = float(configs._G['xdimscale'])
 #    if 'yscale' in auxDict:
 #      if(auxDict['ycordID'] == 'SR'):
-#        yscale = 1.0/float(configs.G['ydimscale'])
+#        yscale = 1.0/float(configs._G['ydimscale'])
 #      else:
-#        yscale = float(configs.G['ydimscale'])
+#        yscale = float(configs._G['ydimscale'])
 #    if 'zscale' in auxDict:
-#      zscale = float(configs.G['zdimscale'])
+#      zscale = float(configs._G['zdimscale'])
 #      vmax = zmax*float(auxDict['zscale'])/zscale
 #    if 'pscale' in auxDict:
-#      pscale = float(configs.G['pdimscale'])
-#  elif(configs.G["scale"] == 'noscale'):
+#      pscale = float(configs._G['pdimscale'])
+#  elif(configs._G["scale"] == 'noscale'):
 #    if 'zscale' in auxDict:
 #      vmax = zmax*float(auxDict['zscale'])
 #
@@ -287,7 +287,7 @@
 ##  v = np.linspace(vmin,vmax,10,endpoint = 'true')
 ##  pprint(v)
 ##  if 'zscale' in auxDict:
-##    if(configs.G["scale"] == 'nonDim'):
+##    if(configs._G["scale"] == 'nonDim'):
 ##      CB = plt.colorbar(ticks=v,format='%0.2f')
 ##    else:
 ##      CB = plt.colorbar(ticks=v,format='%0.2e')
@@ -306,23 +306,23 @@
 #  xstr = ""
 #  ystr = ""
 ##  zstr = ""
-#  if(configs.G['scale'] == 'nonDim'):
+#  if(configs._G['scale'] == 'nonDim'):
 #    xstr = xstr + auxDict['xlabel'] + '[' + auxDict["xscale_str"] + ']' 
 #    ystr = ystr + auxDict['ylabel'] + '[' + auxDict["yscale_str"] + ']' 
 ##    zstr = zstr + auxDict['zlabel'] + '[' + auxDict["zscale_str"] + ']' 
 ##    plt.zlim([zmin,zmax])
-#  elif(configs.G['scale'] == 'noscale'):
+#  elif(configs._G['scale'] == 'noscale'):
 #    xstr = xstr + auxDict['xlabel'] + '[' + auxDict["xunit_str"] + ']' 
 #    ystr = ystr + auxDict['ylabel'] + '[' + auxDict["yunit_str"] + ']' 
 ##    zstr = zstr + auxDict['zlabel'] + '[' + auxDict["zunit_str"] + ']' 
 ##    plt.zlim([zmin*zscale,zmax*zscale])
-#  elif(configs.G['scale'] == 'dimscale'):
+#  elif(configs._G['scale'] == 'dimscale'):
 #    if 'xscale' in auxDict:
-#      xstr = xstr + auxDict['xlabel'] + "[" + configs.G['xdimscale_str'] + auxDict["xunit_str"] + "]" 
+#      xstr = xstr + auxDict['xlabel'] + "[" + configs._G['xdimscale_str'] + auxDict["xunit_str"] + "]" 
 #    else:
 #      xstr = xstr + auxDict['xlabel'] + " [arb.]" 
 #    if 'yscale' in auxDict:
-#      ystr = auxDict['ylabel'] + "[" + configs.G['ydimscale_str'] + auxDict["yunit_str"] + "]" 
+#      ystr = auxDict['ylabel'] + "[" + configs._G['ydimscale_str'] + auxDict["yunit_str"] + "]" 
 #    else:
 #      ystr = auxDict['ylabel'] + " [arb.]" 
 #
@@ -331,24 +331,24 @@
 #  plt.xlabel(xstr)
 #  plt.ylabel(ystr)
 #
-#  if(configs.G['title'] == 'on'):
+#  if(configs._G['title'] == 'on'):
 #    titstr = ""
 #    if 'title_str' in auxDict:
 #      titstr = titstr + str(auxDict['title_str'])
 #    if 'pval' in auxDict:
-#      if(configs.G["scale"] == 'nonDim'):
+#      if(configs._G["scale"] == 'nonDim'):
 #        val = float(auxDict["pval"])/float(auxDict['pscale']) 
 #        titstr = titstr + str(auxDict['pval']) + ' [$' + str(auxDict['pscale_str']) + '$]'
-#      elif(configs.G["scale"] == 'noscale'):
+#      elif(configs._G["scale"] == 'noscale'):
 #        val = float(auxDict["pval"])
 #        titstr = titstr + str(val) + ' [' + str(auxDict['punit_str']) + ']'
-#      elif(configs.G['scale'] == 'dimscale'):
-#        val = float(auxDict['pval'])/float(configs.G['pdimscale'])
-#        titstr = titstr + str(val) + ' [$' + configs.G['pdimscale_str'] + str(auxDict['punit_str']) + '$]'
+#      elif(configs._G['scale'] == 'dimscale'):
+#        val = float(auxDict['pval'])/float(configs._G['pdimscale'])
+#        titstr = titstr + str(val) + ' [$' + configs._G['pdimscale_str'] + str(auxDict['punit_str']) + '$]'
 #      
 #    plt.title(titstr)
 #     
-##  if(configs.G['legend'] == 'on'):
+##  if(configs._G['legend'] == 'on'):
 ##    plt.legend(title,loc='best')
 #
 ##
@@ -371,16 +371,16 @@
 ##  pprint(auxDict)
 ##  z = np.genfromtxt('Zdiconfigsance1D.dat')
 ##  numList = np.arange(np.size(z))
-##  indxMax = z/float(auxDict["pscale"]) <= float(configs.G["maxZ"]) 
+##  indxMax = z/float(auxDict["pscale"]) <= float(configs._G["maxZ"]) 
 ##  numList = numList[indxMax]
 ##  z = z[indxMax]
-##  indxMin =  z/float(auxDict["pscale"]) >= float(configs.G["minZ"]) 
+##  indxMin =  z/float(auxDict["pscale"]) >= float(configs._G["minZ"]) 
 ##  numList = numList[indxMin]
 ##  z = z[indxMin]
 ##  sz = len(numList)
 ##  print numList
-##  if sz > int(configs.G['mov1D']):
-##    indxStep = np.ceil(sz/int(configs.G['mov1D']))
+##  if sz > int(configs._G['mov1D']):
+##    indxStep = np.ceil(sz/int(configs._G['mov1D']))
 ##    numList = numList[0:sz:indxStep]
 ##  return numList
 ##

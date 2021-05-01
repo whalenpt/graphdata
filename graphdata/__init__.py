@@ -9,10 +9,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 global configs
-from .Settings.settings import PlotSettings
+from .settings.settings import PlotSettings
 configs = PlotSettings()
-from pprint import pprint
-pprint(configs.G)
 
 #rc('text',usetex=True)
 rc('text',usetex=False)
@@ -76,23 +74,6 @@ from .surface import Wire
 from .surface import WireH
 from .movSurface import SurfaceM
 from .movSurface import WireM
-from .converg import Converge
-from .converg import Speed
-from .converg import SpeedH
-from .converg import ConvergeH
-from .converg import ConvergeHRS
-from .converg import ConvergeO
-from .converg import Converge2DH
-from .converg import TableP
-from .converg import TableS
-from .converg import TablePS
-from .optic import FreqToWave1D
-from .optic import FreqToWaveF1D
-from .optic import FreqToWave2D
-from .optic import FreqToWaveF2D
-from .optic import WaveToFreq1D
-from .optic import WaveToFreqF1D
-from .optic import SwapIndx1D
 from .maxplot import Max
 from .maxplot import MaxH
 from .maxplot import MaxEvolveS

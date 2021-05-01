@@ -64,7 +64,7 @@ def ContourF(*args,**kwargs):
   levels,levelTicks,levelTickStr,Z = GetContourLevels(numCont,Z,auxDict) 
   width,height = _ContourSize(**kwargs)
   fig = plt.figure(figsize=(width,height))
-  CS = plt.contourf(X,Y,Z,levels,cmap=str(configs.G["cmap"]))
+  CS = plt.contourf(X,Y,Z,levels,cmap=str(configs._G["cmap"]))
   AuxContourLabel(CS,auxDict)
   CB = plt.colorbar(ticks=levelTicks,format='%0.2e')
   plt.ion()
@@ -130,7 +130,7 @@ def ContourHF(*args,**kwargs):
   levels,levelTicks,levelTickStr,Z = GetContourLevels(numCont,Z,auxDict) 
   CS = plt.figure("ContourHF",figsize=(width,height))
   CS.clf()
-  CS = plt.contourf(X,Y,Z,levels,cmap=str(configs.G["cmap"]))
+  CS = plt.contourf(X,Y,Z,levels,cmap=str(configs._G["cmap"]))
   AuxContourLabel(CS,auxDict)
   CB = plt.colorbar(ticks=levelTicks,format='%0.2e')
   plt.ion()
@@ -224,14 +224,14 @@ def ContourLF(*args,**kwargs):
   """
 
   x,y,Z,auxDict = GetData2D(*args)
-  auxDict['decades'] = configs.G['decades']
+  auxDict['decades'] = configs._G['decades']
   x,y,Z,auxDict = ProcessData2D(x,y,Z,auxDict,**kwargs)
   X,Y = np.meshgrid(x,y)
   width,height = _ContourSize(**kwargs)
   fig = plt.figure(figsize=(width,height))
   decades,numCont = ContNumL(**kwargs)
   levels,levelTicks,levelTickStr,Z = GetContourLevelsL(decades,numCont,Z,auxDict) 
-  CS = plt.contourf(X,Y,Z,levels,cmap=str(configs.G["cmap"]),locator=ticker.LogLocator())
+  CS = plt.contourf(X,Y,Z,levels,cmap=str(configs._G["cmap"]),locator=ticker.LogLocator())
   AuxContourLabel(CS,auxDict)
   CB = plt.colorbar(ticks=levelTicks)
   CB.ax.set_yticklabels(levelTickStr)
@@ -291,7 +291,7 @@ def ContourHLF(*args,**kwargs):
   """
 
   x,y,Z,auxDict = GetData2D(*args)
-  auxDict['decades'] = configs.G['decades']
+  auxDict['decades'] = configs._G['decades']
   x,y,Z,auxDict = ProcessData2D(x,y,Z,auxDict,**kwargs)
   X,Y = np.meshgrid(x,y)
   decades,numCont = ContNumL(**kwargs)
@@ -299,7 +299,7 @@ def ContourHLF(*args,**kwargs):
   levels,levelTicks,levelTickStr,Z = GetContourLevelsL(decades,numCont,Z,auxDict) 
   fig = plt.figure("ContourHLF",figsize=(width,height))
   fig.clf()
-  CS = plt.contourf(X,Y,Z,levels,cmap=str(configs.G["cmap"]),locator=ticker.LogLocator())
+  CS = plt.contourf(X,Y,Z,levels,cmap=str(configs._G["cmap"]),locator=ticker.LogLocator())
   AuxContourLabel(CS,auxDict)
   CB = plt.colorbar(ticks=levelTicks)
   CB.ax.set_yticklabels(levelTickStr)
@@ -347,7 +347,7 @@ def GetContourLevelsL(decades,numCont,Z,auxDict):
   return (levels,levelTick,levelTickStr,Z)
 
 def ContNum(**kwargs):
-  numCont = int(configs.G["contours"])
+  numCont = int(configs._G["contours"])
   if 'contours' in kwargs:
     numCont = kwargs['contours']
   if 'conts' in kwargs:
@@ -355,8 +355,8 @@ def ContNum(**kwargs):
   return numCont
 
 def ContNumL(**kwargs):
-  decades = int(configs.G["decades"])
-  numCont = int(configs.G["contours"])
+  decades = int(configs._G["decades"])
+  numCont = int(configs._G["contours"])
   if 'decades' in kwargs:
     decades = kwargs['decades']
   if 'decs' in kwargs:
@@ -369,8 +369,8 @@ def ContNumL(**kwargs):
 
 def _ContourSize(**kwargs):
 
-  width = float(configs.G['ContourWidth'])
-  height = float(configs.G['ContourHeight'])
+  width = float(configs._G['ContourWidth'])
+  height = float(configs._G['ContourHeight'])
   if 'size' in kwargs:
     array = kwargs['size']
     width = array[0]

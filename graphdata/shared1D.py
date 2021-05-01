@@ -1,6 +1,5 @@
 
 import sys
-from pprint import pprint
 from .helper import SetDecadeLimits
 from graphdata import plt
 from graphdata import configs
@@ -12,11 +11,11 @@ def ProcessData1D(x,y,auxDict,**kwargs):
   if 'mirror horizontal' in auxDict:
       x = np.hstack([np.flipud(-x),x])
       y = np.hstack([np.flipud(y),y])
-  if(configs.G["scale"] == 'nonDim'):
+  if(configs.scale() == 'nonDim'):
       x,y = ProcessNonDimData1D(x,y,auxDict)
-  elif(configs.G["scale"] == 'dimscale'):
+  elif(configs.scale() == 'dimscale'):
       x,y = ProcessScaledData1D(x,y,auxDict)
-  elif(configs.G["scale"] == 'noscale'):
+  elif(configs.scale() == 'noscale'):
       x,y = ProcessNonScaledData1D(x,y,auxDict)
   return (x,y,auxDict)
 
@@ -56,13 +55,13 @@ def ProcessPointsX(x,y,auxDict):
     print('EXITING!')
     sys.exit()
 
-  indxStep = 1;
-  if nx > int(configs.G["Points1D"]):
-    indxStep = int(np.ceil(float(nx)/int(configs.G["Points1D"])))
+  indxStep = 1
+  if nx > int(configs._G["Points1D"]):
+    indxStep = int(np.ceil(float(nx)/int(configs._G["Points1D"])))
     x = x[0:nx:indxStep]
     y = y[0:nx:indxStep]
   else: 
-    xvals = np.linspace(x[0],x[-1],int(configs.G["Points1D"]))
+    xvals = np.linspace(x[0],x[-1],int(configs._G["Points1D"]))
     y = np.interp(xvals,x,y)
     x = xvals
 
@@ -105,9 +104,9 @@ def ProcessNonDimData1D(x,y,auxDict):
   return (x,y)
 
 def ProcessScaledData1D(x,y,auxDict):
-  x = x/float(configs.G["xdimscale"]) 
+  x = x/float(configs._G["xdimscale"]) 
   x,y = ProcessPointsX(x,y,auxDict)
-  y = y/float(configs.G["ydimscale"]) 
+  y = y/float(configs._G["ydimscale"]) 
   x,y = ProcessPointsY(x,y,auxDict)
   return (x,y)
 
@@ -121,7 +120,7 @@ def AuxPlotLabel1D(auxDict):
   ystr = ""
   xlab = ""
   ylab = ""
-  if(configs.G['scale'] == 'nonDim'):
+  if(configs._G['scale'] == 'nonDim'):
     if 'xscale_str' in auxDict and 'xlabel' in auxDict:
       xstr = str(auxDict['xlabel']) + ' (' + auxDict["xscale_str"] + ')' 
     elif 'xscale_str' not in auxDict and 'xlabel' in auxDict:
@@ -130,7 +129,7 @@ def AuxPlotLabel1D(auxDict):
       ystr = ystr + auxDict['ylabel'] + ' (' + auxDict["yscale_str"] + ')' 
     elif 'ylabel' in auxDict:
       ystr = ystr + auxDict['ylabel'] 
-  elif(configs.G['scale'] == 'noscale'):
+  elif(configs._G['scale'] == 'noscale'):
     if 'xunit_str' in auxDict and 'xlabel' in auxDict:
       xstr = auxDict['xlabel'] + ' (' + auxDict["xunit_str"] + ')' 
     elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
@@ -140,14 +139,14 @@ def AuxPlotLabel1D(auxDict):
     elif 'yunit_str' not in auxDict and 'ylabel' in auxDict:
       ystr = auxDict['ylabel'] 
 
-  elif(configs.G['scale'] == 'dimscale'):
+  elif(configs._G['scale'] == 'dimscale'):
     if 'xunit_str' in auxDict and 'xlabel' in auxDict:
       xstr = str(auxDict['xlabel']) + ' (' + \
-      str(configs.G['xdimscale_str']) + str(auxDict["xunit_str"]) + ')' 
+      str(configs._G['xdimscale_str']) + str(auxDict["xunit_str"]) + ')' 
     elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
       xstr = str(auxDict['xlabel']) + ' (arb.)' 
     if 'yunit_str' in auxDict and 'ylabel' in auxDict:
-      ystr = str(auxDict['ylabel']) + ' (' + configs.G['ydimscale_str'] + auxDict["yunit_str"] + ')' 
+      ystr = str(auxDict['ylabel']) + ' (' + configs._G['ydimscale_str'] + auxDict["yunit_str"] + ')' 
     elif 'yunit_str' not in auxDict and 'ylabel' in auxDict:
       ystr = ystr + auxDict['ylabel'] + " [arb.]" 
 
@@ -158,21 +157,21 @@ def AuxPlotLabel1D(auxDict):
   plt.xlabel(xstr)
   plt.ylabel(ystr)
 
-  if(configs.G['title'] == 'on'):
+  if(configs._G['title'] == 'on'):
     titstr = ""
     if 'title_str' in auxDict:
       titstr = titstr + str(auxDict['title_str'])
     if 'pval' in auxDict:
-      if(configs.G["scale"] == 'nonDim' and 'pscale' in auxDict and 'pscale_str' in auxDict):
+      if(configs._G["scale"] == 'nonDim' and 'pscale' in auxDict and 'pscale_str' in auxDict):
         val = float(auxDict["pval"])/float(auxDict['pscale']) 
         titstr = titstr + str("%0.2f" % val) + ' (' + str(auxDict['pscale_str'])  + ')'
-      elif(configs.G["scale"] == 'noscale' and 'punit_str' in auxDict):
+      elif(configs._G["scale"] == 'noscale' and 'punit_str' in auxDict):
         val = float(auxDict["pval"])
         titstr = titstr + str("%0.2f" % val) + ' (' + str(auxDict['punit_str']) + ')'
-      elif(configs.G["scale"] == 'dimscale' and 'punit_str' in auxDict):
-        val = float(auxDict['pval'])/float(configs.G['pdimscale'])
+      elif(configs._G["scale"] == 'dimscale' and 'punit_str' in auxDict):
+        val = float(auxDict['pval'])/float(configs._G['pdimscale'])
         titstr = titstr + str("%0.2f" % val) + ' (' + \
-        str(configs.G['pdimscale_str']) + str(auxDict['punit_str']) + ")"
+        str(configs._G['pdimscale_str']) + str(auxDict['punit_str']) + ")"
     plt.title(titstr)
 
 def AuxPlotLabelLL1D(auxDict):

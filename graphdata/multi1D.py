@@ -79,16 +79,16 @@ def AuxMultiPlot1D(fileList):
       xminVec.append(xmin)
       xmaxVec.append(xmax)
       if "xscale" in auxDict:
-        if(configs.G["scale"] == 'nonDim'):
+        if(configs._G["scale"] == 'nonDim'):
           x = x/float(auxDict["xscale"])
-        elif(configs.G["scale"] == 'dimscale'):
-          x = x/float(configs.G['xdimscale'])
+        elif(configs._G["scale"] == 'dimscale'):
+          x = x/float(configs._G['xdimscale'])
 
       if "yscale" in auxDict:
-        if(configs.G["scale"] == 'nonDim'):
+        if(configs._G["scale"] == 'nonDim'):
           y = y/float(auxDict["yscale"])
-        elif(configs.G["scale"] == 'dimscale'):
-          y = y/float(configs.G['ydimscale'])
+        elif(configs._G["scale"] == 'dimscale'):
+          y = y/float(configs._G['ydimscale'])
       
       plt.plot(x,y,configs.LS[count])
       plt.hold(True) 
@@ -141,16 +141,16 @@ def AuxMultiLogPlot1D(fileList):
       xminVec.append(xmin)
       xmaxVec.append(xmax)
       if "xscale" in auxDict:
-        if(configs.G["scale"] == 'nonDim'):
+        if(configs._G["scale"] == 'nonDim'):
           x = x/float(auxDict["xscale"])
-        elif(configs.G["scale"] == 'dimscale'):
-          x = x/float(configs.G['xdimscale'])
+        elif(configs._G["scale"] == 'dimscale'):
+          x = x/float(configs._G['xdimscale'])
 
       if "yscale" in auxDict:
-        if(configs.G["scale"] == 'nonDim'):
+        if(configs._G["scale"] == 'nonDim'):
           y = y/float(auxDict["yscale"])
-        elif(configs.G["scale"] == 'dimscale'):
-          y = y/float(configs.G['ydimscale'])
+        elif(configs._G["scale"] == 'dimscale'):
+          y = y/float(configs._G['ydimscale'])
       
       plt.semilogy(x,y,configs.LS[count])
       plt.hold(True) 

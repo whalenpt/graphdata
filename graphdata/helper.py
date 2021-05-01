@@ -137,7 +137,7 @@ def GenMovie(fileList,movName,movLength,**kwargs):
   fps = len(fileList)/float(movLength)
   str4 = 'type=png:w=800:h=600:fps='+ str(fps)
   strAvi = movName + '.avi'
-  cdc = 'vcodec=' + str(configs.G['movFormat'])
+  cdc = 'vcodec=' + str(configs._G['movFormat'])
   command = ['mencoder',str2,'-mf',str4,
       '-ovc','lavc','-lavcopts',cdc,'-vf','scale=800:600','-oac','copy',
              '-o',strAvi]
@@ -158,7 +158,7 @@ def GetMovieCommand(fileList,movName,movLength):
   fps = len(fileList)/movLength
   str4 = 'type=png:w=800:h=600:fps='+ str(fps)
   strAvi = movName + '.avi'
-  cdc = 'vcodec=' + str(configs.G['movFormat'])
+  cdc = 'vcodec=' + str(configs._G['movFormat'])
   command = ('mencoder',str2,'-mf',str4,
              '-ovc','lavc','-lavcopts',cdc,'-oac','copy',
              '-o',strAvi)
@@ -167,7 +167,7 @@ def GetMovieCommand(fileList,movName,movLength):
 
 
 def MovLength(**kwargs):
-  movLength = float(configs.G['movLength'])
+  movLength = float(configs._G['movLength'])
   if 'movLen' in kwargs:
     movLength = kwargs['movLen']
   return movLength

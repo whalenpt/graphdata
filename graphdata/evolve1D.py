@@ -83,16 +83,16 @@ def Evolve(*args,**kwargs):
     auxDict = ProcessAux(file) 
     if evoID in auxDict: 
       if evoID == 'pval':
-        if(configs.G["scale"] == 'nonDim' and "pscale" in auxDict):
+        if(configs._G["scale"] == 'nonDim' and "pscale" in auxDict):
           x1.append(float(auxDict['pval'])/float(auxDict['pscale']))
-        elif(configs.G["scale"] == 'dimscale'):
-          x1.append(float(auxDict['pval'])/float(configs.G['pdimscale']))
-        elif(configs.G["scale"] == 'noscale'):
+        elif(configs._G["scale"] == 'dimscale'):
+          x1.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
+        elif(configs._G["scale"] == 'noscale'):
           x1.append(float(auxDict['pval']))
       else:
-        if(configs.G["scale"] == 'dimscale'):
-          x1.append(float(auxDict[evoID])/float(configs.G['pdimscale']))
-        elif(configs.G["scale"] == 'noscale'):
+        if(configs._G["scale"] == 'dimscale'):
+          x1.append(float(auxDict[evoID])/float(configs._G['pdimscale']))
+        elif(configs._G["scale"] == 'noscale'):
           x1.append(float(auxDict[evoID]))
     else:
       x1.append(num)
@@ -101,8 +101,8 @@ def Evolve(*args,**kwargs):
   ymin = np.amin(x1)
   ymax = np.amax(x1)
 
-  width = float(configs.G['EvolveWidth'])
-  height = float(configs.G['EvolveHeight'])
+  width = float(configs._G['EvolveWidth'])
+  height = float(configs._G['EvolveHeight'])
   if 'size' in kwargs:
     array = kwargs['size']
     width = array[0]
@@ -148,31 +148,31 @@ def AuxEvolveLabel(ax,auxDict):
   xstr = ""
   ystr = ""
   zstr = ""
-  if(configs.G['scale'] == 'nonDim'):
+  if(configs._G['scale'] == 'nonDim'):
     if 'xscale_str' in auxDict and 'xlabel' in auxDict:
       xstr = auxDict['xlabel'] + ' (' + auxDict["xscale_str"] + ')' 
     if 'pscale_str' in auxDict and 'plabel' in auxDict:
       ystr = auxDict['plabel'] + ' (' + auxDict["pscale_str"] + ')' 
     if 'yscale_str' in auxDict and 'ylabel' in auxDict:
       zstr = auxDict['ylabel'] + ' (' + auxDict["yscale_str"] + ')' 
-  elif(configs.G['scale'] == 'noscale'):
+  elif(configs._G['scale'] == 'noscale'):
     if 'xunit_str' in auxDict and 'xlabel' in auxDict:
       xstr = auxDict['xlabel'] + ' (' + auxDict["xunit_str"] + ')' 
     if 'punit_str' in auxDict and 'plabel' in auxDict:
       ystr = auxDict['plabel'] + ' (' + auxDict["punit_str"] + ')' 
     if 'yunit_str' in auxDict and 'ylabel' in auxDict:
       zstr = auxDict['ylabel'] + ' (' + auxDict["yunit_str"] + ')' 
-  elif(configs.G['scale'] == 'dimscale'):
+  elif(configs._G['scale'] == 'dimscale'):
     if 'xunit_str' in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] + ' (' + configs.G['xdimscale_str'] + auxDict["xunit_str"] + ')' 
+      xstr = auxDict['xlabel'] + ' (' + configs._G['xdimscale_str'] + auxDict["xunit_str"] + ')' 
     elif 'xlabel' in auxDict:
       xstr = auxDict['xlabel'] + " (arb.)" 
     if 'punit_str' in auxDict and 'plabel' in auxDict:
-      ystr = auxDict['plabel'] + ' (' + configs.G['pdimscale_str'] + auxDict["punit_str"] + ')' 
+      ystr = auxDict['plabel'] + ' (' + configs._G['pdimscale_str'] + auxDict["punit_str"] + ')' 
     elif 'plabel' in auxDict:
       ystr = auxDict['plabel'] + " (arb.)" 
     if 'yunit_str' in auxDict and 'ylabel' in auxDict:
-      zstr = zstr + auxDict['ylabel'] + ' (' + configs.G['zdimscale_str'] + auxDict["yunit_str"] + ')' 
+      zstr = zstr + auxDict['ylabel'] + ' (' + configs._G['zdimscale_str'] + auxDict["yunit_str"] + ')' 
 
   if 'zlim' in auxDict:
     zlim = auxDict['zlim']
@@ -270,11 +270,11 @@ def EvolveL(*args,**kwargs):
   for file in fileList:
     auxDict = ProcessAux(file) 
     if "pscale" in auxDict: 
-      if(configs.G["scale"] == 'nonDim'):
+      if(configs._G["scale"] == 'nonDim'):
         x1.append(float(auxDict['pval'])/float(auxDict['pscale']))
-      elif(configs.G["scale"] == 'dimscale'):
-        x1.append(float(auxDict['pval'])/float(configs.G['pdimscale']))
-      elif(configs.G["scale"] == 'noscale'):
+      elif(configs._G["scale"] == 'dimscale'):
+        x1.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
+      elif(configs._G["scale"] == 'noscale'):
         x1.append(float(auxDict['pval']))
     else:
       x1.append(num)
@@ -283,8 +283,8 @@ def EvolveL(*args,**kwargs):
   ymin = np.amin(x1)
   ymax = np.amax(x1)
 
-  width = float(configs.G['EvolveWidthL'])
-  height = float(configs.G['EvolveHeightL'])
+  width = float(configs._G['EvolveWidthL'])
+  height = float(configs._G['EvolveHeightL'])
   if 'size' in kwargs:
     array = kwargs['size']
     width = array[0]
@@ -299,7 +299,7 @@ def EvolveL(*args,**kwargs):
   for file in fileList:
     fileID,repNum = GetDataFileInfo(file) 
     x,y,auxDict = GetData1D(fileID,repNum)
-    auxDict['decades'] = configs.G['decades']
+    auxDict['decades'] = configs._G['decades']
     x,y,auxDict = ProcessData1D(x,y,auxDict,**kwargs)
     y = np.log10(y)
     ax.plot(x,x1[count]*np.ones_like(x),y,color = 'black')
@@ -329,11 +329,11 @@ def EvolveM(*args,**kwargs):
   for file in fileList:
     auxDict = ProcessAux(file) 
     if "pscale" in auxDict: 
-      if(configs.G["scale"] == 'nonDim'):
+      if(configs._G["scale"] == 'nonDim'):
         x.append(float(auxDict['pval'])/float(auxDict['pscale']))
-      elif(configs.G["scale"] == 'dimscale'):
-        x.append(float(auxDict['pval'])/float(configs.G['pdimscale']))
-      elif(configs.G["scale"] == 'noscale'):
+      elif(configs._G["scale"] == 'dimscale'):
+        x.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
+      elif(configs._G["scale"] == 'noscale'):
         x.append(float(auxDict['pval']))
     else:
       x.append(num)
@@ -363,8 +363,8 @@ def EvolveM(*args,**kwargs):
 
   X,Y = np.meshgrid(y,x)
 
-  width = float(configs.G['EvolveWidth'])
-  height = float(configs.G['EvolveHeight'])
+  width = float(configs._G['EvolveWidth'])
+  height = float(configs._G['EvolveHeight'])
   fig = plt.figure(figsize=(width,height))
   fig.clf()
   ax = fig.add_subplot(1,1,1,projection = '3d')
@@ -388,11 +388,11 @@ def EvolveS(*args,**kwargs):
   for file in fileList:
     auxDict = ProcessAux(file) 
     if "pscale" in auxDict: 
-      if(configs.G["scale"] == 'nonDim'):
+      if(configs._G["scale"] == 'nonDim'):
         x.append(float(auxDict['pval'])/float(auxDict['pscale']))
-      elif(configs.G["scale"] == 'dimscale'):
-        x.append(float(auxDict['pval'])/float(configs.G['pdimscale']))
-      elif(configs.G["scale"] == 'noscale'):
+      elif(configs._G["scale"] == 'dimscale'):
+        x.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
+      elif(configs._G["scale"] == 'noscale'):
         x.append(float(auxDict['pval']))
     else:
       x.append(num)
@@ -428,7 +428,7 @@ def EvolveS(*args,**kwargs):
   ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
-  p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs.G["cmap"]),linewidth=0,antialiased=True,shade=True) 
+  p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs._G["cmap"]),linewidth=0,antialiased=True,shade=True) 
   plt.xlim([y[0],y[-1]])
   plt.ylim([x[0],x[-1]])
   AuxSurfaceLabel(ax,auxDict)
@@ -440,7 +440,7 @@ def AuxSurfaceLabel(ax,auxDict):
   xstr = ""
   ystr = ""
   zstr = ""
-  if(configs.G['scale'] == 'nonDim'):
+  if(configs._G['scale'] == 'nonDim'):
     if 'xscale_str' in auxDict and 'xlabel' in auxDict:
       xstr = auxDict['xlabel'] + '(' + auxDict["xscale_str"] + ')' 
     elif 'xscale_str' not in auxDict and 'xlabel' in auxDict:
@@ -453,7 +453,7 @@ def AuxSurfaceLabel(ax,auxDict):
       zstr =  auxDict['ylabel'] + '(' + auxDict["yscale_str"] + ')' 
     elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
       zstr =  auxDict['ylabel'] 
-  elif(configs.G['scale'] == 'noscale'):
+  elif(configs._G['scale'] == 'noscale'):
     if 'xunit_str' in auxDict and 'xlabel' in auxDict:
       xstr = auxDict['xlabel'] + '(' + auxDict["xunit_str"] + ')' 
     elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
@@ -466,17 +466,17 @@ def AuxSurfaceLabel(ax,auxDict):
       zstr =  auxDict['ylabel'] + '(' + auxDict["yscale_str"] + ')' 
     elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
       zstr =  auxDict['ylabel'] 
-  elif(configs.G['scale'] == 'dimscale'):
+  elif(configs._G['scale'] == 'dimscale'):
     if 'xunit_str' in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] + '(' + configs.G['xdimscale_str'] + auxDict["xunit_str"] + ')' 
+      xstr = auxDict['xlabel'] + '(' + configs._G['xdimscale_str'] + auxDict["xunit_str"] + ')' 
     elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
       xstr = auxDict['xlabel'] + " [arb.]" 
     if 'punit_str' in auxDict and 'plabel' in auxDict:
-      ystr = auxDict['plabel'] + '(' + configs.G['pdimscale_str'] + auxDict["punit_str"] + ')' 
+      ystr = auxDict['plabel'] + '(' + configs._G['pdimscale_str'] + auxDict["punit_str"] + ')' 
     elif 'punit_str' not in auxDict and 'plabel' in auxDict:
       ystr = ystr + auxDict['plabel'] + " [arb.]" 
     if 'yunit_str' in auxDict and 'ylabel' in auxDict:
-      zstr = auxDict['ylabel'] + '(' + configs.G['ydimscale_str'] + auxDict["yunit_str"] + ')' 
+      zstr = auxDict['ylabel'] + '(' + configs._G['ydimscale_str'] + auxDict["yunit_str"] + ')' 
     elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
       zstr = auxDict['ylabel'] + " [arb.]" 
 
@@ -494,12 +494,12 @@ def AuxSurfaceLabel(ax,auxDict):
   if 'angle1' in auxDict and 'angle2' in auxDict:
     ax.view_init(auxDict['angle1'],auxDict['angle2'])
 
-  numTicks = int(configs.G['NumberSurfaceTicks'])
+  numTicks = int(configs._G['NumberSurfaceTicks'])
   ax.xaxis.set_major_locator(ticker.LinearLocator(numTicks))
   ax.yaxis.set_major_locator(ticker.LinearLocator(numTicks))
   ax.zaxis.set_major_locator(ticker.LinearLocator(4))
   
-  labelType = str(configs.G['SurfaceTickFormat'])
+  labelType = str(configs._G['SurfaceTickFormat'])
   ax.xaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
   ax.yaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
   ax.zaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
@@ -523,11 +523,11 @@ def EvolveLS(*args,**kwargs):
   for file in fileList:
     auxDict = ProcessAux(file) 
     if "pscale" in auxDict: 
-      if(configs.G["scale"] == 'nonDim'):
+      if(configs._G["scale"] == 'nonDim'):
         x.append(float(auxDict['pval'])/float(auxDict['pscale']))
-      elif(configs.G["scale"] == 'dimscale'):
-        x.append(float(auxDict['pval'])/float(configs.G['pdimscale']))
-      elif(configs.G["scale"] == 'noscale'):
+      elif(configs._G["scale"] == 'dimscale'):
+        x.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
+      elif(configs._G["scale"] == 'noscale'):
         x.append(float(auxDict['pval']))
     else:
       x.append(num)
@@ -535,7 +535,7 @@ def EvolveLS(*args,**kwargs):
 
   fileID,repNum = GetDataFileInfo(fileList[0]) 
   y,z,auxDict = GetData1D(fileID,repNum)
-  auxDict['decades'] = configs.G['decades']
+  auxDict['decades'] = configs._G['decades']
   y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
   y,z = ProcessEvolvePoints(y,z,120)
 
@@ -549,7 +549,7 @@ def EvolveLS(*args,**kwargs):
   for file in fileList:
     fileID,repNum = GetDataFileInfo(file) 
     y,z,auxDict = GetData1D(fileID,repNum)
-    auxDict['decades'] = configs.G['decades']
+    auxDict['decades'] = configs._G['decades']
     y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
     y,z = ProcessEvolvePoints(y,z,120)
     z = np.log10(z)
@@ -557,7 +557,7 @@ def EvolveLS(*args,**kwargs):
     count = count + 1
 
   X,Y = np.meshgrid(y,x)
-  fig = plt.figure(figsize=(float(configs.G['EvolveWidth']),float(configs.G['EvolveHeight'])))
+  fig = plt.figure(figsize=(float(configs._G['EvolveWidth']),float(configs._G['EvolveHeight'])))
   fig.clf()
   ax = fig.gca(projection='3d')
   surf = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=cm.jet,linewidth=0,antialiased=False) 
@@ -593,11 +593,11 @@ def GetContourData(*args):
   for file in fileList:
     auxDict = ProcessAux(file) 
     if "pscale" in auxDict: 
-      if(configs.G["scale"] == 'nonDim'):
+      if(configs._G["scale"] == 'nonDim'):
         x.append(float(auxDict['pval'])/float(auxDict['pscale']))
-      elif(configs.G["scale"] == 'dimscale'):
-        x.append(float(auxDict['pval'])/float(configs.G['pdimscale']))
-      elif(configs.G["scale"] == 'noscale'):
+      elif(configs._G["scale"] == 'dimscale'):
+        x.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
+      elif(configs._G["scale"] == 'noscale'):
         x.append(float(auxDict['pval']))
     else:
       x.append(num)
@@ -655,7 +655,7 @@ def EvolveI(*args):
 def AuxContourLabel(CS,auxDict):
   xstr = ""
   ystr = ""
-  if(configs.G['scale'] == 'nonDim'):
+  if(configs._G['scale'] == 'nonDim'):
     if 'pscale_str' in auxDict and 'plabel' in auxDict:
       xstr = auxDict['plabel'] + '(' + auxDict["pscale_str"] + ')' 
     elif 'pscale_str' not in auxDict and 'plabel' in auxDict:
@@ -664,7 +664,7 @@ def AuxContourLabel(CS,auxDict):
       ystr = auxDict['xlabel'] + '(' + auxDict["xscale_str"] + ')' 
     elif 'xscale_str' not in auxDict and 'xlabel' in auxDict:
       ystr = auxDict['xlabel'] 
-  elif(configs.G['scale'] == 'noscale'):
+  elif(configs._G['scale'] == 'noscale'):
     if 'punit_str' in auxDict and 'plabel' in auxDict:
       xstr = auxDict['plabel']  + '(' + auxDict["punit_str"] + ')' 
     elif 'punit_str' not in auxDict and 'plabel' in auxDict:
@@ -673,13 +673,13 @@ def AuxContourLabel(CS,auxDict):
       ystr = auxDict['xlabel'] + '(' + auxDict["xunit_str"] + ')' 
     elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
       ystr = auxDict['xlabel']
-  elif(configs.G['scale'] == 'dimscale'):
+  elif(configs._G['scale'] == 'dimscale'):
     if 'punit_str' in auxDict and 'plabel' in auxDict:
-      xstr = auxDict['plabel'] + '(' + configs.G['pdimscale_str'] + auxDict["punit_str"] + ')' 
+      xstr = auxDict['plabel'] + '(' + configs._G['pdimscale_str'] + auxDict["punit_str"] + ')' 
     elif 'punit_str' not in auxDict and 'plabel' in auxDict:
       xstr = ystr + auxDict['plabel'] + " [arb.]" 
     if 'xunit_str' in auxDict and 'xlabel' in auxDict:
-      ystr = auxDict['xlabel'] + '(' + configs.G['xdimscale_str'] + auxDict["xunit_str"] + ')' 
+      ystr = auxDict['xlabel'] + '(' + configs._G['xdimscale_str'] + auxDict["xunit_str"] + ')' 
     elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
       ystr = auxDict['xlabel'] + " [arb.]" 
   xstr = '$' + xstr + '$'
@@ -713,11 +713,11 @@ def EvolveB(*args,**kwargs):
   for file in fileList:
     auxDict = ProcessAux(file) 
     if "pscale" in auxDict: 
-      if(configs.G["scale"] == 'nonDim'):
+      if(configs._G["scale"] == 'nonDim'):
         x.append(float(auxDict['pval'])/float(auxDict['pscale']))
-      elif(configs.G["scale"] == 'dimscale'):
-        x.append(float(auxDict['pval'])/float(configs.G['pdimscale']))
-      elif(configs.G["scale"] == 'noscale'):
+      elif(configs._G["scale"] == 'dimscale'):
+        x.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
+      elif(configs._G["scale"] == 'noscale'):
         x.append(float(auxDict['pval']))
     else:
       x.append(num)
@@ -739,7 +739,7 @@ def EvolveB(*args,**kwargs):
     count = count + 1
 
   X,Y = np.meshgrid(x,y)
-  plt.figure(figsize=(float(configs.G['EvolveWidth']),float(configs.G['EvolveHeight'])))
+  plt.figure(figsize=(float(configs._G['EvolveWidth']),float(configs._G['EvolveHeight'])))
   CS = plt.contour(X,Y,Z,6,colors='k')
   AuxContourLabel(CS,auxDict)
   plt.clabel(CS,fontsize=9,inline=1,fmt='%0.02e')
@@ -772,11 +772,11 @@ def EvolveLB(*args,**kwargs):
   for file in fileList:
     auxDict = ProcessAux(file) 
     if "pscale" in auxDict: 
-      if(configs.G["scale"] == 'nonDim'):
+      if(configs._G["scale"] == 'nonDim'):
         x.append(float(auxDict['pval'])/float(auxDict['pscale']))
-      elif(configs.G["scale"] == 'dimscale'):
-        x.append(float(auxDict['pval'])/float(configs.G['pdimscale']))
-      elif(configs.G["scale"] == 'noscale'):
+      elif(configs._G["scale"] == 'dimscale'):
+        x.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
+      elif(configs._G["scale"] == 'noscale'):
         x.append(float(auxDict['pval']))
     else:
       x.append(num)
@@ -792,14 +792,14 @@ def EvolveLB(*args,**kwargs):
   for file in fileList:
     fileID,repNum = GetDataFileInfo(file) 
     y,z,auxDict = GetData1D(fileID,repNum)
-    auxDict['decades'] = configs.G['decades']
+    auxDict['decades'] = configs._G['decades']
     y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
     y,z = ProcessEvolvePoints(y,z,50)
     Z[:,count] = z
     count = count + 1
 
   X,Y = np.meshgrid(x,y)
-  plt.figure(figsize=(float(configs.G['EvolveWidth']),float(configs.G['EvolveHeight'])))
+  plt.figure(figsize=(float(configs._G['EvolveWidth']),float(configs._G['EvolveHeight'])))
   CS = plt.contour(X,Y,Z,colors = 'k',locator=ticker.LogLocator())
   AuxContourLabel(CS,auxDict)
   plt.clabel(CS,fontsize=9,inline=1,fmt='%0.02e')
@@ -822,8 +822,8 @@ def _SurfaceSize(*args):
       width = figSz[0]
       height = figSz[1]
   else:
-    width = float(configs.G['SurfaceWidth'])
-    height = float(configs.G['SurfaceHeight'])
+    width = float(configs._G['SurfaceWidth'])
+    height = float(configs._G['SurfaceHeight'])
 
   return (width,height) 
 
@@ -832,16 +832,16 @@ def GetView(*args):
     view = args[3]  
     if len(view) ==  1:
       ang1 = view[0] 
-      ang2 = int(configs.G['surfaceAzimuth'])
+      ang2 = int(configs._G['surfaceAzimuth'])
     elif len(view) == 2:
       ang1 = view[0] 
       ang2 = view[1] 
     else:
-      ang1 = int(configs.G['surfaceElevation'])
-      ang2 = int(configs.G['surfaceAzimuth'])
+      ang1 = int(configs._G['surfaceElevation'])
+      ang2 = int(configs._G['surfaceAzimuth'])
   else:
-    ang1 = int(configs.G['surfaceElevation'])
-    ang2 = int(configs.G['surfaceAzimuth'])
+    ang1 = int(configs._G['surfaceElevation'])
+    ang2 = int(configs._G['surfaceAzimuth'])
   return(ang1,ang2)
 
 
@@ -864,10 +864,10 @@ def GetView(*args):
 #    x,z,xmin,xmax,zmin,zmax = ProcessData1D(data[:,0],data[:,1],auxDict)
 #    xlen = len(x)
 #    if "xscale" in auxDict:
-#      if(configs.G["scale"] == 'nonDim'):
+#      if(configs._G["scale"] == 'nonDim'):
 #        x = x/float(auxDict["xscale"])
-#      elif(configs.G["scale"] == 'dimscale'):
-#        x = x/float(configs.G['xdimscale'])
+#      elif(configs._G["scale"] == 'dimscale'):
+#        x = x/float(configs._G['xdimscale'])
 #
 #  if 'pscale' in auxDict:
 #    yscale = float(auxDict['pscale']); 
@@ -882,20 +882,20 @@ def GetView(*args):
 #  for file in fileList:
 #    auxDict = ProcessAux(file) 
 #    if "pscale" in auxDict:
-#      if(configs.G["scale"] == 'nonDim'):
+#      if(configs._G["scale"] == 'nonDim'):
 #        y.append(float(auxDict['pval'])/float(auxDict['pscale']))
-#      elif(configs.G["scale"] == 'dimscale'):
-#        y.append(float(auxDict['pval'])/float(configs.G['pdimscale']))
+#      elif(configs._G["scale"] == 'dimscale'):
+#        y.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
 #    else:
 #      y.append(float(auxDict['pval']))
 #    with open(file) as f:
 #      data = np.genfromtxt(f,skip_header=len(auxDict))
 #      xgarb,ztemp,xmin,xmax,zmin,zmax = ProcessData1D(data[:,0],data[:,1],auxDict)
 #      if "yscale" in auxDict:
-#        if(configs.G["scale"] == 'nonDim'):
+#        if(configs._G["scale"] == 'nonDim'):
 #          ztemp = ztemp/float(auxDict["yscale"])
-#        elif(configs.G["scale"] == 'dimscale'):
-#          ztemp = ztemp/float(configs.G['ydimscale'])
+#        elif(configs._G["scale"] == 'dimscale'):
+#          ztemp = ztemp/float(configs._G['ydimscale'])
 #    Z[count,:] = ztemp 
 #    count = count + 1
 #

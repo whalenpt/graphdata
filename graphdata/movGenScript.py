@@ -10,7 +10,7 @@ str2 = str2[0:-1]
 fps = len(fileList)/movLength
 str4 = 'type=png:w=800:h=600:fps='+ str(fps)
 strAvi = movName + '.avi'
-cdc = 'vcodec=' + str(configs.G['movFormat'])
+cdc = 'vcodec=' + str(configs._G['movFormat'])
 command = ['mencoder',str2,'-mf',str4,
            '-ovc','lavc','-lavcopts',cdc,'-oac','copy',
            '-o',strAvi]

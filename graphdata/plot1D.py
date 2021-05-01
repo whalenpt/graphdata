@@ -59,7 +59,7 @@ def Plot(*args,**kwargs):
   print(x[0])
   print(x[-1])
   plt.xlim([x[0],x[-1]])
-  if 'legend' in auxDict and configs.G['legend'] == 'on':
+  if 'legend' in auxDict and configs._G['legend'] == 'on':
     plt.legend([str(auxDict["legend"])],loc='best')
   plt.ion()
   plt.show()
@@ -99,7 +99,7 @@ def PlotH(*args,**kwargs):
     figSize: [width,height]
       Width and height should be specified in inches. 
       The default figure size is configsored in the settings object under
-      configs.G['PlotWidth'] and configs.G['PlotHeight']
+      configs._G['PlotWidth'] and configs._G['PlotHeight']
 
     lineStyle: colors, e.g. 'k','b','r','g',etc. and
                marker, e.g. '--','-.','.','s','d','o'
@@ -175,7 +175,7 @@ def PlotL(*args,**kwargs):
   """
  
   x,y,auxDict = GetData1D(*args)
-  auxDict['decades'] = configs.G['decades']
+  auxDict['decades'] = configs._G['decades']
   x,y,auxDict = ProcessData1D(x,y,auxDict,**kwargs)
   width,height = _PlotSizeL(**kwargs)
   plt.figure(figsize=(width,height))
@@ -183,7 +183,7 @@ def PlotL(*args,**kwargs):
   plt.semilogy(x,y,configs.LS)
   plt.grid(True)
   AuxPlotLabel1D(auxDict)
-  if 'legend' in auxDict and configs.G['legend'] == 'on':
+  if 'legend' in auxDict and configs._G['legend'] == 'on':
     plt.legend([str(auxDict["legend"])],loc='best')
   
   plt.xlim([x[0],x[-1]])
@@ -232,7 +232,7 @@ def PlotHL(*args,**kwargs):
   """
  
   x,y,auxDict = GetData1D(*args)
-  auxDict['decades'] = configs.G['decades']
+  auxDict['decades'] = configs._G['decades']
   x,y,auxDict = ProcessData1D(x,y,auxDict,**kwargs)
   labs = plt.get_figlabels() 
   if "PlotHL" not in labs:
@@ -294,7 +294,7 @@ def PlotF(*args,**kwargs):
     plt.plot(x,-y,configs.LS)
   AuxPlotLabel1D(auxDict)
   plt.xlim([x[0],x[-1]])
-  if 'legend' in auxDict and configs.G['legend'] == 'on':
+  if 'legend' in auxDict and configs._G['legend'] == 'on':
     plt.legend([str(auxDict["legend"])],loc='best')
   plt.ion()
   plt.show()
@@ -382,7 +382,7 @@ def PlotLF(*args,**kwargs):
   """
  
   x,y,auxDict = GetFileData1D(*args)
-  auxDict['decades'] = configs.G['decades']
+  auxDict['decades'] = configs._G['decades']
   x,y,auxDict = ProcessData1D(x,y,auxDict,**kwargs)
   width,height = _PlotSizeL(**kwargs)
   plt.figure(figsize=(width,height))
@@ -391,7 +391,7 @@ def PlotLF(*args,**kwargs):
   plt.grid(True)
   AuxPlotLabel1D(auxDict)
   plt.xlim([x[0],x[-1]])
-  if 'legend' in auxDict and configs.G['legend'] == 'on':
+  if 'legend' in auxDict and configs._G['legend'] == 'on':
     plt.legend([str(auxDict["legend"])],loc='best')
   plt.ion()
   plt.show()
@@ -425,7 +425,7 @@ def PlotHLF(*args,**kwargs):
   """
  
   x,y,auxDict = GetFileData1D(*args)
-  auxDict['decades'] = configs.G['decades']
+  auxDict['decades'] = configs._G['decades']
   x,y,auxDict = ProcessData1D(x,y,auxDict,**kwargs)
 
 #  y = y/1.0e6
@@ -457,8 +457,8 @@ def PlotHLF(*args,**kwargs):
 
 def _PlotSize(**kwargs):
 
-  width = float(configs.G['PlotWidth'])
-  height = float(configs.G['PlotHeight'])
+  width = float(configs._G['PlotWidth'])
+  height = float(configs._G['PlotHeight'])
   if 'size' in kwargs:
     array = kwargs['size']
     width = array[0]
@@ -467,8 +467,8 @@ def _PlotSize(**kwargs):
   return (width,height) 
 
 def _PlotSizeL(**kwargs):
-  width = float(configs.G['PlotWidthL'])
-  height = float(configs.G['PlotHeightL'])
+  width = float(configs._G['PlotWidthL'])
+  height = float(configs._G['PlotHeightL'])
   if 'size' in kwargs:
     array = kwargs['size']
     width = array[0]
@@ -503,10 +503,10 @@ def LogLogF(*args,**kwargs):
   """
  
   x,y,auxDict = GetFileData(*args)
-  auxDict['decades'] = configs.G['decades']
+  auxDict['decades'] = configs._G['decades']
   x,y,auxDict = ProcessData1D(x,y,auxDict,**kwargs)
-  width = float(configs.G['LogLogWidth'])
-  height = float(configs.G['LogLogHeight'])
+  width = float(configs._G['LogLogWidth'])
+  height = float(configs._G['LogLogHeight'])
   p = plt.figure(figsize=(width,height))
   configs.DefaultLS()
   plt.loglog(x,y,configs.LS)
@@ -543,10 +543,10 @@ def LogLogHF(*args,**kwargs):
   """
  
   x,y,auxDict = GetFileData(*args)
-  auxDict['decades'] = configs.G['decades']
+  auxDict['decades'] = configs._G['decades']
   x,y,auxDict = ProcessData1D(x,y,auxDict,**kwargs)
-  width = float(configs.G['LogLogWidth'])
-  height = float(configs.G['LogLogHeight'])
+  width = float(configs._G['LogLogWidth'])
+  height = float(configs._G['LogLogHeight'])
   labs = plt.get_figlabels() 
 
   if "LogLogHF" not in labs:

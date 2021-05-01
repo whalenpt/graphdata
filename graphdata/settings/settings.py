@@ -1,16 +1,17 @@
-#!/usr/bin/python
-# Filename: configurations.py
+# Filename: settings.py
 
 import os 
 import sys
 import copy
+import json
 from matplotlib import rc,rcParams 
-from pprint import pprint
+from pathlib import Path
 
 class PlotSettings(object):
+  """ Class which holds configuration settings for graphdata."""
 
   def __init__(self):
-    self.LoadSettings()
+    self._G = self.LoadSettings()
     self.LSoptions = {'basic':['k-o','k--d','k-.s','r-o','r--d','r-.s'],\
             'color':['k','r','b','g','c'],\
             'longcolor': ['k','r','b','g','c','k--','r--','b--','g--','c--'],\
@@ -23,16 +24,15 @@ class PlotSettings(object):
             'converge2':['t-p','k-d','f-v','g-*'],\
             'converge3':['r-<','t-p','b-o','c-v'],\
             'converge4':['t-p','k-d','c-v','g-*']}
-    self.LSvec = copy.deepcopy(self.LSoptions[self.G['LSvec']])
-    self.LS = self.LSvec[0] 
-    self.cmapvec = ['hot','jet','bone','gray','binary','gist_yarg']
+    self._LSvec = copy.deepcopy(self.LSoptions[self._G['LSvec']])
+    self.LS = self._LSvec[0] 
+    self._cmapvec = ['hot','jet','bone','gray','binary','gist_yarg']
     self.LegendList = []
-    self.ModeVec = ['basic','paper']
-    self.SetMode(self.G["Mode"])
+    self._ModeVec = ['basic','paper']
+    self.SetMode(self._G["Mode"])
 
-  def LoadSettings(self):
-    self.G = dict()
-    defaultDict = {'Points1D': 100,'PointsX_2D':100,'PointsY_2D':100,\
+  def _LoadDefaultSettings(self):
+    default_dict = {'Points1D': 100,'PointsX_2D':100,'PointsY_2D':100,\
       'scale':'noscale','xdimscale':1.0,'ydimscale':1.0,'zdimscale':1.0,\
       'pdimscale':1.0,'xdimscale_str':'','ydimscale_str':'','zdimscale_str':'',\
       'pdimscale_str':'', 'process data':'on',\
@@ -47,39 +47,51 @@ class PlotSettings(object):
       'EvolveHeight':8,'EvolveWidth':12,'EvolveHeightL':5,'EvolveWidthL':16,\
       'decades':12,\
       'Mode':'basic'}
+    return default_dict
+
+  def LoadSettings(self):
+    """ Internal function which sets configuration dictionary by
+        loading values from $HOME/.configs/graphdata/graphdata.conf or
+        using specified default values.
+
+        OUTPUTS:
+            configs : dict
+                dictionary of configuration values. 
+    """
+    configs = dict()
+    hm = os.environ.get("HOME")
+    pr_dir = os.path.join(hm,'.config','graphdata')
+    pr_file = os.path.join(pr_dir,'settings.conf')
 
     try:
-      hm = os.environ.get("HOME")
-      prFile = hm + "/Code/GraphData3/Settings/graphParams.txt"
-      f = open(prFile)
-      params = f.read() 
-      f.close()
-      for row in params.splitlines():
-        nm,val = row.split(':')
-        val = val.strip() 
-        self.G[nm] = val
-    except:
-      print("graphParams.txt file not found.")
+        with open(pr_file) as f:
+            configs = json.load(f)
+    except IOError as e:
+        configs = self._LoadDefaultSettings()
+        os.makedirs(pr_dir,exist_ok=True)
+        with open(pr_file,'w') as outfile:
+            json.dump(configs,outfile)
 
-    for key in defaultDict:
-      if key not in self.G:
-        self.G[key] = defaultDict[key]
+    return configs
 
+  def scale(self):
+      return self._G['scale']
 
-  def GraphParamStdOut(self):
-    for key in sorted(self.G.keys()):
-      print((key + "\t\t\t\t" + str(self.G[key])))
+  def SettingsDict(self):
+      return self._G
 
-  def GraphParamFileOut(self):
+  def DisplaySettings(self):
+    for key in sorted(self._G.keys()):
+        print((key + ":" + " "*8 + str(self._G[key])))
+
+  def _WriteSettings(self):
+    """ Writes a json configuration file. """
     hm = os.environ.get("HOME")
-    prFile = hm + "/CompletedProjects/Python/GraphData3/Settings/graphParams.txt"
-    f = open(prFile,'w')
-    for key in sorted(self.G.keys()):
-      line = key + ":\t\t\t\t\t\t\t\t" + str(self.G[key]) + "\n"
-      f.write(line)
-    f.close()
+    pr_file = os.path.join(hm,'.config','graphdata','settings.conf')
+    with open(pr_file,'w') as outfile:
+        json.dump(self._G,outfile)
 
-  def ProcessScale(self,scale):
+  def _ProcessScale(self,scale):
     if scale == 'femto' or scale == 'f':
       return ('f',1.0e-15)
     elif scale == 'nano' or scale == 'n':
@@ -100,25 +112,26 @@ class PlotSettings(object):
       return False
 
   def ScaleX(self,scale):
-    scale_str, scale_val = self.ProcessScale(scale)
-    self.G['xdimscale'] = scale_val
-    self.G['xdimscale_str'] = scale_str
-    self.GraphParamFileOut()
+    scale_str, scale_val = self._ProcessScale(scale)
+    self._G['xdimscale'] = scale_val
+    self._G['xdimscale_str'] = scale_str
+    self._WriteSettings()
+    
   def ScaleY(self,scale):
-    scale_str, scale_val = self.ProcessScale(scale)
-    self.G['ydimscale'] = scale_val
-    self.G['ydimscale_str'] = scale_str
-    self.GraphParamFileOut()
+    scale_str, scale_val = self._ProcessScale(scale)
+    self._G['ydimscale'] = scale_val
+    self._G['ydimscale_str'] = scale_str
+    self._WriteSettings()
   def ScaleZ(self,scale):
-    scale_str, scale_val = self.ProcessScale(scale)
-    self.G['zdimscale'] = scale_val
-    self.G['zdimscale_str'] = scale_str
-    self.GraphParamFileOut()
+    scale_str, scale_val = self._ProcessScale(scale)
+    self._G['zdimscale'] = scale_val
+    self._G['zdimscale_str'] = scale_str
+    self._WriteSettings()
   def ScaleP(self,scale):
-    scale_str, scale_val = self.ProcessScale(scale)
-    self.G['pdimscale'] = scale_val
-    self.G['pdimscale_str'] = scale_str
-    self.GraphParamFileOut()
+    scale_str, scale_val = self._ProcessScale(scale)
+    self._G['pdimscale'] = scale_val
+    self._G['pdimscale_str'] = scale_str
+    self._WriteSettings()
 
   def AddLegend(self,name):
     self.LegendList.append(name)
@@ -128,71 +141,71 @@ class PlotSettings(object):
     self.LegendList.append(name)
 
   def ContourSize(self,w,h):
-    self.G["ContourWidth"] = w
-    self.G["ContourHeight"] = h
-    self.GraphParamFileOut()
+    self._G["ContourWidth"] = w
+    self._G["ContourHeight"] = h
+    self._WriteSettings()
 
   def EvolveSize(self,w,h):
-    self.G["EvolveWidth"] = w
-    self.G["EvolveHeight"] = h
-    self.GraphParamFileOut()
+    self._G["EvolveWidth"] = w
+    self._G["EvolveHeight"] = h
+    self._WriteSettings()
 
   def EvolveSizeL(self,w,h):
-    self.G["EvolveWidthL"] = w
-    self.G["EvolveHeightL"] = h
-    self.GraphParamFileOut()
+    self._G["EvolveWidthL"] = w
+    self._G["EvolveHeightL"] = h
+    self._WriteSettings()
 
   def SurfaceSize(self,w,h):
-    self.G["SurfaceWidth"] = w
-    self.G["SurfaceHeight"] = h
-    self.GraphParamFileOut()
+    self._G["SurfaceWidth"] = w
+    self._G["SurfaceHeight"] = h
+    self._WriteSettings()
 
   def PlotSize(self,w,h):
-    self.G["PlotWidth"] = w
-    self.G["PlotHeight"] = h
-    self.GraphParamFileOut()
+    self._G["PlotWidth"] = w
+    self._G["PlotHeight"] = h
+    self._WriteSettings()
 
   def PlotSizeL(self,w,h):
-    self.G["PlotWidthL"] = w
-    self.G["PlotHeightL"] = h
-    self.GraphParamFileOut()
+    self._G["PlotWidthL"] = w
+    self._G["PlotHeightL"] = h
+    self._WriteSettings()
 
   def WireSize(self,w,h):
-    self.G["WireWidth"] = w
-    self.G["WireHeight"] = h
-    self.GraphParamFileOut()
+    self._G["WireWidth"] = w
+    self._G["WireHeight"] = h
+    self._WriteSettings()
 
   def LogLogSize(self,w,h):
-    self.G["LogLogWidth"] = w
-    self.G["LogLogHeight"] = h
-    self.GraphParamFileOut()
+    self._G["LogLogWidth"] = w
+    self._G["LogLogHeight"] = h
+    self._WriteSettings()
 
   def ConvergeSize(self,w,h):
-    self.G["ConvergeWidth"] = w
-    self.G["ConvergeHeight"] = h
-    self.GraphParamFileOut()
+    self._G["ConvergeWidth"] = w
+    self._G["ConvergeHeight"] = h
+    self._WriteSettings()
 
   def ToggleLS(self):
-    print((self.LSvec))
-    item = self.LSvec.pop(0)
-    self.LSvec.append(item)
-    print((self.LSvec))
-    self.LS = self.LSvec[0]
+    print((self._LSvec))
+    item = self._LSvec.pop(0)
+    self._LSvec.append(item)
+    print((self._LSvec))
+    self.LS = self._LSvec[0]
 
   def ToggleCmap(self):
-    item = self.cmapvec.pop(0)
-    self.cmapvec.append(item)
-    self.G["cmap"] = str(self.cmapvec[0])
-    print(("Colormap toggled to " + str(self.G["cmap"])))
-    self.GraphParamFileOut()
+    item = self._cmapvec.pop(0)
+    self._cmapvec.append(item)
+    self._G["cmap"] = str(self._cmapvec[0])
+    print(("Colormap toggled to " + str(self._G["cmap"])))
+    self._WriteSettings()
 
   def SetCmap(self,val):
     """
     Cmap styles:  hot,jet,bone,gray,binary,gist_yarg,etc.
     """
-    self.G["cmap"] = val 
-    print(("Colormap set to " + str(self.G["cmap"])))
-    self.GraphParamFileOut()
+    self._G["cmap"] = val 
+    print(("Colormap set to " + str(self._G["cmap"])))
+    self._WriteSettings()
 
   def SetLS(self,key):
     """
@@ -209,113 +222,113 @@ class PlotSettings(object):
     """
     
     if key in self.LSoptions:
-      self.G['LSvec'] = key
-      self.GraphParamFileOut()
+      self._G['LSvec'] = key
+      self._WriteSettings()
       self.DefaultLS()
     else:
       print("Did not recognize linestyles. Here is a list of the options: ")
       print(('\n'.join("%s:\t\t %s" % (kkey, ','.join(map(str, values))) for kkey, values in list(self.LSoptions.items()))))
 
   def DefaultLS(self):
-    self.LSvec = copy.deepcopy(self.LSoptions[self.G['LSvec']])
-    self.LS = self.LSvec[0] 
+    self._LSvec = copy.deepcopy(self.LSoptions[self._G['LSvec']])
+    self.LS = self._LSvec[0] 
 
   def SetMovieLength(self,num):
-    self.G["movLength"] = num
-    self.GraphParamFileOut()
+    self._G["movLength"] = num
+    self._WriteSettings()
 
   def Decades(self,num):
-    self.G["decades"] = num
-    self.GraphParamFileOut()
+    self._G["decades"] = num
+    self._WriteSettings()
 
   def NumContours(self,num):
-    self.G["contours"] = num
-    self.GraphParamFileOut()
+    self._G["contours"] = num
+    self._WriteSettings()
 
   def SurfaceView(self,num1,num2):
-    self.G["surfaceElevation"] = num1
-    self.G["surfaceAzimuth"] = num2
-    self.GraphParamFileOut()
+    self._G["surfaceElevation"] = num1
+    self._G["surfaceAzimuth"] = num2
+    self._WriteSettings()
 
   def Points1D(self,num):
-    self.G["Points1D"] = num
-    self.GraphParamFileOut()
+    self._G["Points1D"] = num
+    self._WriteSettings()
 
   def Points2D(self,num1,num2):
-    self.G["PointsX_2D"] = num1
-    self.G["PointsY_2D"] = num2
-    self.GraphParamFileOut()
+    self._G["PointsX_2D"] = num1
+    self._G["PointsY_2D"] = num2
+    self._WriteSettings()
 
   def PointsX_2D(self,num):
-    self.G["PointsX_2D"] = num
-    self.GraphParamFileOut()
+    self._G["PointsX_2D"] = num
+    self._WriteSettings()
 
   def PointsY_2D(self,num):
-    self.G["PointsY_2D"] = num
-    self.GraphParamFileOut()
+    self._G["PointsY_2D"] = num
+    self._WriteSettings()
 
   def ScaleSet(self,val):
-    self.G["scale"] = val 
-    self.GraphParamFileOut()
+    self._G["scale"] = val 
+    self._WriteSettings()
 
   def SetNumSurfTicks(self,val):
-    self.G['NumberSurfaceTicks'] = val 
-    self.GraphParamFileOut()
+    self._G['NumberSurfaceTicks'] = val 
+    self._WriteSettings()
 
   def ToggleSurfFormat(self):
-    if(self.G['SurfaceTickFormat'] == '%0.02e'):
-      self.G['SurfaceTickFormat'] = '%0.02f'
+    if(self._G['SurfaceTickFormat'] == '%0.02e'):
+      self._G['SurfaceTickFormat'] = '%0.02f'
     else:
-      self.G['SurfaceTickFormat'] = '%0.02e'
-    self.GraphParamFileOut()
+      self._G['SurfaceTickFormat'] = '%0.02e'
+    self._WriteSettings()
 
 
   def ToggleTitle(self):
-    if(str(self.G['title']) == 'on'):
-      self.G['title'] = 'off'
+    if(str(self._G['title']) == 'on'):
+      self._G['title'] = 'off'
     else:
-      self.G['title'] = 'on'
-    self.GraphParamFileOut()
+      self._G['title'] = 'on'
+    self._WriteSettings()
     print("Title Toggled: ") 
 
   def ToggleLegend(self):
-    if(self.G['legend'] == 'on'):
-      self.G['legend'] = 'off'
+    if(self._G['legend'] == 'on'):
+      self._G['legend'] = 'off'
     else:
-      self.G['legend'] = 'on'
-    self.GraphParamFileOut()
+      self._G['legend'] = 'on'
+    self._WriteSettings()
     print("Legend Toggled: ") 
 
   def ToggleMovFormat(self):
-    if(self.G['movFormat'] == 'mpeg4'):
-      self.G['movFormat'] = 'wmv2'
+    if(self._G['movFormat'] == 'mpeg4'):
+      self._G['movFormat'] = 'wmv2'
     else:
-      self.G['movFormat'] = 'mpeg4'
-    self.GraphParamFileOut()
+      self._G['movFormat'] = 'mpeg4'
+    self._WriteSettings()
 
   def ToggleScale(self):
-    if(str(self.G['scale']) == 'nonDim'):
-      self.G['scale'] = 'noscale'
+    if(str(self._G['scale']) == 'nonDim'):
+      self._G['scale'] = 'noscale'
       print("Scale toggled to noscale")
-    elif(str(self.G['scale']) == 'noscale'):
-      self.G['scale'] = 'dimscale'
+    elif(str(self._G['scale']) == 'noscale'):
+      self._G['scale'] = 'dimscale'
       print("Scale toggled to dimscale")
     else:
-      self.G['scale'] = 'nonDim'
+      self._G['scale'] = 'nonDim'
       print("Scale toggled to non-dimensional scale")
-    self.GraphParamFileOut()
+    self._WriteSettings()
 
   def ToggleProcessData(self):
-    if(str(self.G['process data']) == 'on'):
-      self.G['process data'] = 'off'
+    if(str(self._G['process data']) == 'on'):
+      self._G['process data'] = 'off'
       print("Data will not be processed")
-    elif(str(self.G['process data']) == 'off'):
-      self.G['process data'] = 'on'
+    elif(str(self._G['process data']) == 'off'):
+      self._G['process data'] = 'on'
       print("Data will be processed")
     else:
-      self.G['process data'] = 'on'
+      self._G['process data'] = 'on'
       print("Data will be processed")
-    self.GraphParamFileOut()
+    self._WriteSettings()
 
   def SetMode(self,val):
     """
@@ -325,7 +338,7 @@ class PlotSettings(object):
     """
 
     if val ==  'paper':
-      self.G["Mode"] = 'paper'
+      self._G["Mode"] = 'paper'
 #      font = {'family' : 'sans-serif', 
 #              'sans-serif' : 'Helvetica',
 #              'weight' : 'bold',
@@ -381,10 +394,10 @@ class PlotSettings(object):
       self.SurfaceSize(width,height)
       self.LogLogSize(3.35,1.5)
       self.ConvergeSize(2,2)
-      self.GraphParamFileOut()
+      self._WriteSettings()
 
     elif val ==  'basic':
-      self.G["Mode"] = 'basic'
+      self._G["Mode"] = 'basic'
       font = {'family' : 'sans-serif', 
               'sans-serif' : 'Helvetica',
               'weight' : 'bold',
@@ -415,7 +428,7 @@ class PlotSettings(object):
       self.SurfaceSize(12,8)
       self.LogLogSize(16,5)
       self.SetLS('color')
-      self.GraphParamFileOut()
+      self._WriteSettings()
 
     else:
       print("Did not recognize mode setting")
@@ -427,10 +440,10 @@ class PlotSettings(object):
        basic:    bigger plots for use with presentations/data visualization. 
     """
 
-    item = self.ModeVec.pop(0)
-    self.ModeVec.append(item)
-    self.SetMode(str(self.ModeVec[0]))
-    print(("Mode toggled to " + str(self.ModeVec[0])))
+    item = self._ModeVec.pop(0)
+    self._ModeVec.append(item)
+    self.SetMode(str(self._ModeVec[0]))
+    print(("Mode toggled to " + str(self._ModeVec[0])))
 
 
 

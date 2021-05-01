@@ -76,7 +76,7 @@ def Surface(*args,**kwargs):
   ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
-  p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs.G["cmap"]),linewidth=0,antialiased=True,shade=True) 
+  p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs._G["cmap"]),linewidth=0,antialiased=True,shade=True) 
   AuxSurfaceLabel(ax,ang1,ang2,auxDict)
   plt.ion()
   plt.show()
@@ -143,7 +143,7 @@ def SurfaceH(*args):
   ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
-  p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs.G["cmap"]),linewidth=0,antialiased=True,shade=True) 
+  p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs._G["cmap"]),linewidth=0,antialiased=True,shade=True) 
   AuxSurfaceLabel(ax,ang1,ang2,auxDict)
   plt.ion()
   plt.show()
@@ -289,16 +289,16 @@ def GetView(*args):
     view = args[3]  
     if len(view) ==  1:
       ang1 = view[0] 
-      ang2 = int(configs.G['surfaceAzimuth'])
+      ang2 = int(configs._G['surfaceAzimuth'])
     elif len(view) == 2:
       ang1 = view[0] 
       ang2 = view[1] 
     else:
-      ang1 = int(configs.G['surfaceElevation'])
-      ang2 = int(configs.G['surfaceAzimuth'])
+      ang1 = int(configs._G['surfaceElevation'])
+      ang2 = int(configs._G['surfaceAzimuth'])
   else:
-    ang1 = int(configs.G['surfaceElevation'])
-    ang2 = int(configs.G['surfaceAzimuth'])
+    ang1 = int(configs._G['surfaceElevation'])
+    ang2 = int(configs._G['surfaceAzimuth'])
   return(ang1,ang2)
 
 def _SurfaceSize(*args):
@@ -315,8 +315,8 @@ def _SurfaceSize(*args):
       width = figSz[0]
       height = figSz[1]
   else:
-    width = float(configs.G['SurfaceWidth'])
-    height = float(configs.G['SurfaceHeight'])
+    width = float(configs._G['SurfaceWidth'])
+    height = float(configs._G['SurfaceHeight'])
 
   return (width,height) 
 
@@ -334,8 +334,8 @@ def _WireSize(*args):
       width = figSz[0]
       height = figSz[1]
   else:
-    width = int(configs.G['WireWidth'])
-    height = int(configs.G['WireHeight'])
+    width = int(configs._G['WireWidth'])
+    height = int(configs._G['WireHeight'])
 
   return (width,height) 
 
@@ -343,7 +343,7 @@ def _WireSize(*args):
 
 def AuxSurfaceLabel(ax,ang1,ang2,auxDict):
 
-  numTicks = int(configs.G['NumberSurfaceTicks'])
+  numTicks = int(configs._G['NumberSurfaceTicks'])
   ax.xaxis.set_major_locator(ticker.LinearLocator(numTicks))
   ax.yaxis.set_major_locator(ticker.LinearLocator(numTicks))
 #  ax.zaxis.set_major_locator(ticker.LinearLocator(4))
@@ -351,7 +351,7 @@ def AuxSurfaceLabel(ax,ang1,ang2,auxDict):
   xstr = ""
   ystr = ""
   zstr = ""
-  if(configs.G['scale'] == 'nonDim'):
+  if(configs._G['scale'] == 'nonDim'):
     if 'xscale_str' in auxDict and 'xlabel' in auxDict:
       xstr = auxDict['xlabel'] + '[' + auxDict["xscale_str"] + ']' 
     elif 'xscale_str' not in auxDict and 'xlabel' in auxDict:
@@ -364,12 +364,12 @@ def AuxSurfaceLabel(ax,ang1,ang2,auxDict):
       zstr =  auxDict['zlabel'] + '[' + auxDict["zscale_str"] + ']' 
     elif 'zscale_str' not in auxDict and 'zlabel' in auxDict:
       zstr =  auxDict['zlabel'] 
-#    labelType = str(configs.G['SurfaceTickFormat'])
+#    labelType = str(configs._G['SurfaceTickFormat'])
 #    ax.xaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
 #    ax.yaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
 #    ax.zaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
 
-  elif(configs.G['scale'] == 'noscale'):
+  elif(configs._G['scale'] == 'noscale'):
     if 'xunit_str' in auxDict and 'xlabel' in auxDict:
       xstr = auxDict['xlabel'] + '[' + auxDict["xunit_str"] + ']' 
     elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
@@ -382,7 +382,7 @@ def AuxSurfaceLabel(ax,ang1,ang2,auxDict):
       zstr =  auxDict['zlabel'] + '[' + auxDict["zunit_str"] + ']' 
     elif 'zscale_str' not in auxDict and 'zlabel' in auxDict:
       zstr =  auxDict['zlabel'] 
-    labelType = str(configs.G['SurfaceTickFormat'])
+    labelType = str(configs._G['SurfaceTickFormat'])
 
 #    ax.xaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
 #    ax.yaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
@@ -390,21 +390,21 @@ def AuxSurfaceLabel(ax,ang1,ang2,auxDict):
 #    zfmt = ax.zaxis.get_major_formatter() 
 #    zfmt.set_powerlimits([-1,1])
 
-  elif(configs.G['scale'] == 'dimscale'):
+  elif(configs._G['scale'] == 'dimscale'):
     if 'xunit_str' in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] + "[" + configs.G['xdimscale_str'] + auxDict["xunit_str"] + "]" 
+      xstr = auxDict['xlabel'] + "[" + configs._G['xdimscale_str'] + auxDict["xunit_str"] + "]" 
     elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
       xstr = auxDict['xlabel'] + " [arb.]" 
     if 'yunit_str' in auxDict and 'ylabel' in auxDict:
-      ystr = auxDict['ylabel'] + "[" + configs.G['ydimscale_str'] + auxDict["yunit_str"] + "]" 
+      ystr = auxDict['ylabel'] + "[" + configs._G['ydimscale_str'] + auxDict["yunit_str"] + "]" 
     elif 'yunit_str' not in auxDict and 'ylabel' in auxDict:
       ystr = ystr + auxDict['ylabel'] + " [arb.]" 
     if 'zunit_str' in auxDict and 'zlabel' in auxDict:
-      zstr = auxDict['zlabel'] + "[" + configs.G['zdimscale_str'] + auxDict["zunit_str"] + "]" 
+      zstr = auxDict['zlabel'] + "[" + configs._G['zdimscale_str'] + auxDict["zunit_str"] + "]" 
     elif 'zscale_str' not in auxDict and 'zlabel' in auxDict:
       zstr = auxDict['zlabel'] + " [arb.]" 
 
-#    labelType = str(configs.G['SurfaceTickFormat'])
+#    labelType = str(configs._G['SurfaceTickFormat'])
 #    ax.xaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
 #    ax.yaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
 #    ax.zaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))

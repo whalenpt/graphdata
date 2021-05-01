@@ -14,11 +14,11 @@ def ProcessData2D(x,y,z,auxDict,**kwargs):
     y = x
     x = ty
     z = np.transpose(z)
-  if(configs.G["scale"] == 'nonDim'):
+  if(configs._G["scale"] == 'nonDim'):
     x,y,z = ProcessNonDimData2D(x,y,z,auxDict)
-  elif(configs.G["scale"] == 'dimscale'):
+  elif(configs._G["scale"] == 'dimscale'):
     x,y,z = ProcessScaledData2D(x,y,z,auxDict)
-  elif(configs.G["scale"] == 'noscale'):
+  elif(configs._G["scale"] == 'noscale'):
     x,y,z = ProcessNonScaledData2D(x,y,z,auxDict)
   z = np.transpose(z)
   return (x,y,z,auxDict)
@@ -79,14 +79,14 @@ def ProcessPointsXY(x,y,z,auxDict):
     sys.exit()
 
   indxStep = 1;
-  if nx > int(configs.G["PointsX_2D"]):
-    indxStep = int(np.ceil(float(nx)/int(configs.G["PointsX_2D"])))
+  if nx > int(configs._G["PointsX_2D"]):
+    indxStep = int(np.ceil(float(nx)/int(configs._G["PointsX_2D"])))
   x = x[0:nx:indxStep]
   z = z[0:nx:indxStep,:]
 
   indxStep = 1;
-  if ny > int(configs.G["PointsY_2D"]):
-    indxStep = int(np.ceil(float(ny)/int(configs.G["PointsY_2D"])))
+  if ny > int(configs._G["PointsY_2D"]):
+    indxStep = int(np.ceil(float(ny)/int(configs._G["PointsY_2D"])))
   y = y[0:ny:indxStep];
   z = z[:,0:ny:indxStep]
 
@@ -126,9 +126,9 @@ def ProcessNonDimData2D(x,y,z,auxDict):
 
 def ProcessScaledData2D(x,y,z,auxDict):
 
-  x = x/float(configs.G["xdimscale"]) 
-  y = y/float(configs.G["ydimscale"]) 
-  z = z/float(configs.G["zdimscale"]) 
+  x = x/float(configs._G["xdimscale"]) 
+  y = y/float(configs._G["ydimscale"]) 
+  z = z/float(configs._G["zdimscale"]) 
 
   x,y,z = ProcessPointsXY(x,y,z,auxDict)
   x,y,z = ProcessPointsZ(x,y,z,auxDict)
@@ -143,7 +143,7 @@ def ProcessNonScaledData2D(x,y,z,auxDict):
 def AuxContourLabel(CS,auxDict):
   xstr = ""
   ystr = ""
-  if(configs.G['scale'] == 'nonDim'):
+  if(configs._G['scale'] == 'nonDim'):
     if 'xscale_str' in auxDict and 'xlabel' in auxDict:
       xstr = auxDict['xlabel'] + '[' + auxDict["xscale_str"] + ']' 
     elif 'xscale_str' not in auxDict and 'xlabel' in auxDict:
@@ -152,7 +152,7 @@ def AuxContourLabel(CS,auxDict):
       ystr = auxDict['ylabel'] + '[' + auxDict["yscale_str"] + ']' 
     elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
       ystr = auxDict['ylabel'] 
-  elif(configs.G['scale'] == 'noscale'):
+  elif(configs._G['scale'] == 'noscale'):
     if 'xunit_str' in auxDict and 'xlabel' in auxDict:
       xstr = auxDict['xlabel']  + '[' + auxDict["xunit_str"] + ']' 
     elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
@@ -161,13 +161,13 @@ def AuxContourLabel(CS,auxDict):
       ystr = auxDict['ylabel'] + '[' + auxDict["yunit_str"] + ']' 
     elif 'yunit_str' not in auxDict and 'ylabel' in auxDict:
       ystr = auxDict['ylabel']
-  elif(configs.G['scale'] == 'dimscale'):
+  elif(configs._G['scale'] == 'dimscale'):
     if 'xunit_str' in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] + "[" + configs.G['xdimscale_str'] + auxDict["xunit_str"] + "]" 
+      xstr = auxDict['xlabel'] + "[" + configs._G['xdimscale_str'] + auxDict["xunit_str"] + "]" 
     elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
       xstr = ystr + auxDict['xlabel'] + " [arb.]" 
     if 'yunit_str' in auxDict and 'ylabel' in auxDict:
-      ystr = auxDict['ylabel'] + "[" + configs.G['ydimscale_str'] + auxDict["yunit_str"] + "]" 
+      ystr = auxDict['ylabel'] + "[" + configs._G['ydimscale_str'] + auxDict["yunit_str"] + "]" 
     elif 'yunit_str' not in auxDict and 'ylabel' in auxDict:
       ystr = auxDict['ylabel'] + " [arb.]" 
   CS.ax.set_xlabel(xstr)
