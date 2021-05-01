@@ -1,10 +1,10 @@
 
-from .shared1D import AuxPlotLabel1D 
-from .shared1D import AuxPlotLabelLL1D 
-from .shared1D import ProcessData1D 
-from .helper import GenFileList 
-from .helper import GetData1D 
-from .helper import GetFileData1D 
+from .shared.shared1D import AuxPlotLabel1D 
+from .shared.shared1D import AuxPlotLabelLL1D 
+from .shared.shared1D import ProcessData1D 
+from .shared.shared import GenFileList 
+from .shared.shared import GetData1D 
+from .shared.shared import GetFileData1D 
 import os 
 from graphdata import plt
 from graphdata import np 

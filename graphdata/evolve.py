@@ -7,12 +7,11 @@ from matplotlib.colors import LightSource
 
 from .shared1D import ProcessData1D 
 from pprint import pprint
-from .helper import ProcessAux 
+from .shared import ProcessAux 
 from .helper import GenFileList
 from .helper import GetDataFileInfo
 from .helper import GetData1D 
 from .helper import GenFileList
-from .helper import GenMovie
 from .helper import MovLength
 from graphdata import plt
 from graphdata import configs 
@@ -186,43 +185,6 @@ def AuxEvolveLabel(ax,auxDict):
   ax.set_zlabel(zstr,labelpad = 40)
   ax.view_init(view[0],view[1])
 
-def EvolveR(*args,**kwargs):
-
-# view = [elev,azim]
-  numFiles = 6
-  if len(args) > 2:
-    numFiles = args[2]
-  incr = 360/numFiles
-
-  elev = 57
-  if 'view' in kwargs:
-    view = kwargs['view']
-    elev = view[0]
-    del kwargs['view']
-
-  if 'elev' in kwargs:
-    elev = kwargs['elev']
-
-  kwargs['view'] = [elev,incr]
-  ax = Evolve(*args,**kwargs)
-  ax.axis('off')
-  ax.view_init(elev,0)
-  ax.set_title('view = (' + str(elev) + ',0)')
-  plt.draw()
-  plt.savefig('EvolveR_0.png')
-  imageList = ['EvolveR_0.png']
-
-  for angle in range(incr,360,incr):
-    ax.view_init(elev,angle)
-    ax.set_title('view = (' + str(elev) + ',' + str(angle) + ')')
-    plt.draw()
-    imageFile = 'EvolveR_' + str(angle) + '.png'
-    plt.savefig(imageFile)
-    imageList.append(imageFile)
-
-  print(imageList)
-  movLength = MovLength(**kwargs)
-  GenMovie(imageList,'EvolveR',movLength)
 
 def EvolveL(*args,**kwargs):
   """
@@ -317,65 +279,6 @@ def EvolveL(*args,**kwargs):
   plt.ion()
   plt.show()
   return ax
-
-def EvolveM(*args,**kwargs):
-  fileList = GenFileList(*args)
-  plotArgs = args[2:]
-  fileLen = len(fileList)
-  count = 0
-  auxDict = dict() 
-  x = []
-  num = 0
-  for file in fileList:
-    auxDict = ProcessAux(file) 
-    if "pscale" in auxDict: 
-      if(configs._G["scale"] == 'nonDim'):
-        x.append(float(auxDict['pval'])/float(auxDict['pscale']))
-      elif(configs._G["scale"] == 'dimscale'):
-        x.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
-      elif(configs._G["scale"] == 'noscale'):
-        x.append(float(auxDict['pval']))
-    else:
-      x.append(num)
-      num = num + 1
-
-  fileID,repNum = GetDataFileInfo(fileList[0]) 
-  y,z,auxDict = GetData1D(fileID,repNum)
-  y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
-  y,z = ProcessEvolvePoints(y,z,60)
-
-  if len(args) > 3:
-    view = args[3]  
-    if len(view) > 0:
-      auxDict['angle1'] = view[0]
-    if len(view) > 1:
-      auxDict['angle2'] = view[1]
-
-  count = 0; 
-  Z = np.zeros((len(x),len(y)))
-  for file in fileList:
-    fileID,repNum = GetDataFileInfo(file) 
-    y,z,auxDict = GetData1D(fileID,repNum)
-    y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
-    y,z = ProcessEvolvePoints(y,z,60)
-    Z[count,:] = z 
-    count = count + 1
-
-  X,Y = np.meshgrid(y,x)
-
-  width = float(configs._G['EvolveWidth'])
-  height = float(configs._G['EvolveHeight'])
-  fig = plt.figure(figsize=(width,height))
-  fig.clf()
-  ax = fig.add_subplot(1,1,1,projection = '3d')
-  wframe = ax.plot_wireframe(X, Y, Z, rstride=1, cstride=1,color='black')
-  plt.xlim([x[0],x[-1]])
-  AuxSurfaceLabel(ax,auxDict)
-  plt.ion()
-  plt.show()
-  return True
-
-
 
 def EvolveS(*args,**kwargs):
   fileList = GenFileList(*args)
@@ -843,70 +746,5 @@ def GetView(*args):
     ang1 = int(configs._G['surfaceElevation'])
     ang2 = int(configs._G['surfaceAzimuth'])
   return(ang1,ang2)
-
-
-#def EvolveContour(fileID,evolveNum = 40,simNum = 0):
-#  plt.clf()
-#  configs.DefaultLS()
-#  fileList = GetEvolveFileList(fileID,evolveNum,simNum)
-#  if not fileList:
-#    return False
-#  fileLen = len(fileList)
-#  xmin = 0.0; xmax = 0.0; ymin = 0.0; ymax = 0.0; zmin = 0.0; zmax = 0.0
-#  count = 0; titleList = []; xscale = 1.0; yscale = 1.0; zscale = 1.0 
-#  yminVec = []; ymaxVec = []; xminVec = []; xmaxVec = []; 
-#
-#  auxDict = ProcessAux(fileList[0])
-#  xlen = 0
-#  x = []
-#  with open(fileList[0]) as f:
-#    data = np.genfromtxt(f,skip_header=len(auxDict))
-#    x,z,xmin,xmax,zmin,zmax = ProcessData1D(data[:,0],data[:,1],auxDict)
-#    xlen = len(x)
-#    if "xscale" in auxDict:
-#      if(configs._G["scale"] == 'nonDim'):
-#        x = x/float(auxDict["xscale"])
-#      elif(configs._G["scale"] == 'dimscale'):
-#        x = x/float(configs._G['xdimscale'])
-#
-#  if 'pscale' in auxDict:
-#    yscale = float(auxDict['pscale']); 
-#  if 'xscale' in auxDict:
-#    xscale = float(auxDict['xscale'])
-#  if 'yscale' in auxDict:
-#    zscale = float(auxDict['yscale'])
-#
-#  count = 0; 
-#  y = []
-#  Z = np.zeros((fileLen,xlen))
-#  for file in fileList:
-#    auxDict = ProcessAux(file) 
-#    if "pscale" in auxDict:
-#      if(configs._G["scale"] == 'nonDim'):
-#        y.append(float(auxDict['pval'])/float(auxDict['pscale']))
-#      elif(configs._G["scale"] == 'dimscale'):
-#        y.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
-#    else:
-#      y.append(float(auxDict['pval']))
-#    with open(file) as f:
-#      data = np.genfromtxt(f,skip_header=len(auxDict))
-#      xgarb,ztemp,xmin,xmax,zmin,zmax = ProcessData1D(data[:,0],data[:,1],auxDict)
-#      if "yscale" in auxDict:
-#        if(configs._G["scale"] == 'nonDim'):
-#          ztemp = ztemp/float(auxDict["yscale"])
-#        elif(configs._G["scale"] == 'dimscale'):
-#          ztemp = ztemp/float(configs._G['ydimscale'])
-#    Z[count,:] = ztemp 
-#    count = count + 1
-#
-#
-#  ymin = np.amin(y); ymax = np.amax(y) 
-#  X,Y = np.meshgrid(x,y)
-#  CS = plt.contourf(X,Y,Z)
-#  AuxContourLabel(auxDict,CS,xmin,xmax,ymin,ymax,xscale,yscale)
-#  plt.ion()
-#  plt.show()
-#  return True
-
 
 

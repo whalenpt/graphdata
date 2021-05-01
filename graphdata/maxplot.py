@@ -1,19 +1,10 @@
 
-#from shared1D import AuxPlotLabel1D 
-from .shared1D import ProcessData1D 
-from .helper import GenFileList 
-from .helper import GetData1D 
-from .helper import GetDataFileInfo
-from .helper import GenFileList
-from .helper import ProcessAux
-from .helper import GetSimNums
-from .helper import GetRepFileList
-from .helper import LoadData1D
-from .helper import LoadParams
+from graphdata.shared.shared1D import LoadData1D,ProcessData1D 
+from graphdata.shared.shared import GenFileList,GetDataFileInfo,ProcessAux,GetSimNums,GetRepFileList,LoadParams
 from matplotlib import ticker 
 from mpl_toolkits.mplot3d.axes3d import Axes3D 
 from matplotlib import cm 
-from .plot1D import _PlotSize 
+from graphdata.plot import _PlotSize 
 import os 
 import sys 
 import glob
