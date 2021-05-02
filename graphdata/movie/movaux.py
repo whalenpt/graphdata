@@ -51,4 +51,25 @@ def MovLength(**kwargs):
   return movLength
 
 
+def ProcessMovie(fileList,*args):
+  imageList = []
+  for file in fileList: 
+    fileID,repNum = GetDataFileInfo(file) 
+    SurfaceH(fileID,repNum,*args)
+    imgFile = 'Surface_' + fileID + str(repNum) + '.png'
+    imageList.append(imgFile)
+    plt.savefig(imgFile)
+  plt.close()
+  if not imageList:
+    print("No images generated in ProcessMovie. ")  
+    sys.exit()
+  return imageList
+
+def MovLength(**kwargs):
+  if len(args) > 5:
+    movLength = float(args[5])
+  else:
+    movLength = float(configs._G['movLength'])
+  return movLength
+
 

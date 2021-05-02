@@ -2,37 +2,27 @@
 import os 
 from graphdata.movie.movaux import GenMovie
 from graphdata.movie.movaux import MovLength
-from graphdata.shared import GenFileList
+from graphdata.shared.shared import GenFileList
 import sys 
 from graphdata import plt
 from graphdata import configs 
 from graphdata import np 
-from graphdata.contour import ContourHF
-from graphdata.contour import ContourHLF
+from graphdata.contour import contourf
 
-def ContourfMovie(*args,**kwargs):
+def contourfMovie(*args,**kwargs):
   fileList = GenFileList(*args)
-  imageList = ProcessMovieF(fileList,**kwargs)
+  imageList = ProcessContourfMovie(fileList,**kwargs)
   fileID = args[0]
-  movName = "ContourfMovie_" + str(fileID)
+  movName = "contourfMovie_" + str(fileID)
   movLength = MovLength(**kwargs)
   GenMovie(imageList,movName,movLength)
 
-def ContourLFM(*args,**kwargs):
-  fileList = GenFileList(*args)
-  imageList = ProcessMovieLF(fileList,**kwargs)
-  fileID = args[0]
-  movName = "ContourfLogMovie_" + str(fileID)
-  movLength = MovLength(**kwargs)
-  GenMovie(imageList,movName,movLength)
-
-def ProcessMovieF(fileList,*args,**kwargs):
-
+def ProcessContourfMovie(fileList,*args,**kwargs):
   imageList = []
   confineLayout = True
   for file in fileList: 
     fileID,repNum = GetDataFileInfo(file) 
-    ContourHF(fileID,repNum,*args,**kwargs)
+    contourf(fileID,repNum,*args,overwrite=True,**kwargs)
     imgFile = 'ContourF_' + fileID + '_' + str(repNum) + '.png'
     imageList.append(imgFile)
     plt.savefig(imgFile)
@@ -42,11 +32,19 @@ def ProcessMovieF(fileList,*args,**kwargs):
     sys.exit()
   return imageList
 
-def ProcessMovieLF(fileList,*args,**kwargs):
+def contourfLogMovie(*args,**kwargs):
+  fileList = GenFileList(*args)
+  imageList = ProcessContourfLogMovie(fileList,**kwargs)
+  fileID = args[0]
+  movName = "contourfLogMovie_" + str(fileID)
+  movLength = MovLength(**kwargs)
+  GenMovie(imageList,movName,movLength)
+
+def ProcessContourfLogMovie(fileList,*args,**kwargs):
   imageList = []
   for file in fileList: 
     fileID,repNum = GetDataFileInfo(file) 
-    ContourHLF(fileID,repNum,*args,**kwargs)
+    ContourHLF(fileID,repNum,*args,overwrite=True,**kwargs)
     imgFile = 'ContourLF_' + fileID + '_' + str(repNum) + '.png'
     imageList.append(imgFile)
     plt.savefig(imgFile)

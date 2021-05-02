@@ -73,7 +73,7 @@ def SetLimits2D(glist,auxDict):
     auxDict['zmax'] = zmax
   return auxDict
 
-def GetDataLog_2D(*arg):
+def GetDataLog2D(*arg):
   if len(arg) < 2:
     print("GetData2D requires at least two arguments: the fileID and file# ") 
     return False

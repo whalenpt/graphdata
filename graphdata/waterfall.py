@@ -15,7 +15,7 @@ def waterfall(*args,**kwargs):
   """
   Plots the evolution of 1D data in a mesh-like 3D figure. 
 
-  waterfall(fileID,fileRange,plotLimits,evoID):
+  waterfall(fileID,fileRange,plotLimits,**kwargs):
   Args:
     fileID: ID for data files where files look like fileID_fileNum.dat 
     e.g. if data files for T data are T_0.dat,T_1.dat,T_2.dat,...  then the
@@ -94,14 +94,8 @@ def waterfall(*args,**kwargs):
   ymin = np.amin(x1)
   ymax = np.amax(x1)
 
-  width = float(configs._G['WaterfallWidth'])
-  height = float(configs._G['WaterfallHeight'])
-  if 'size' in kwargs:
-    array = kwargs['size']
-    width = array[0]
-    height = array[1]
-
-  fig = plt.figure(figsize=(width,height))
+  SetWaterfallFigsize(auxDict,**kwargs)
+  fig = plt.figure(figsize=auxDict['figsize'])
   ax = fig.add_subplot(1,1,1,projection = '3d')
   ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
@@ -123,19 +117,33 @@ def waterfall(*args,**kwargs):
     auxDict['zlim'] = ylim
   auxDict['ylim'] = [ymin,ymax]
 
-  if 'view' in kwargs:
-    auxDict['view'] = kwargs['view']
-  else:
-    auxDict['view'] = [57,-57]
-
 
   plt.xlim([x[0],x[-1]])
   plt.ylim([ymin,ymax])
+  SetWaterfallView(auxDict,**kwargs)
   AuxWaterfallLabel(ax,auxDict)
   plt.ion()
   plt.show()
   plt.tight_layout()
   return ax
+
+def SetWaterfallFigsize(auxDict,**kwargs):
+  if 'figsize' in kwargs:
+      auxDict['figsize'] = kwargs['figsize']
+  else:
+      auxDict['figsize'] = (float(configs._G['WaterfallWidth']),float(configs._G['WaterfallHeight']))
+
+
+def SetWaterfallView(auxDict,**kwargs):
+  if 'elev' in kwargs:
+    auxDict['elev'] = kwargs['elev']
+  else:
+    auxDict['elev'] = 57
+  if 'azim' in kwargs:
+    auxDict['azim'] = kwargs['azim']
+  else:
+    auxDict['azim'] = -57 
+
 
 def AuxWaterfallLabel(ax,auxDict):
   xstr = ""
@@ -170,6 +178,7 @@ def AuxWaterfallLabel(ax,auxDict):
   if 'zlim' in auxDict:
     zlim = auxDict['zlim']
     ax.set_zlim3d(zlim)
+
   view = [57,-57]
   if 'view' in auxDict:
     view = auxDict['view']
@@ -239,14 +248,8 @@ def waterfallLog(*args,**kwargs):
   ymin = np.amin(x1)
   ymax = np.amax(x1)
 
-  width = float(configs._G['WaterfallWidthL'])
-  height = float(configs._G['WaterfallHeightL'])
-  if 'size' in kwargs:
-    array = kwargs['size']
-    width = array[0]
-    height = array[1]
-
-  fig = plt.figure(figsize=(width,height))
+  SetWaterfallFigsize(auxDict,**kwargs)
+  fig = plt.figure(figsize=auxDict['figsize'])
   ax = fig.add_subplot(1,1,1,projection = '3d')
   ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
   ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
@@ -269,6 +272,7 @@ def waterfallLog(*args,**kwargs):
   plt.tight_layout()
   plt.xlim([x[0],x[-1]])
   plt.ylim([ymin,ymax])
+  SetWaterfallView(auxDict,**kwargs)
   AuxWaterfallLabel(ax,auxDict)
   plt.ion()
   plt.show()
@@ -459,101 +463,67 @@ def WaterfallB(*args,**kwargs):
   plt.show()
   return True
 
-def waterfallLog(*args,**kwargs):
-  fileID = '' 
-  fileList = []
-  if len(args) == 0:
-    return False
-  elif len(args) == 1:
-    fileID = args[0] 
-    fileList = GenFileList(fileID) 
-  elif len(args) > 1:
-    fileID = args[0] 
-    fileSpec = args[1]
-    fileList = GenFileList(fileID,fileSpec) 
-  if not fileList:
-    print("waterfall fileList not generated. ")  
-    return False
+#def waterfallLog(*args,**kwargs):
+#  fileID = '' 
+#  fileList = []
+#  if len(args) == 0:
+#    return False
+#  elif len(args) == 1:
+#    fileID = args[0] 
+#    fileList = GenFileList(fileID) 
+#  elif len(args) > 1:
+#    fileID = args[0] 
+#    fileSpec = args[1]
+#    fileList = GenFileList(fileID,fileSpec) 
+#  if not fileList:
+#    print("waterfall fileList not generated. ")  
+#    return False
+#
+#  plotArgs = args[2:]
+#  fileLen = len(fileList)
+#  count = 0
+#  auxDict = dict() 
+#  x = []
+#  num = 0
+#  for file in fileList:
+#    auxDict = ProcessAux(file) 
+#    if "pscale" in auxDict: 
+#      if(configs._G["scale"] == 'nonDim'):
+#        x.append(float(auxDict['pval'])/float(auxDict['pscale']))
+#      elif(configs._G["scale"] == 'dimscale'):
+#        x.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
+#      elif(configs._G["scale"] == 'noscale'):
+#        x.append(float(auxDict['pval']))
+#    else:
+#      x.append(num)
+#      num = num + 1
+#
+#  fileID,repNum = GetDataFileInfo(fileList[0]) 
+#  y,z,auxDict = GetData(fileID,repNum)
+#  y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
+#  y,z = ProcessWaterfallPoints(y,z,50)
+#
+#  count = 0; 
+#  Z = np.zeros((len(y),len(x)))
+#  for file in fileList:
+#    fileID,repNum = GetDataFileInfo(file) 
+#    y,z,auxDict = GetData1D(fileID,repNum)
+#    auxDict['decades'] = configs._G['decades']
+#    y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
+#    y,z = ProcessWaterfallPoints(y,z,50)
+#    Z[:,count] = z
+#    count = count + 1
+#
+#  X,Y = np.meshgrid(x,y)
+#  plt.figure(figsize=(float(configs._G['WaterfallWidth']),float(configs._G['WaterfallHeight'])))
+#  CS = plt.contour(X,Y,Z,colors = 'k',locator=ticker.LogLocator())
+#  AuxContourLabel(CS,auxDict)
+#  plt.clabel(CS,fontsize=9,inline=1,fmt='%0.02e')
+#  plt.ion()
+#  plt.show()
+#  return True
+#
 
-  plotArgs = args[2:]
-  fileLen = len(fileList)
-  count = 0
-  auxDict = dict() 
-  x = []
-  num = 0
-  for file in fileList:
-    auxDict = ProcessAux(file) 
-    if "pscale" in auxDict: 
-      if(configs._G["scale"] == 'nonDim'):
-        x.append(float(auxDict['pval'])/float(auxDict['pscale']))
-      elif(configs._G["scale"] == 'dimscale'):
-        x.append(float(auxDict['pval'])/float(configs._G['pdimscale']))
-      elif(configs._G["scale"] == 'noscale'):
-        x.append(float(auxDict['pval']))
-    else:
-      x.append(num)
-      num = num + 1
 
-  fileID,repNum = GetDataFileInfo(fileList[0]) 
-  y,z,auxDict = GetData(fileID,repNum)
-  y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
-  y,z = ProcessWaterfallPoints(y,z,50)
-
-  count = 0; 
-  Z = np.zeros((len(y),len(x)))
-  for file in fileList:
-    fileID,repNum = GetDataFileInfo(file) 
-    y,z,auxDict = GetData1D(fileID,repNum)
-    auxDict['decades'] = configs._G['decades']
-    y,z,auxDict = ProcessData1D(y,z,auxDict,**kwargs)
-    y,z = ProcessWaterfallPoints(y,z,50)
-    Z[:,count] = z
-    count = count + 1
-
-  X,Y = np.meshgrid(x,y)
-  plt.figure(figsize=(float(configs._G['WaterfallWidth']),float(configs._G['WaterfallHeight'])))
-  CS = plt.contour(X,Y,Z,colors = 'k',locator=ticker.LogLocator())
-  AuxContourLabel(CS,auxDict)
-  plt.clabel(CS,fontsize=9,inline=1,fmt='%0.02e')
-  plt.ion()
-  plt.show()
-  return True
-
-
-def _SurfaceSize(*args):
-
-  if len(args) > 4:
-    figSz = args[4]
-    if isinstance(figSz,int):
-      width = figSz
-      height = figSz
-    elif len(figSz) == 1:
-      width = figSz[0]
-      height = figSz[0]
-    elif len(figSz) == 2:
-      width = figSz[0]
-      height = figSz[1]
-  else:
-    width = float(configs._G['SurfaceWidth'])
-    height = float(configs._G['SurfaceHeight'])
-
-  return (width,height) 
-
-def GetView(*args):
-  if len(args) > 3:
-    view = args[3]  
-    if len(view) ==  1:
-      ang1 = view[0] 
-      ang2 = int(configs._G['surfaceAzimuth'])
-    elif len(view) == 2:
-      ang1 = view[0] 
-      ang2 = view[1] 
-    else:
-      ang1 = int(configs._G['surfaceElevation'])
-      ang2 = int(configs._G['surfaceAzimuth'])
-  else:
-    ang1 = int(configs._G['surfaceElevation'])
-    ang2 = int(configs._G['surfaceAzimuth'])
-  return(ang1,ang2)
 
 

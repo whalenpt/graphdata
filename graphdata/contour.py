@@ -8,7 +8,7 @@ from graphdata import plt
 from graphdata import configs 
 from graphdata import np 
 
-def contourf(*args,**kwargs,overwrite=False):
+def contourf(*args,overwrite=False,**kwargs):
   """
   Color contour plot of 2D data. 
 
@@ -115,7 +115,7 @@ def GetContourLevels(numCont,Z,auxDict):
   return (levels,levelTick,levelTickStr,Z)
 
 
-def contourfLog(*args,**kwargs,overwrite=False):
+def contourfLog(*args,overwrite=False,**kwargs):
   """
   Log color contour plot of 2D data. 
 

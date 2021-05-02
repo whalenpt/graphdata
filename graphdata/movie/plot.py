@@ -8,15 +8,13 @@ from graphdata.shared.shared import GenFileList
 from graphdata import plt
 from graphdata import configs 
 from graphdata import np 
-from graphdata.plot import PlotH 
-from graphdata.plot import PlotHL
+from graphdata.plot import plot
 
-
-def PlotM(*args,**kwargs):
+def plotMovie(*args,**kwargs):
   """
   Movie consisting of a sequence of 1D x-y graphs. 
 
-  PlotM(fileID,fileRange,opts): 
+  plotMovie(fileID,fileRange,opts): 
 
   fileID: ID for data files where files look like fileID_fileNum.dat e.g. if
   data files for T data are T_0.dat,T_1.dat,T_2.dat,...  then the fileID is
@@ -56,15 +54,15 @@ def PlotM(*args,**kwargs):
   specified then a default value will be used. This default value is set
   in 
      
-  e.g. PlotM('T',[10,0,60],lim=[0,1,-10,10]) will produce a 1D Movie with 10
+  e.g. plotMovie('T',[10,0,60],lim=[0,1,-10,10]) will produce a 1D Movie with 10
   (input,output) data pairs starting with T_0.dat, then going to T_6.dat,
   then to ..., and lastly T_60.dat. The graph will truncate inputs to the
   range of 0 to 1 and plot output in the range of -10 to 10
 
-  e.g. PlotM('ST',40) will produce a movie with 40 frames (if 40 data
+  e.g. plotMovie('ST',40) will produce a movie with 40 frames (if 40 data
   files are available of fileID 'ST')
 
-  e.g. PlotM('ST',40,lim=[1.5,2.5,-5,5],movLen=10) will produce a 10 second movie
+  e.g. plotMovie('ST',40,lim=[1.5,2.5,-5,5],movLen=10) will produce a 10 second movie
   with 40 frames of data (if 40 data files are available of fileID 'ST')
   and  with x and y plot limits given by 1.5 < x < 2.5 and -5 < y < 5.
 
@@ -76,11 +74,11 @@ def PlotM(*args,**kwargs):
   movLength = MovLength(**kwargs)
   GenMovie(imageList,fileID,movLength,**kwargs)
 
-def PlotLM(*args,**kwargs): 
+def semilogyMovie(*args,**kwargs): 
   """
   SemiLogy movie consisting of a sequence of 1D x-y graphs. 
 
-  PlotLM(fileID,fileRange,opts): 
+  semilogyMovie(fileID,fileRange,opts): 
 
   fileID: ID for data files where files look like fileID_fileNum.dat e.g. if
   data files for T data are T_0.dat,T_1.dat,T_2.dat,...  then the fileID is
@@ -116,7 +114,7 @@ def PlotLM(*args,**kwargs):
 
   decades = val
   Number of decades of data to plot. Can be used instead of
-  ylim = [ymin,ymax] for semilogy PlotLM movies
+  ylim = [ymin,ymax] for semilogy semilogyMovie movies
  
   movLen = val 
   Length of movie in seconds. This parameter determines time
@@ -124,22 +122,22 @@ def PlotLM(*args,**kwargs):
   specified then a default value will be used. This default value is set
   in 
      
-  e.g. PlotLM('T',[10,0,60],lim=[0,1,-10,10]) will produce a 1D Movie with 10
+  e.g. semilogyMovie('T',[10,0,60],lim=[0,1,-10,10]) will produce a 1D Movie with 10
   (input,output) data pairs starting with T_0.dat, then going to T_6.dat,
   then to ..., and lastly T_60.dat. The graph will truncate inputs to the
   range of 0 to 1 and plot output in the range of -10 to 10
 
-  e.g. PlotLM('SQ_ST',40,decs=) will produce a movie with 40 frames (if 40 data
+  e.g. semilogyMovie('SQ_ST',40,decs=) will produce a movie with 40 frames (if 40 data
   files are available of fileID 'SQ_ST')
 
-  e.g. PlotM('SQ_ST',40,lim=[1.5,2.5,-5,5],movLen=10) will produce a 10 second movie
+  e.g. plotMovie('SQ_ST',40,lim=[1.5,2.5,-5,5],movLen=10) will produce a 10 second movie
   with 40 frames of data (if 40 data files are available of fileID 'ST')
   and  with x and y plot limits given by 1.5 < x < 2.5 and -5 < y < 5.
 
   """
 
   fileList = GenFileList(*args)
-  imageList = ProcessMovieL(fileList,**kwargs)
+  imageList = ProcessMovieSemiLogy(fileList,**kwargs)
   fileID = args[0]
   movLength = MovLength(**kwargs)
   GenMovie(imageList,fileID,movLength,**kwargs)
@@ -150,7 +148,7 @@ def ProcessMovie(fileList,**kwargs):
   configs.DefaultLS()
   for file in fileList: 
     fileID,repNum = GetDataFileInfo(file) 
-    PlotH(fileID,repNum,**kwargs)
+    plot(fileID,repNum,overwrite=True,**kwargs)
     imgFile = fileID + '_' + str(repNum) + '.png'
     imageList.append(imgFile)
     plt.savefig(imgFile)
@@ -162,13 +160,13 @@ def ProcessMovie(fileList,**kwargs):
     sys.exit()
   return imageList
 
-def ProcessMovieL(fileList,**kwargs):
+def ProcessMovieSemilogy(fileList,**kwargs):
   imageList = []
   plt.clf()
   configs.DefaultLS()
   for file in fileList: 
     fileID,repNum = GetDataFileInfo(file) 
-    PlotHL(fileID,repNum,**kwargs)
+    semilogy(fileID,repNum,overwrite=True,**kwargs)
     imgFile = fileID + '_' + str(repNum) + '.png'
     imageList.append(imgFile)
     plt.savefig(imgFile)

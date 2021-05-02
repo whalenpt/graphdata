@@ -1,6 +1,8 @@
 
 import sys
+import glob
 from graphdata.shared.shared import SetDecadeLimits
+from graphdata.shared.shared import ProcessAux
 from graphdata import plt
 from graphdata import configs
 from graphdata import np
@@ -36,25 +38,11 @@ def LoadComplexData1D(fileName):
     x = data[:,0]; yr = data[:,1]; yi = data[:,2];
   return (x,yr,yi,auxDict)
 
-def GetData1D(*arg):
-  if len(arg) < 2:
-    print("GetData1D requires at least two arguments: the fileID and file# ") 
-    return False
-  fileID = arg[0]
-  num = arg[1]
-  fileID = str(fileID)
-  fileName = fileID + '_' + str(num) + '.dat'
-  print(fileName)
-  x,y,auxDict = LoadData1D(fileName)
-  return (x,y,auxDict)
-
-def GetFileData1D(*arg):
-  if len(arg) < 1:
-    print("GetFileData1D requires at least one arguments: the file name ") 
-    return False
-  fileName = str(arg[0])
-  print(fileName)
-  x,y,auxDict = LoadData1D(fileName)
+def GetData1D(fileID,fileNumber=None):
+  filename = fileID
+  if fileNumber is not None:
+      filename += '_' + str(fileNumber) + '.dat'
+  x,y,auxDict = LoadData1D(filename)
   return (x,y,auxDict)
 
 def ProcessData1D(x,y,auxDict,**kwargs):
@@ -228,8 +216,6 @@ def AuxPlotLabel1D(auxDict):
 def AuxPlotLabelLL1D(auxDict):
   AuxPlotLabel1D(auxDict)
   ax = plt.gca()
-#  ax.xaxis.set_major_locator(ticker.LogLocator(numticks=6))
-#  ax.yaxis.set_major_locator(ticker.LogLocator(numticks=6))
   ax.xaxis.set_major_locator(ticker.LogLocator(numdecs=6))
   ax.yaxis.set_major_locator(ticker.LogLocator(numdecs=4))
   ax.xaxis.grid(b =
