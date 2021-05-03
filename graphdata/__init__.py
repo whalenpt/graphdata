@@ -36,8 +36,9 @@ plt.register_cmap(cmap = newhotmap)
 
 
 from graphdata.plot import plot 
-from graphdata.plot import semilogy
-from graphdata.plot import loglog
+from graphdata.semilogy import semilogy
+from graphdata.loglog import loglog
+from graphdata import idnum
 from graphdata.movie.plot import plotMovie
 from graphdata.movie.plot import semilogyMovie
 from graphdata.shared.shared1D import LoadData1D
@@ -55,5 +56,6 @@ from graphdata.surface import surface
 from graphdata.wireframe import wireframe
 from graphdata.movie.surface import surfaceMovie
 from graphdata.movie.wireframe import wireframeMovie
+
 
 

@@ -45,8 +45,7 @@ def GetData1D(fileID,fileNumber=None):
   x,y,auxDict = LoadData1D(filename)
   return (x,y,auxDict)
 
-def ProcessData1D(x,y,auxDict,**kwargs):
-  auxDict = ProcessCmdLineOpts(auxDict,**kwargs)
+def ProcessData1D(x,y,auxDict):
   if 'mirror horizontal' in auxDict:
       x = np.hstack([np.flipud(-x),x])
       y = np.hstack([np.flipud(y),y])
@@ -58,28 +57,9 @@ def ProcessData1D(x,y,auxDict,**kwargs):
       x,y = ProcessNonScaledData1D(x,y,auxDict)
   return (x,y,auxDict)
 
-def ProcessCmdLineOpts(auxDict,**kwargs):
-  if 'lim' in kwargs:
-    kwargs['limits'] = kwargs['lim']
-  if 'limits' in kwargs:
-    limits = kwargs['limits']
-    if len(limits) > 1:
-      auxDict['xlim'] = limits[0:2]
-    if len(limits) > 3:
-      auxDict['ylim'] = limits[2:4]
-  if 'xlim' in kwargs:
-    auxDict['xlim'] = kwargs['xlim']
-  if 'ylim' in kwargs:
-    auxDict['ylim'] = kwargs['ylim']
-  if 'LS' in kwargs:
-    auxDict['LS'] = kwargs['LS']
-  if 'decades' in kwargs:
-    auxDict['decades'] = float(kwargs['decades'])
-  return auxDict
-
 def ProcessPointsX(x,y,auxDict): 
 
-  if 'xlim' in auxDict:
+  if 'xlim' in auxDict and auxDict['xlim'] is not None:
     xlim = auxDict['xlim']
     indxMax = x < float(xlim[1])
     x = x[indxMax]
@@ -111,7 +91,7 @@ def ProcessPointsX(x,y,auxDict):
   return (x,y)
 
 def ProcessPointsY(x,y,auxDict): 
-  if 'ylim' in auxDict:
+  if 'ylim' in auxDict and auxDict['ylim'] is not None:
     ylim = auxDict['ylim']
     indxMax = y < float(ylim[1])
     x = x[indxMax]
@@ -131,6 +111,7 @@ def ProcessPointsY(x,y,auxDict):
       y = y/np.amax(y)
   if 'decades' in auxDict:
     y = SetDecadeLimits(float(auxDict['decades']),y)
+    
   return (x,y)
 
 def ProcessNonDimData1D(x,y,auxDict):

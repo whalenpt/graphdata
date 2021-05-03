@@ -32,19 +32,19 @@ class PlotSettings(object):
     self.SetMode(self._G["Mode"])
 
   def _LoadDefaultSettings(self):
-    default_dict = {'Points1D': 100,'PointsX_2D':100,'PointsY_2D':100,\
+    default_dict = {'Points1D': 200,'PointsX_2D':100,'PointsY_2D':100,\
       'scale':'noscale','xdimscale':1.0,'ydimscale':1.0,'zdimscale':1.0,\
       'pdimscale':1.0,'xdimscale_str':'','ydimscale_str':'','zdimscale_str':'',\
       'pdimscale_str':'', 'process data':'on',\
       'LSvec':'color','cmap':'hot','title':'on','legend':'on',\
       'movFormat':'wmv2','movLength':10.0,\
       'FigWidth':14,'FigHeight':8,'FigWidthL':15,'FigHeightL':5,\
-      'PlotWidth':14,'PlotHeight':8,'PlotWidthL':15,'PlotHeightL':5,\
+      'PlotWidth':14,'PlotHeight':8,'SemilogyWidth':15,'SemilogyHeight':5,\
+      'LogLogWidth':14,'LogLogHeight':8,\
       'SurfaceTickFormat':'%0.02e','NumberSurfaceTicks':6,'SurfaceTickFormat':'%0.02e',\
-      'SurfaceWidth':8,'SurfaceHeight':8,'WireHeight':8,'WireWidth':8,\
-      'ContourHeight':6,'ContourWidth':15,'contours':50,\
-      'ConvergeHeight':6,'ConvergeWidth':6,\
-      'EvolveHeight':8,'EvolveWidth':12,'EvolveHeightL':5,'EvolveWidthL':16,\
+      'SurfaceWidth':8,'SurfaceHeight':8,'WireframeHeight':8,'WireframeWidth':8,\
+      'ContourfHeight':6,'ContourfWidth':15,'contours':50,\
+      'WireframeLogHeight':5,'WireframeLogWidth':16,\
       'decades':12,\
       'Mode':'basic'}
     return default_dict

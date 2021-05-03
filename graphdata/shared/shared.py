@@ -252,4 +252,8 @@ def fmtcols(mylist,cols):
   return '\n'.join(lines)
 
 
+def ExtendDictionary(dict1,**kwargs):
+    dict1.update(**kwargs)
+    return dict1
+
 
