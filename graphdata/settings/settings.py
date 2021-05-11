@@ -34,8 +34,8 @@ class PlotSettings(object):
   def _LoadDefaultSettings(self):
     default_dict = {'Points1D': 200,'PointsX_2D':100,'PointsY_2D':100,\
       'scale':'noscale','xdimscale':1.0,'ydimscale':1.0,'zdimscale':1.0,\
-      'pdimscale':1.0,'xdimscale_str':'','ydimscale_str':'','zdimscale_str':'',\
-      'pdimscale_str':'', 'process data':'on',\
+      'tdimscale':1.0,'xdimscale_str':'','ydimscale_str':'','zdimscale_str':'',\
+      'tdimscale_str':'', 'process data':'on',\
       'LSvec':'color','cmap':'hot','title':'on','legend':'on',\
       'movFormat':'wmv2','movLength':10.0,\
       'FigWidth':14,'FigHeight':8,'FigWidthL':15,'FigHeightL':5,\
@@ -116,7 +116,7 @@ class PlotSettings(object):
     self._G['xdimscale'] = scale_val
     self._G['xdimscale_str'] = scale_str
     self._WriteSettings()
-    
+
   def ScaleY(self,scale):
     scale_str, scale_val = self._ProcessScale(scale)
     self._G['ydimscale'] = scale_val
@@ -127,10 +127,10 @@ class PlotSettings(object):
     self._G['zdimscale'] = scale_val
     self._G['zdimscale_str'] = scale_str
     self._WriteSettings()
-  def ScaleP(self,scale):
+  def ScaleT(self,scale):
     scale_str, scale_val = self._ProcessScale(scale)
-    self._G['pdimscale'] = scale_val
-    self._G['pdimscale_str'] = scale_str
+    self._G['tdimscale'] = scale_val
+    self._G['tdimscale_str'] = scale_str
     self._WriteSettings()
 
   def AddLegend(self,name):

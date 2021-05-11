@@ -1,16 +1,16 @@
 
-from graphdata.shared.shared1D import AuxPlotLabel1D 
-from graphdata.shared.shared1D import ProcessData1D 
-from graphdata.shared.shared1D import LoadData1D 
+from graphdata.shared.shared1D import AuxPlotLabel1D
+from graphdata.shared.shared1D import ProcessData1D
+from graphdata.shared.shared1D import LoadData1D
 from graphdata.shared.figsizes import PlotSize
 from graphdata.shared.shared import ExtendDictionary
 from graphdata import plt
-from graphdata import np 
-from graphdata import configs 
+from graphdata import np
+from graphdata import configs
 
 def plot(filename,figsize=None,xlim=None,ylim=None,overwrite=False,**kwargs):
     """
-    Graph of 1D data file using Matplotlib plt.plot 
+    Graph of 1D data file using Matplotlib plt.plot
 
     INPUTS:
         filename: string
@@ -24,12 +24,12 @@ def plot(filename,figsize=None,xlim=None,ylim=None,overwrite=False,**kwargs):
         overwrite: bool
             add lines to an existing plt.plot graph if it exists
             (default is False which will plot graph on a new figure)
-        **kwargs: dictionary 
+        **kwargs: dictionary
             (optional) arguments to be passed onto plt.loglog plot
 
     OUTPUTS:
 
-        ax : matplotlib.axes.Axes 
+        ax : matplotlib.axes.Axes
             Matplotlib axes object, allows for setting limits and other manipulation of the axes
             (e.g. ax.set_xlim([0,1]) would set the graph x-limits to be between 0 and 1)
 
@@ -43,7 +43,7 @@ def plot(filename,figsize=None,xlim=None,ylim=None,overwrite=False,**kwargs):
         ylim = [np.min(y),np.max(y)]
     ExtendDictionary(auxDict,figsize=figsize,xlim=xlim,ylim=ylim,overwrite=overwrite)
     x,y,auxDict = ProcessData1D(x,y,auxDict)
-    labs = plt.get_figlabels() 
+    labs = plt.get_figlabels()
     if overwrite:
         if "Plot" not in labs:
             configs.DefaultLS()
@@ -69,7 +69,7 @@ def plot(filename,figsize=None,xlim=None,ylim=None,overwrite=False,**kwargs):
     plt.ion()
     plt.show()
     ax = plt.gca()
-    return ax
+    return ax,auxDict
 
 
 

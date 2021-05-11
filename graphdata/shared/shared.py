@@ -1,16 +1,29 @@
 # Filename: shared.py
 
 import glob
-import shutil 
-import os 
+import shutil
+import os
 import string
 import re
-import sys 
+import sys
 import subprocess
 import operator
 from graphdata import plt
-from graphdata import configs 
-from graphdata import np 
+from graphdata import configs
+from graphdata import np
+from graphdata.shared.datfile import ReadDatMetadata
+from graphdata.shared.jsonfile import ReadJSONMetadata
+
+def LoadMetadata(fileName):
+    if not validateFileName(fileName):
+        raise Exception('Failed to find file: {}'.format(fileName))
+    filepath,extension = os.path.splitext(fileName)
+    if extension == '.json':
+        return ReadJSONMetadata(fileName)
+    elif extension == '.dat':
+        return ReadDatMetadata(fileName)
+    else:
+        raise Exception('Failed to recognize data format for file extension {}'.format(extension))
 
 def LoadParams(file):
   paramDict = dict()
@@ -22,7 +35,7 @@ def LoadParams(file):
         key = ' '.join(key.split())
         val = ' '.join(val.split())
         paramDict[key] = val
-  return paramDict 
+  return paramDict
 
 
 def GenFileList(*args):
@@ -173,19 +186,6 @@ def GetRepFileList(fileID):
   fileList = SortNumericStringList(fileList)
   return fileList
 
-def ProcessAux(file):
-  auxDict = dict()
-  with open(file) as f:
-    line = f.readline()
-    while(line.startswith('#')):
-      key,val = line.split(':')
-      key = key[1:]
-      key = ' '.join(key.split())
-      val = ' '.join(val.split())
-      auxDict[key] = val
-      line = f.readline()
-  return auxDict
-
 class NumericString:
   def __init__(self,rawValue):
     self.rawValue = rawValue
@@ -256,4 +256,14 @@ def ExtendDictionary(dict1,**kwargs):
     dict1.update(**kwargs)
     return dict1
 
+
+def validateFileName(fileName):
+    if not os.path.isfile(fileName):
+        print('No files detected: ')
+        print('Files in directory are: ')
+        dirFiles = os.listdir('.')
+        dirFiles = SortNumericStringList(dirFiles)
+        print(fmtcols(dirFiles,1))
+        return False
+    return True
 

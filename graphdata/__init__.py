@@ -42,12 +42,12 @@ from graphdata import idnum
 from graphdata.movie.plot import plotMovie
 from graphdata.movie.plot import semilogyMovie
 from graphdata.shared.shared1D import LoadData1D
-from graphdata.shared.shared1D import LoadComplexData1D
 from graphdata.shared.shared2D import LoadData2D
+from graphdata.shared.shared import LoadMetadata
 from graphdata.shared.shared import GenFileList
 from graphdata.wireframe import wireframe
 from graphdata.waterfall import waterfall
-from graphdata.waterfall import waterfallLog
+#from graphdata.waterfall import waterfallLog
 from graphdata.contour import contourf
 from graphdata.contour import contourfLog
 from graphdata.movie.contour import contourfMovie

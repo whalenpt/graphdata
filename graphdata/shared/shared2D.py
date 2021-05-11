@@ -2,46 +2,27 @@
 import sys
 import glob
 import os
-from graphdata.shared.shared import ProcessAux, SortNumericStringList,fmtcols,SetDecadeLimits
+from graphdata.shared.shared import validateFileName,SetDecadeLimits
+from graphdata.shared.datfile import ReadDatFile2D
+from graphdata.shared.jsonfile import ReadJSONFile2D
 from graphdata import plt
-from graphdata import configs 
-from graphdata import np 
+from graphdata import configs
+from graphdata import np
 
 def LoadData2D(file):
-  fileList = glob.glob(file)
-  if len(fileList) == 0:
-    print('No files detected: ') 
-    print('Files in directory are: ')
-    dirFiles = os.listdir('.')
-    dirFiles = SortNumericStringList(dirFiles)
-    print(fmtcols(dirFiles,1))
-    sys.exit()
-
-  auxDict = ProcessAux(file) 
-  with open(file) as f:
-    line = f.readline()
-    while(line.startswith('#')):
-      line = f.readline()
-    nD1,nD2 = line.split()
-    nD1 = int(nD1)
-    nD2 = int(nD2)
-    x = []
-    y = []
-    for i in range(nD1):
-      x.append(float(f.readline()))
-    for i in range(nD2):
-      y.append(float(f.readline()))
-    x = np.array(x)
-    y = np.array(y)
-    z = np.genfromtxt(f)
-    shape = (nD1,nD2)
-    z = z.reshape(shape)
-
-  return (x,y,z,auxDict)
+    if not validateFileName(fileName):
+        raise Exception('Failed to find file: {}'.format(fileName))
+    filepath,extension = os.path.splitext(fileName)
+    if extension == '.json':
+        return ReadJSONFile2D(fileName)
+    elif extension == '.dat':
+        return ReadDatFile2D(fileName)
+    else:
+        raise Exception('Failed to recognize data format for file extension {}'.format(extension))
 
 def GetData2D(*arg):
   if len(arg) < 2:
-    print("GetData2D requires at least two arguments: the fileID and file# ") 
+    print("GetData2D requires at least two arguments: the fileID and file# ")
     return False
   fileID = arg[0]
   num = arg[1]
