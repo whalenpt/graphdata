@@ -69,7 +69,7 @@ def plot(filename,figsize=None,xlim=None,ylim=None,overwrite=False,**kwargs):
     plt.ion()
     plt.show()
     ax = plt.gca()
-    return ax,auxDict
+    return ax
 
 
 

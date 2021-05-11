@@ -154,18 +154,6 @@ def AuxPlotLabel1D(auxDict):
 
     if(configs._G['title'] == 'on' and 'title_str' in auxDict):
         titstr = str(auxDict['title_str'])
-        if 'time_elapsed' in auxDict:
-            if(configs._G["scale"] == 'nonDim' and 'tscale' in auxDict and \
-               'tscale_str' in auxDict and 'tval' in auxDict):
-                val = float(auxDict["tval"])/float(auxDict['tscale'])
-                titstr = titstr + ' = ' + str("%0.2f" % val) + ' (' + str(auxDict['tscale_str'])  + ')'
-            elif(configs._G["scale"] == 'noscale' and 'tunit_str' in auxDict and 'tval' in auxDict):
-                val = float(auxDict["tval"])
-                titstr = titstr + ' = ' + str("%0.2f" % val) + ' (' + str(auxDict['tunit_str']) + ')'
-            elif(configs._G["scale"] == 'dimscale' and 'tunit_str' in auxDict and 'tval' in auxDict):
-                val = float(auxDict['tval'])/float(configs._G['tdimscale'])
-                titstr = titstr + str("%0.2f" % val) + ' (' + \
-                    str(configs._G['tdimscale_str']) + str(auxDict['tunit_str']) + ")"
         plt.title(titstr)
 
 def AuxPlotLabelLL1D(auxDict):
