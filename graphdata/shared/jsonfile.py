@@ -22,7 +22,13 @@ def ReadJSONFile1D(file):
         xlabel = data['xlabel']
         ylabel = data['ylabel']
         x = np.array(data[xlabel])
-        y = np.array(data[ylabel])
+        y= data[ylabel]
+        if isinstance(y,dict) and y['dtype'] == 'complex128':
+            yreal = np.array(y['real'])
+            yimag = np.array(y['imag'])
+            y = yreal+1j*yimag
+        elif isinstance(y,list):
+            y = np.array(y)
         del data[xlabel]
         del data[ylabel]
         return (x,y,data)
@@ -30,13 +36,18 @@ def ReadJSONFile1D(file):
         pass
     try:
         x = np.array(data['x'])
-        y = np.array(data['y'])
+        y= data['y']
+        if isinstance(y,dict) and y['dtype'] == 'complex128':
+            yreal = np.array(y['real'])
+            yimag = np.array(y['imag'])
+            y = yreal+1j*yimag
+        elif isinstance(y,list):
+            y = np.array(y)
         del data['x']
         del data['y']
         return (x,y,data)
     except:
         raise Exception('Failed to parse JSON file data')
-        
 
 def ReadJSONFile2D(file):
     data = ReadJSONFile(file)
@@ -46,7 +57,13 @@ def ReadJSONFile2D(file):
         zlabel = data['zlabel']
         x = np.array(data[xlabel])
         y = np.array(data[ylabel])
-        z = np.array(data[zlabel])
+        z = data[zlabel]
+        if isinstance(z,dict) and z['dtype'] == 'complex128':
+            zreal = np.array(z['real'])
+            zimag = np.array(z['imag'])
+            z = zreal+1j*zimag
+        elif isinstance(z,list):
+            z = np.array(z)
         del data[xlabel]
         del data[ylabel]
         del data[zlabel]
@@ -56,14 +73,20 @@ def ReadJSONFile2D(file):
     try:
         x = np.array(data['x'])
         y = np.array(data['y'])
-        z = np.array(data['z'])
+        z = data['z']
+        if isinstance(z,dict) and z['dtype'] == 'complex128':
+            zreal = np.array(z['real'])
+            zimag = np.array(z['imag'])
+            z = zreal+1j*zimag
+        elif isinstance(z,list):
+            z = np.array(z)
+
         del data['x']
         del data['y']
         del data['z']
         return (x,y,z,data)
     except:
         raise Exception('Failed to parse JSON file data')
-        
 
 
 

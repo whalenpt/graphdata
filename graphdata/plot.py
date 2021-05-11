@@ -46,9 +46,9 @@ def plot(filename,figsize=None,xlim=None,ylim=None,overwrite=False,**kwargs):
     labs = plt.get_figlabels()
     if overwrite:
         if "Plot" not in labs:
-            configs.DefaultLS()
+            configs.defaultLS()
         else:
-            configs.ToggleLS()
+            configs.toggleLS()
         plt.figure("Plot",figsize=figsize)
         if(configs.LS == 'k--'):
             plt.plot(x,y,configs.LS,dashes = (4,2),**kwargs)
@@ -56,7 +56,7 @@ def plot(filename,figsize=None,xlim=None,ylim=None,overwrite=False,**kwargs):
             plt.plot(x,y,configs.LS,**kwargs)
     else:
         plt.figure(figsize=figsize)
-        configs.DefaultLS()
+        configs.defaultLS()
         plt.plot(x,y,configs.LS,**kwargs)
 
     AuxPlotLabel1D(auxDict)

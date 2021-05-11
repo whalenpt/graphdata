@@ -55,12 +55,12 @@ def loglog(filename,figsize=None,decades=None,xlim=None,ylim=None,overwrite=Fals
     if overwrite:
         labs = plt.get_figlabels() 
         if "LogLog" not in labs:
-          configs.DefaultLS()
+          configs.defaultLS()
         else:
-          configs.ToggleLS()
+          configs.toggleLS()
         plt.figure("LogLog",figsize=figsize)
     else:
-        configs.DefaultLS()
+        configs.defaultLS()
         plt.figure(figsize=figsize)
   
     fig = plt.loglog(x,y,configs.LS,**kwargs)

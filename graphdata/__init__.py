@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 global configs
-from .settings.settings import PlotSettings
+from graphdata.settings.settings import PlotSettings
 configs = PlotSettings()
 
 #rc('text',usetex=True)

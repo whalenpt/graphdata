@@ -9,9 +9,8 @@ from pathlib import Path
 
 class PlotSettings(object):
     """ Class which holds configuration settings for graphdata."""
-
     def __init__(self):
-        self._G = self.LoadSettings()
+        self._G = self.loadsettings()
         self._LSoptions = {'basic':['k-o','k--d','k-.s','r-o','r--d','r-.s'],\
                 'color':['k','r','b','g','c'],\
                 'longcolor': ['k','r','b','g','c','k--','r--','b--','g--','c--'],\
@@ -25,11 +24,11 @@ class PlotSettings(object):
                 'converge3':['r-<','t-p','b-o','c-v'],\
                 'converge4':['t-p','k-d','c-v','g-*']}
         self._LSvec = copy.deepcopy(self._LSoptions[self._G['LSvec']])
-        self._LS = self._LSvec[0] 
+        self._LS = self._LSvec[0]
         self._cmapvec = ['hot','jet','bone','gray','binary','gist_yarg']
-        self.LegendList = []
-        self._ModeVec = ['basic','paper']
-        self.SetMode(self._G["Mode"])
+        self.legendList = []
+        self._modeVec = ['basic','paper']
+        self.setMode(self._G["Mode"])
     @property
     def LS(self):
         return self._LS
@@ -37,8 +36,8 @@ class PlotSettings(object):
     def LS(self,val):
         self._LS = val
 
-    def _LoadDefaultSettings(self):
-        default_dict = {'Points1D': 200,'PointsX_2D':100,'PointsY_2D':100,\
+    def _loadDefaultsettings(self):
+        default_dict = {'points1D': 200,'pointsX_2D':100,'pointsY_2D':100,\
           'scale':'noscale','xdimscale':1.0,'ydimscale':1.0,'zdimscale':1.0,\
           'tdimscale':1.0,'xdimscale_str':'','ydimscale_str':'','zdimscale_str':'',\
           'tdimscale_str':'', 'process data':'on',\
@@ -55,7 +54,7 @@ class PlotSettings(object):
           'Mode':'basic'}
         return default_dict
 
-    def LoadSettings(self):
+    def loadsettings(self):
         """ Internal function which sets configuration dictionary by
             loading values from $HOME/.configs/graphdata/graphdata.conf or
             using specified default values.
@@ -72,7 +71,7 @@ class PlotSettings(object):
             with open(pr_file) as f:
                 configs = json.load(f)
         except IOError as e:
-            configs = self._LoadDefaultSettings()
+            configs = self._loadDefaultsettings()
             os.makedirs(pr_dir,exist_ok=True)
             with open(pr_file,'w') as outfile:
                 json.dump(configs,outfile)
@@ -81,21 +80,21 @@ class PlotSettings(object):
     def scale(self):
         return self._G['scale']
 
-    def SettingsDict(self):
+    def settingsDict(self):
         return self._G
 
-    def DisplaySettings(self):
+    def displaysettings(self):
       for key in sorted(self._G.keys()):
           print((key + ":" + " "*8 + str(self._G[key])))
 
-    def _WriteSettings(self):
+    def _writesettings(self):
       """ Writes a json configuration file. """
       hm = os.environ.get("HOME")
       pr_file = os.path.join(hm,'.config','graphdata','settings.conf')
       with open(pr_file,'w') as outfile:
           json.dump(self._G,outfile)
 
-    def _ProcessScale(self,scale):
+    def _processScale(self,scale):
       if scale == 'femto' or scale == 'f':
         return ('f',1.0e-15)
       elif scale == 'nano' or scale == 'n':
@@ -115,102 +114,97 @@ class PlotSettings(object):
       else:
         return False
 
-    def ScaleX(self,scale):
-      scale_str, scale_val = self._ProcessScale(scale)
+    def scaleX(self,scale):
+      scale_str, scale_val = self._processScale(scale)
       self._G['xdimscale'] = scale_val
       self._G['xdimscale_str'] = scale_str
-      self._WriteSettings()
+      self._writesettings()
 
-    def ScaleY(self,scale):
-      scale_str, scale_val = self._ProcessScale(scale)
+    def scaleY(self,scale):
+      scale_str, scale_val = self._processScale(scale)
       self._G['ydimscale'] = scale_val
       self._G['ydimscale_str'] = scale_str
-      self._WriteSettings()
-    def ScaleZ(self,scale):
-      scale_str, scale_val = self._ProcessScale(scale)
+      self._writesettings()
+    def scaleZ(self,scale):
+      scale_str, scale_val = self._processScale(scale)
       self._G['zdimscale'] = scale_val
       self._G['zdimscale_str'] = scale_str
-      self._WriteSettings()
-    def ScaleT(self,scale):
-      scale_str, scale_val = self._ProcessScale(scale)
+      self._writesettings()
+    def scaleT(self,scale):
+      scale_str, scale_val = self._processScale(scale)
       self._G['tdimscale'] = scale_val
       self._G['tdimscale_str'] = scale_str
-      self._WriteSettings()
+      self._writesettings()
 
-    def AddLegend(self,name):
-      self.LegendList.append(name)
+    def addLegend(self,name):
+      self.legendList.append(name)
 
-    def SetLegend(self,name):
-      self.LegendList = []
-      self.LegendList.append(name)
+    def setLegend(self,name):
+      self.legendList = []
+      self.legendList.append(name)
 
-    def ContourSize(self,w,h):
+    def contourSize(self,w,h):
       self._G["ContourWidth"] = w
       self._G["ContourHeight"] = h
-      self._WriteSettings()
+      self._writesettings()
 
-    def EvolveSize(self,w,h):
+    def evolveSize(self,w,h):
       self._G["EvolveWidth"] = w
       self._G["EvolveHeight"] = h
-      self._WriteSettings()
+      self._writesettings()
 
-    def EvolveSizeL(self,w,h):
+    def evolveSizeL(self,w,h):
       self._G["EvolveWidthL"] = w
       self._G["EvolveHeightL"] = h
-      self._WriteSettings()
+      self._writesettings()
 
-    def SurfaceSize(self,w,h):
+    def surfaceSize(self,w,h):
       self._G["SurfaceWidth"] = w
       self._G["SurfaceHeight"] = h
-      self._WriteSettings()
+      self._writesettings()
 
-    def PlotSize(self,w,h):
+    def plotSize(self,w,h):
       self._G["PlotWidth"] = w
       self._G["PlotHeight"] = h
-      self._WriteSettings()
+      self._writesettings()
 
-    def PlotSizeL(self,w,h):
+    def plotSizeL(self,w,h):
       self._G["PlotWidthL"] = w
       self._G["PlotHeightL"] = h
-      self._WriteSettings()
+      self._writesettings()
 
-    def WireSize(self,w,h):
+    def wireSize(self,w,h):
       self._G["WireWidth"] = w
       self._G["WireHeight"] = h
-      self._WriteSettings()
+      self._writesettings()
 
-    def LogLogSize(self,w,h):
+    def loglogSize(self,w,h):
       self._G["LogLogWidth"] = w
       self._G["LogLogHeight"] = h
-      self._WriteSettings()
+      self._writesettings()
 
-    def ConvergeSize(self,w,h):
-      self._G["ConvergeWidth"] = w
-      self._G["ConvergeHeight"] = h
-      self._WriteSettings()
-
-    def ToggleLS(self):
+    def toggleLS(self):
       item = self._LSvec.pop(0)
       self._LSvec.append(item)
       self._LS = self._LSvec[0]
       print("Line style toggled to '{}'".format(self._LS))
 
-    def ToggleCmap(self):
+    def toggleCmap(self):
       item = self._cmapvec.pop(0)
       self._cmapvec.append(item)
       self._G["cmap"] = str(self._cmapvec[0])
       print(("Colormap toggled to " + str(self._G["cmap"])))
-      self._WriteSettings()
+      self._writesettings()
 
-    def SetCmap(self,val):
+    def setCmap(self,val):
       """
       Cmap styles:  hot,jet,bone,gray,binary,gist_yarg,etc.
       """
       self._G["cmap"] = val 
       print(("Colormap set to " + str(self._G["cmap"])))
-      self._WriteSettings()
+      self._writesettings()
 
-    def SetLS(self,key):
+    def setLS(self,key):
       """
       Linestyle options:
          basic:       ['k-o','k--d','k-.s','r-o','r--d','r-.s']
@@ -225,93 +219,93 @@ class PlotSettings(object):
       """
       if key in self._LSoptions:
         self._G['LSvec'] = key
-        self._WriteSettings()
-        self.DefaultLS()
+        self._writesettings()
+        self.defaultLS()
       else:
         print("Did not recognize linestyles. Here is a list of the options: ")
         print(('\n'.join("%s:\t\t %s" % (kkey, ','.join(map(str, values))) for kkey, values in list(self._LSoptions.items()))))
 
-    def DefaultLS(self):
+    def defaultLS(self):
       self._LSvec = copy.deepcopy(self._LSoptions[self._G['LSvec']])
       self._LS = self._LSvec[0]
 
-    def SetMovieLength(self,num):
+    def setMovieLength(self,num):
       self._G["movLength"] = num
-      self._WriteSettings()
+      self._writesettings()
 
-    def Decades(self,num):
+    def decades(self,num):
       self._G["decades"] = num
-      self._WriteSettings()
+      self._writesettings()
 
-    def NumContours(self,num):
+    def numContours(self,num):
       self._G["contours"] = num
-      self._WriteSettings()
+      self._writesettings()
 
-    def SurfaceView(self,num1,num2):
+    def surfaceView(self,num1,num2):
       self._G["surfaceElevation"] = num1
       self._G["surfaceAzimuth"] = num2
-      self._WriteSettings()
+      self._writesettings()
 
-    def Points1D(self,num):
-      self._G["Points1D"] = num
-      self._WriteSettings()
+    def points1D(self,num):
+      self._G["points1D"] = num
+      self._writesettings()
 
-    def Points2D(self,num1,num2):
-      self._G["PointsX_2D"] = num1
-      self._G["PointsY_2D"] = num2
-      self._WriteSettings()
+    def points2D(self,num1,num2):
+      self._G["pointsX_2D"] = num1
+      self._G["pointsY_2D"] = num2
+      self._writesettings()
 
-    def PointsX_2D(self,num):
-      self._G["PointsX_2D"] = num
-      self._WriteSettings()
+    def pointsX_2D(self,num):
+      self._G["pointsX_2D"] = num
+      self._writesettings()
 
-    def PointsY_2D(self,num):
-      self._G["PointsY_2D"] = num
-      self._WriteSettings()
+    def pointsY_2D(self,num):
+      self._G["pointsY_2D"] = num
+      self._writesettings()
 
-    def ScaleSet(self,val):
+    def scaleset(self,val):
       self._G["scale"] = val
-      self._WriteSettings()
+      self._writesettings()
 
-    def SetNumSurfTicks(self,val):
+    def setNumSurfTicks(self,val):
       self._G['NumberSurfaceTicks'] = val
-      self._WriteSettings()
+      self._writesettings()
 
-    def ToggleSurfFormat(self):
+    def toggleSurfFormat(self):
       if(self._G['SurfaceTickFormat'] == '%0.02e'):
         self._G['SurfaceTickFormat'] = '%0.02f'
       else:
         self._G['SurfaceTickFormat'] = '%0.02e'
-      self._WriteSettings()
+      self._writesettings()
 
 
-    def ToggleTitle(self):
+    def toggleTitle(self):
         if(str(self._G['title']) == 'on'):
             self._G['title'] = 'off'
             print('Figure title toggled off')
         else:
             self._G['title'] = 'on'
             print('Figure title toggled on')
-        self._WriteSettings()
+        self._writesettings()
 
-    def ToggleLegend(self):
+    def toggleLegend(self):
         if(self._G['legend'] == 'on'):
             self._G['legend'] = 'off'
             print('Legend toggled off')
         else:
             self._G['legend'] = 'on'
             print('Legend toggled on')
-        self._WriteSettings()
+        self._writesettings()
 
 
-    def ToggleMovFormat(self):
+    def toggleMovFormat(self):
         if(self._G['movFormat'] == 'mpeg4'):
             self._G['movFormat'] = 'wmv2'
         else:
             self._G['movFormat'] = 'mpeg4'
-        self._WriteSettings()
+        self._writesettings()
 
-    def ToggleScale(self):
+    def toggleScale(self):
         if(str(self._G['scale']) == 'nonDim'):
             self._G['scale'] = 'noscale'
             print("Scale toggled to noscale")
@@ -321,9 +315,9 @@ class PlotSettings(object):
         else:
             self._G['scale'] = 'nonDim'
             print("Scale toggled to non-dimensional scale")
-        self._WriteSettings()
+        self._writesettings()
 
-    def ToggleProcessData(self):
+    def toggleProcessData(self):
         if(str(self._G['process data']) == 'on'):
             self._G['process data'] = 'off'
             print("Data will not be processed")
@@ -333,9 +327,9 @@ class PlotSettings(object):
         else:
             self._G['process data'] = 'on'
             print("Data will be processed")
-        self._WriteSettings()
+        self._writesettings()
 
-    def SetMode(self,val):
+    def setMode(self,val):
         """
         Mode settings available are
            paper:       high res figures (sizes show up as they will in a paper)
@@ -343,15 +337,15 @@ class PlotSettings(object):
         """
 
         if val ==  'paper':
-            self._SetPaperMode()
-            self._WriteSettings()
+            self._setPaperMode()
+            self._writesettings()
         elif val ==  'basic':
-            self._SetBasicMode()
-            self._WriteSettings()
+            self._setBasicMode()
+            self._writesettings()
         else:
             print("Did not recognize mode setting")
 
-    def _SetPaperMode(self):
+    def _setPaperMode(self):
         self._G["Mode"] = 'paper'
         font = {'family' : 'sans-serif',
                 'sans-serif' : 'Helvetica',
@@ -400,16 +394,15 @@ class PlotSettings(object):
         rcParams['legend.numpoints'] = 1  
         rcParams['legend.fontsize'] = 'medium' 
         rcParams['legend.frameon'] = True 
-        self.EvolveSize(3.35,2.0)
-        self.ContourSize(width,height)
-        self.WireSize(width,height)
-        self.PlotSize(width,height)
-        self.PlotSizeL(width,height)
-        self.SurfaceSize(width,height)
-        self.LogLogSize(3.35,1.5)
-        self.ConvergeSize(2,2)
+        self.evolveSize(3.35,2.0)
+        self.contourSize(width,height)
+        self.wireSize(width,height)
+        self.plotSize(width,height)
+        self.plotSizeL(width,height)
+        self.surfaceSize(width,height)
+        self.loglogSize(3.35,1.5)
 
-    def _SetBasicMode(self):
+    def _setBasicMode(self):
         self._G["Mode"] = 'basic'
         font = {'family' : 'sans-serif',
                 'sans-serif' : 'Helvetica',
@@ -431,27 +424,26 @@ class PlotSettings(object):
         rcParams['ytick.major.size'] = 4
         rcParams['legend.fontsize'] = 'medium'
         rcParams['legend.frameon'] = True
-        self.EvolveSize(12,8)
-        self.ContourSize(12,8)
-        self.WireSize(12,8)
-        self.PlotSize(8,6)
-        self.PlotSizeL(8,6)
-        self.ConvergeSize(6,6)
-        self.SurfaceSize(12,8)
-        self.LogLogSize(16,5)
-        self.SetLS('color')
+        self.evolveSize(12,8)
+        self.contourSize(12,8)
+        self.wireSize(12,8)
+        self.plotSize(8,6)
+        self.plotSizeL(8,6)
+        self.surfaceSize(12,8)
+        self.loglogSize(16,5)
+        self.setLS('color')
 
-    def ToggleMode(self):
+    def toggleMode(self):
         """
         Mode settings available are
            paper:       high res figures (sizes show up as they will in a paper)
            basic:    bigger plots for use with presentations/data visualization.
         """
 
-        item = self._ModeVec.pop(0)
-        self._ModeVec.append(item)
-        self.SetMode(str(self._ModeVec[0]))
-        print(("Mode toggled to " + str(self._ModeVec[0])))
+        item = self._modeVec.pop(0)
+        self._modeVec.append(item)
+        self.setMode(str(self._modeVec[0]))
+        print(("Mode toggled to " + str(self._modeVec[0])))
 
 
 

@@ -56,12 +56,12 @@ def semilogy(filename,figsize=None,decades=None,xlim=None,ylim=None,overwrite=Fa
     if overwrite:
         labs = plt.get_figlabels() 
         if "Semilogy" not in labs:
-          configs.DefaultLS()
+          configs.defaultLS()
         else:
-          configs.ToggleLS()
+          configs.toggleLS()
         plt.figure("Semilogy",figsize=figsize)
     else:
-        configs.DefaultLS()
+        configs.defaultLS()
         plt.figure(figsize=figsize)
   
     plt.semilogy(x,y,configs.LS,**kwargs)

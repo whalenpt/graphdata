@@ -28,7 +28,7 @@ def GetMultiPlotFileList(fileID,num = 0):
 
 def MultiPlot(fileID,num = 0):
   plt.clf()
-  configs.DefaultLS()
+  configs.defaultLS()
   fileList = GetMultiPlotFileList(fileID,num)
   auxDict,xmin,xmax,ymin,ymax,xscale,yscale,titleList = AuxMultiPlot1D(fileList)
   AuxPlotLabel1D(auxDict,xmin,xmax,ymin,ymax,xscale,yscale,titleList)
@@ -38,7 +38,7 @@ def MultiPlot(fileID,num = 0):
 
 def MultiPlotL(fileID,num = 0):
   plt.clf()
-  configs.DefaultLS()
+  configs.defaultLS()
   fileList = GetMultiPlotFileList(fileID,num)
   auxDict,xmin,xmax,ymin,ymax,xscale,yscale,titleList = AuxMultiLogPlot1D(fileList)
   AuxPlotLabel1D(auxDict,xmin,xmax,ymin,ymax,xscale,yscale,titleList)
