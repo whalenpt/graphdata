@@ -109,7 +109,7 @@ def ContourLevels(levels,Z):
         levels[i] = zmin + i*dz
     return levels
 
-def ContourLevelTicks(levels):
+def ContourLevelTicks(levels,Z):
     numCont = levels
     if not isinstance(levels,int):
         numCont = len(levels)

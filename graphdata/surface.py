@@ -12,9 +12,6 @@ from graphdata.shared.shared2D import ProcessData2D
 from graphdata.shared.shared2D import GetView
 from graphdata.shared.shared2D import Labels2D
 
-#from graphdata.shared.shared2D import GetDataLog2D 
-#from graphdata.shared.shared2D import ProcessData2D 
-
 from graphdata import plt
 from graphdata import configs 
 from graphdata import np 

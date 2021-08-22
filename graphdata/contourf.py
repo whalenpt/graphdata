@@ -61,22 +61,27 @@ def contourf(filename,levels=None,figsize=None,xlim=None,ylim=None,zlim=None,\
     if decades is not None:
         Z = ProcessDecadeLimits(Z,decades)
     levels = ContourLevels(levels,Z)
-    levelTicks = ContourLevelTicks(levels)
+    levelTicks = ContourLevelTicks(levels,Z)
     if overwrite:
         fig = plt.figure("Contourf",figsize=figsize)
         fig.clf()
     else:
         fig = plt.figure(figsize=figsize)
+    ax = plt.gca()
 
-    xlabel = LabelX(auxDict)
-    ylabel = LabelY(auxDict)
-    CS = plt.contourf(X,Y,Z,levels,**kwargs)
-    CS.ax.set_xlabel(xlabel)
-    CS.ax.set_ylabel(ylabel)
+    if 'cmap' in kwargs:
+        cmap = kwargs['cmap']
+        del kwargs['cmap']
+    else:
+        cmap = str(configs._G["cmap"])
+
+    CS = plt.contourf(X,Y,Z,levels,cmap=cmap,**kwargs)
+    ax.set_xlabel(LabelX(auxDict))
+    ax.set_ylabel(LabelY(auxDict))
     CB = plt.colorbar(ticks=levelTicks,format='%0.2e')
     plt.ion()
     plt.show()
-    return CS.ax
+    return ax
 
 #def contourfLog(*args,overwrite=False,**kwargs):
 #  """
