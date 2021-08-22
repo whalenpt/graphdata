@@ -52,12 +52,12 @@ def ProcessPointsX(x,y,auxDict):
       raise Exception('No points within specified x-limits')
 
   indxStep = 1
-  if nx > int(configs._G["Points1D"]):
-    indxStep = int(np.ceil(float(nx)/int(configs._G["Points1D"])))
+  if nx > int(configs._G["points1D"]):
+    indxStep = int(np.ceil(float(nx)/int(configs._G["points1D"])))
     x = x[0:nx:indxStep]
     y = y[0:nx:indxStep]
   else:
-    xvals = np.linspace(x[0],x[-1],int(configs._G["Points1D"]))
+    xvals = np.linspace(x[0],x[-1],int(configs._G["points1D"]))
     y = np.interp(xvals,x,y)
     x = xvals
 
