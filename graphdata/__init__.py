@@ -39,23 +39,25 @@ from graphdata.plot import plot
 from graphdata.semilogy import semilogy
 from graphdata.loglog import loglog
 from graphdata import idnum
-from graphdata.movie.plot import plotMovie
-from graphdata.movie.plot import semilogyMovie
+from graphdata.surface import surface
 from graphdata.shared.shared1D import LoadData1D
 from graphdata.shared.shared2D import LoadData2D
 from graphdata.shared.shared import LoadMetadata
-from graphdata.shared.shared import GenFileList
-from graphdata.wireframe import wireframe
-from graphdata.waterfall import waterfall
+#from graphdata.shared.shared import GenFileList
+from graphdata.contourf import contourf
+
+#from graphdata.movie.plot import plotMovie
+#from graphdata.movie.plot import semilogyMovie
+
+#from graphdata.wireframe import wireframe
+#from graphdata.waterfall import waterfall
 #from graphdata.waterfall import waterfallLog
-from graphdata.contour import contourf
-from graphdata.contour import contourfLog
-from graphdata.movie.contour import contourfMovie
-from graphdata.movie.contour import contourfLogMovie
-from graphdata.surface import surface
-from graphdata.wireframe import wireframe
-from graphdata.movie.surface import surfaceMovie
-from graphdata.movie.wireframe import wireframeMovie
+#from graphdata.contour import contourfLog
+#from graphdata.movie.contour import contourfMovie
+#from graphdata.movie.contour import contourfLogMovie
+#from graphdata.wireframe import wireframe
+#from graphdata.movie.surface import surfaceMovie
+#from graphdata.movie.wireframe import wireframeMovie
 
 
 

@@ -43,15 +43,15 @@ class PlotSettings(object):
           'tdimscale_str':'', 'process data':'on',\
           'LSvec':'color','cmap':'hot','title':'on','legend':'on',\
           'movFormat':'wmv2','movLength':10.0,\
+          'elev':30,'azim' : -120,'decades' : 12, 'contours' : 20 \
           'FigWidth':14,'FigHeight':8,'FigWidthL':15,'FigHeightL':5,\
           'PlotWidth':14,'PlotHeight':8,'SemilogyWidth':15,'SemilogyHeight':5,\
           'LogLogWidth':14,'LogLogHeight':8,\
           'SurfaceTickFormat':'%0.02e','NumberSurfaceTicks':6,'SurfaceTickFormat':'%0.02e',\
-          'SurfaceWidth':8,'SurfaceHeight':8,'SurfaceElevation':30,'SurfaceAzimuth' : -120,\
+          'SurfaceWidth':8,'SurfaceHeight':8,\
           'WireframeHeight':8,'WireframeWidth':8,\
-          'ContourfHeight':6,'ContourfWidth':15,'contours':50,\
+          'ContourfHeight':6,'ContourfWidth':15,\
           'WireframeLogHeight':5,'WireframeLogWidth':16,\
-          'decades':12,\
           'Mode':'basic'}
         return default_dict
 
@@ -243,8 +243,8 @@ class PlotSettings(object):
       self._writesettings()
 
     def surfaceView(self,elev,azim):
-      self._G["SurfaceElevation"] = elev
-      self._G["SurfaceAzimuth"] = azim
+      self._G["elev"] = elev
+      self._G["azim"] = azim
       self._writesettings()
 
     def points1D(self,num):

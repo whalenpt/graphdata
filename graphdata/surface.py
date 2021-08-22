@@ -4,8 +4,9 @@
 
 from matplotlib import ticker 
 from mpl_toolkits.mplot3d.axes3d import Axes3D 
+
 from graphdata.shared.shared import ExtendDictionary
-from graphdata.shared.figsizes import PlotSize
+from graphdata.shared.figsizes import SurfaceSize
 from graphdata.shared.shared2D import LoadData2D
 from graphdata.shared.shared2D import ProcessData2D
 from graphdata.shared.shared2D import GetView
@@ -24,7 +25,7 @@ def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,overwrite=False,
 
     INPUTS:
         filename: string
-            name of file containing 1D data to be plotted
+            name of file containing 2D data to be plotted
         figsize: tuple (width,height)
             size of figure to be displayed
         xlim: np.array
@@ -37,18 +38,19 @@ def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,overwrite=False,
             false (default) -> create new surface plot figure
             true -> clear figure named 'Surface' and make new surface plot
         **kwargs: dictionary
-            (optional) arguments to be passed onto plt.loglog plot
+            (optional) arguments to be passed onto plt.surface plot
 
     OUTPUTS:
 
-        ax : matplotlib.axes.Axes
+        ax : mpl_toolkits.mplot3d.axes3d.Axes3D
             Matplotlib axes object, allows for setting limits and other manipulation of the axes
-            (e.g. ax.set_xlim([0,1]) would set the graph x-limits to be between 0 and 1)
 
     """
 
     x,y,Z,auxDict = LoadData2D(filename)
-    figsize = PlotSize(figsize)
+    ExtendDictionary(auxDict,figsize=figsize,xlim=xlim,ylim=ylim,overwrite=overwrite)
+    figsize = SurfaceSize(figsize)
+
     if xlim is None:
         xlim = [x[0],x[-1]]
     if ylim is None:
@@ -57,7 +59,6 @@ def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,overwrite=False,
     elev,azim = GetView(**kwargs)
     auxDict['elev'] = elev 
     auxDict['azim'] = azim
-    ExtendDictionary(auxDict,figsize=figsize,xlim=xlim,ylim=ylim,overwrite=overwrite)
     x,y,Z,auxDict = ProcessData2D(x,y,Z,auxDict)
     X,Y = np.meshgrid(x,y)
 
@@ -98,7 +99,7 @@ def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,overwrite=False,
 
     plt.ion()
     plt.show()
-    return p 
+    return ax
 
 
 

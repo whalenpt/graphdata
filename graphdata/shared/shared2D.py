@@ -4,7 +4,11 @@ import glob
 import os
 from matplotlib import ticker
 
-from graphdata.shared.shared import validateFileName,SetDecadeLimits
+from graphdata.shared.shared import validateFileName
+from graphdata.shared.shared import LabelX
+from graphdata.shared.shared import LabelY
+from graphdata.shared.shared import LabelZ
+
 from graphdata.shared.datfile import ReadDatFile2D
 from graphdata.shared.jsonfile import ReadJSONFile2D
 
@@ -23,63 +27,116 @@ def LoadData2D(fileName):
     else:
         raise Exception('Failed to recognize data format for file extension {}'.format(extension))
 
+def ProcessPointsXYZ(x,y,z,auxDict): 
+    if 'xlim' in auxDict and auxDict['xlim'] is not None:
+        xlim = auxDict['xlim']
+        indxMax = x < float(xlim[1])
+        x = x[indxMax]
+        z = z[indxMax,:]
+        indxMin = x >= float(xlim[0]) 
+        x = x[indxMin]
+        z = z[indxMin,:]
+
+    nx = len(x)
+    if nx == 0:
+        print('No points within specfied x-limits: ') 
+        print('EXITING!')
+        sys.exit()
+
+    if 'ylim' in auxDict and auxDict['ylim'] is not None:
+        ylim = auxDict['ylim']
+        indxMax = y < float(ylim[1])
+        y = y[indxMax]
+        z = z[:,indxMax]
+        indxMin = y >= float(ylim[0]) 
+        y = y[indxMin]
+        z = z[:,indxMin]
+  
+    ny = len(y)
+    if ny == 0:
+        print('No points within specfied y-limits: ') 
+        print('EXITING!')
+        sys.exit()
+
+    indxStep = 1;
+    if nx > int(configs._G["pointsX_2D"]):
+        indxStep = int(np.ceil(float(nx)/int(configs._G["pointsX_2D"])))
+    x = x[0:nx:indxStep]
+    z = z[0:nx:indxStep,:]
+  
+    indxStep = 1;
+    if ny > int(configs._G["pointsY_2D"]):
+        indxStep = int(np.ceil(float(ny)/int(configs._G["pointsY_2D"])))
+    y = y[0:ny:indxStep];
+    z = z[:,0:ny:indxStep]
+
+    if 'ycordID' in auxDict:
+        if(auxDict['ycordID'] == 'R' or auxDict['ycordID'] == 'SR'):
+            y = np.hstack([-np.flipud(y),y])
+            z = np.hstack([np.fliplr(z),z])
+
+    return (x,y,z)
+
+
 def GetView(**kwargs):
     if 'elev' in kwargs:
         elev = kwargs['elev']
     else:
-        elev = int(configs._G['SurfaceElevation'])
-
+        elev = int(configs._G['elev'])
     if 'azim' in kwargs:
         azim = kwargs['azim']
     else:
-        azim = int(configs._G['SurfaceAzimuth'])
+        azim = int(configs._G['azim'])
     return elev,azim
 
+def ProcessContourLimitZ(Z,zlim):
+    zmin = float(zlim[0]) 
+    zmax = float(zlim[1])
+    Z[Z < zmin] = zmin
+    Z[Z > zmax] = zmax
+    return Z
+
+def ProcessDecadeLimitZ(Z,decades):
+    zmax = 10.0*np.amax(Z)
+    zmin = pow(10,-decades-1)*zmax
+    maxLevel = int(np.ceil(np.log10(zmax)))
+    minLevel = int(maxLevel - decades - 1)
+    Z[Z < pow(10,minLevel)] = pow(10,minLevel)
+    return Z
+
+def ContourLevels(levels,Z):
+    if levels is not None:
+        return levels
+    numCont = int(configs._G['contours'])
+    zmin = float(np.amin(Z)) 
+    zmax = float(np.amax(Z))
+    dz = (zmax - zmin)/(numCont-1)
+    levels = np.zeros(numCont,dtype = float)
+    for i in range(numCont):
+        levels[i] = zmin + i*dz
+    return levels
+
+def ContourLevelTicks(levels)
+    numCont = levels
+    if not isinstance(levels,int):
+        numCont = len(levels)
+    minTick = float(np.amin(Z)) 
+    maxTick = float(np.amax(Z))
+    levelTicks = list(np.linspace(minTick,maxTick,numCont))
+    maxLevTick = 6 
+    if len(levelTicks) > maxLevTick:
+        indxStep = int(np.ceil(float(len(levelTicks))/maxLevTick))
+        lastTick = levelTicks[-1]
+        levelTicks = levelTicks[0:-1:indxStep]
+        if lastTick not in levelTicks:
+            levelTicks.append(lastTick)
+    return levelTicks
 
 def Labels2D(auxDict):
-  xstr = ""
-  ystr = ""
-  zstr = ""
-  if(configs._G['scale'] == 'nonDim'):
-    if 'xscale_str' in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] + '(' + auxDict["xscale_str"] + ')' 
-    elif 'xscale_str' not in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] 
-    if 'yscale_str' in auxDict and 'plabel' in auxDict:
-      ystr = auxDict['ylabel'] + '(' + auxDict["yscale_str"] + ')' 
-    elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
-      ystr = auxDict['ylabel'] 
-    if 'zscale_str' in auxDict and 'zlabel' in auxDict:
-      zstr =  auxDict['zlabel'] + '(' + auxDict["zscale_str"] + ')' 
-    elif 'zscale_str' not in auxDict and 'zlabel' in auxDict:
-      zstr =  auxDict['zlabel'] 
-  elif(configs._G['scale'] == 'noscale'):
-    if 'xunit_str' in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] + '(' + auxDict["xunit_str"] + ')' 
-    elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
-       xstr = auxDict['xlabel']
-    if 'yunit_str' in auxDict and 'ylabel' in auxDict:
-      ystr = auxDict['ylabel']  + '(' + auxDict["yunit_str"] + ')' 
-    elif 'yunit_str' not in auxDict and 'ylabel' in auxDict:
-      ystr = auxDict['ylabel'] 
-    if 'zscale_str' in auxDict and 'zlabel' in auxDict:
-      zstr =  auxDict['zlabel'] + '(' + auxDict["zscale_str"] + ')' 
-    elif 'zscale_str' not in auxDict and 'zlabel' in auxDict:
-      zstr =  auxDict['zlabel'] 
-  elif(configs._G['scale'] == 'dimscale'):
-    if 'xunit_str' in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] + '(' + configs._G['xdimscale_str'] + auxDict["xunit_str"] + ')' 
-    elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] + " [arb.]" 
-    if 'yunit_str' in auxDict and 'ylabel' in auxDict:
-      ystr = auxDict['ylabel'] + '(' + configs._G['ydimscale_str'] + auxDict["yunit_str"] + ')' 
-    elif 'yunit_str' not in auxDict and 'ylabel' in auxDict:
-      ystr = ystr + auxDict['ylabel'] + " [arb.]" 
-    if 'zunit_str' in auxDict and 'zlabel' in auxDict:
-      zstr = auxDict['zlabel'] + '(' + configs._G['zdimscale_str'] + auxDict["zunit_str"] + ')' 
-    elif 'zscale_str' not in auxDict and 'zlabel' in auxDict:
-      zstr = auxDict['zlabel'] + " [arb.]" 
-  return (xstr,ystr,zstr)
+    xstr = LabelX(auxDict)
+    ystr = LabelY(auxDict)
+    zstr = LabelZ(auxDict)
+    return (xstr,ystr,zstr)
 
 
 def GetData2D(*arg):
@@ -133,100 +190,21 @@ def GetDataLog2D(*arg):
 
 
 def ProcessData2D(x,y,z,auxDict,**kwargs):
-  auxDict = ProcessCmdLineOpts(auxDict,**kwargs)
-  if 'swapxy' in auxDict:
-    ty = y
-    y = x
-    x = ty
-    z = np.transpose(z)
-  if(configs._G["scale"] == 'nonDim'):
-    x,y,z = ProcessNonDimData2D(x,y,z,auxDict)
-  elif(configs._G["scale"] == 'dimscale'):
-    x,y,z = ProcessScaledData2D(x,y,z,auxDict)
-  elif(configs._G["scale"] == 'noscale'):
+    if 'swapxy' in auxDict:
+        tempy = y
+        y = x
+        x = tempy
+        z = np.transpose(z)
     x,y,z = ProcessNonScaledData2D(x,y,z,auxDict)
-  z = np.transpose(z)
-  return (x,y,z,auxDict)
+    z = np.transpose(z)
+    return (x,y,z,auxDict)
 
-def ProcessCmdLineOpts(auxDict,**kwargs):
-  if 'lim' in kwargs:
-    kwargs['limits'] = kwargs['lim']
-  if 'limits' in kwargs:
-    limits = kwargs['limits']
-    if len(limits) > 1:
-      auxDict['xlim'] = limits[0:2]
-    if len(limits) > 3:
-      auxDict['ylim'] = limits[2:4]
-    if len(limits) > 5:
-      auxDict['zlim'] = limits[4:6]
-  if 'xlim' in kwargs:
-    auxDict['xlim'] = kwargs['xlim']
-  if 'ylim' in kwargs:
-    auxDict['ylim'] = kwargs['ylim']
-  if 'zlim' in kwargs:
-    auxDict['zlim'] = kwargs['zlim']
-  if 'LS' in kwargs:
-    auxDict['LS'] = kwargs['LS']
-  if 'decades' in kwargs:
-    auxDict['decades'] = float(kwargs['decades'])
-  return auxDict
-
-def ProcessPointsXY(x,y,z,auxDict): 
-
-  if 'xlim' in auxDict:
-    xlim = auxDict['xlim']
-    indxMax = x < float(xlim[1])
-    x = x[indxMax]
-    z = z[indxMax,:]
-    indxMin = x >= float(xlim[0]) 
-    x = x[indxMin]
-    z = z[indxMin,:]
-
-  nx = len(x)
-  if nx == 0:
-    print('No points within specfied x-limits: ') 
-    print('EXITING!')
-    sys.exit()
-
-  if 'ylim' in auxDict:
-    ylim = auxDict['ylim']
-    indxMax = y < float(ylim[1])
-    y = y[indxMax]
-    z = z[:,indxMax]
-    indxMin = y >= float(ylim[0]) 
-    y = y[indxMin]
-    z = z[:,indxMin]
-
-  ny = len(y)
-  if ny == 0:
-    print('No points within specfied x-limits: ') 
-    print('EXITING!')
-    sys.exit()
-
-  indxStep = 1;
-  if nx > int(configs._G["pointsX_2D"]):
-    indxStep = int(np.ceil(float(nx)/int(configs._G["pointsX_2D"])))
-  x = x[0:nx:indxStep]
-  z = z[0:nx:indxStep,:]
-
-  indxStep = 1;
-  if ny > int(configs._G["pointsY_2D"]):
-    indxStep = int(np.ceil(float(ny)/int(configs._G["pointsY_2D"])))
-  y = y[0:ny:indxStep];
-  z = z[:,0:ny:indxStep]
-
-  if 'ycordID' in auxDict:
-    if(auxDict['ycordID'] == 'R' or auxDict['ycordID'] == 'SR'):
-      y = np.hstack([-np.flipud(y),y])
-      z = np.hstack([np.fliplr(z),z])
-  return (x,y,z)
-
-def ProcessPointsZ(x,y,z,auxDict): 
-  if 'zcordID' in auxDict:
-    if(auxDict['zcordID'] == 'AU'):
-      z = z/np.amax(z)
-  if 'decades' in auxDict:
-    z = SetDecadeLimits(auxDict['decades'],z)
+#def ProcessPointsZ(x,y,z,auxDict): 
+#    if 'zcordID' in auxDict:
+#        if(auxDict['zcordID'] == 'AU'):
+#            z = z/np.amax(z)
+#    if 'decades' in auxDict:
+#        z = SetDecadeLimits(auxDict['decades'],z)
 
   #if 'zmin' in auxDict:
   #  indxMin = z >= float(auxDict['zmin']) 
@@ -234,7 +212,8 @@ def ProcessPointsZ(x,y,z,auxDict):
   #if 'zmax' in auxDict:
   #  indxMax = z < float(auxDict['zmax']) 
   #  z[indxMax] = float(auxDict['zmax'])
-  return (x,y,z)
+
+#  return (x,y,z)
 
 
 def ProcessNonDimData2D(x,y,z,auxDict):
@@ -244,26 +223,19 @@ def ProcessNonDimData2D(x,y,z,auxDict):
     y = y/(float(auxDict["yscale"]))
   if 'zscale' in auxDict: 
     z = z/(float(auxDict["zscale"]))
-
-  x,y,z = ProcessPointsXY(x,y,z,auxDict)
-  x,y,z = ProcessPointsZ(x,y,z,auxDict)
-  return (x,y,z)
+  return ProcessPointsXYZ(x,y,z,auxDict)
 
 def ProcessScaledData2D(x,y,z,auxDict):
 
   x = x/float(configs._G["xdimscale"]) 
   y = y/float(configs._G["ydimscale"]) 
   z = z/float(configs._G["zdimscale"]) 
-
-  x,y,z = ProcessPointsXY(x,y,z,auxDict)
-  x,y,z = ProcessPointsZ(x,y,z,auxDict)
-  return (x,y,z)
+  return ProcessPointsXYZ(x,y,z,auxDict)
+#  x,y,z = ProcessPointsZ(x,y,z,auxDict)
 
 
 def ProcessNonScaledData2D(x,y,z,auxDict):
-  x,y,z = ProcessPointsXY(x,y,z,auxDict)
-  x,y,z = ProcessPointsZ(x,y,z,auxDict)
-  return (x,y,z)
+  return ProcessPointsXYZ(x,y,z,auxDict)
 
 def AuxContourLabel(CS,auxDict):
   xstr = ""

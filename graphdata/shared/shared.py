@@ -41,6 +41,28 @@ def LoadParams(file):
         paramDict[key] = val
   return paramDict
 
+def LabelX(auxDict):
+    xstr = ''
+    if 'xunit_str' in auxDict and 'xlabel' in auxDict:
+      xstr = auxDict['xlabel'] + '(' + auxDict["xunit_str"] + ')' 
+    elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
+       xstr = auxDict['xlabel']
+    return xstr
+
+def LabelY(auxDict):
+    ystr = ''
+    if 'yunit_str' in auxDict and 'ylabel' in auxDict:
+      ystr = auxDict['ylabel']  + '(' + auxDict["yunit_str"] + ')' 
+    elif 'yunit_str' not in auxDict and 'ylabel' in auxDict:
+      ystr = auxDict['ylabel'] 
+
+def LabelZ(auxDict):
+    zstr = ''
+    if 'zscale_str' in auxDict and 'zlabel' in auxDict:
+        zstr =  auxDict['zlabel'] + '(' + auxDict["zscale_str"] + ')' 
+    elif 'zscale_str' not in auxDict and 'zlabel' in auxDict:
+        zstr =  auxDict['zlabel'] 
+    return zstr
 
 def GenFileList(*args):
 
@@ -147,14 +169,6 @@ def GenFileList(*args):
       print("Did not recognize number of arguments in GenFileList. ") 
       return False
 
-def SetDecadeLimits(decades,y):
-  ymax = 10.0*np.amax(y)
-  ymin = pow(10,-decades-1)*ymax
-  maxLevel = int(np.ceil(np.log10(ymax)))
-  minLevel = int(maxLevel - decades - 1)
-  indx = y < pow(10,minLevel)
-  y[indx] = pow(10,minLevel)
-  return y
 
 def GetDataFileInfo(fileName):
   splitList = re.split('[.]',fileName)
