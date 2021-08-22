@@ -2,6 +2,8 @@
 import sys
 import glob
 import os
+from matplotlib import ticker
+
 from graphdata.shared.shared import validateFileName,SetDecadeLimits
 from graphdata.shared.datfile import ReadDatFile2D
 from graphdata.shared.jsonfile import ReadJSONFile2D
@@ -22,17 +24,62 @@ def LoadData2D(fileName):
         raise Exception('Failed to recognize data format for file extension {}'.format(extension))
 
 def GetView(**kwargs):
-
     if 'elev' in kwargs:
         elev = kwargs['elev']
     else:
         elev = int(configs._G['SurfaceElevation'])
+
     if 'azim' in kwargs:
         azim = kwargs['azim']
     else:
         azim = int(configs._G['SurfaceAzimuth'])
     return elev,azim
 
+
+def Labels2D(auxDict):
+  xstr = ""
+  ystr = ""
+  zstr = ""
+  if(configs._G['scale'] == 'nonDim'):
+    if 'xscale_str' in auxDict and 'xlabel' in auxDict:
+      xstr = auxDict['xlabel'] + '(' + auxDict["xscale_str"] + ')' 
+    elif 'xscale_str' not in auxDict and 'xlabel' in auxDict:
+      xstr = auxDict['xlabel'] 
+    if 'yscale_str' in auxDict and 'plabel' in auxDict:
+      ystr = auxDict['ylabel'] + '(' + auxDict["yscale_str"] + ')' 
+    elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
+      ystr = auxDict['ylabel'] 
+    if 'zscale_str' in auxDict and 'zlabel' in auxDict:
+      zstr =  auxDict['zlabel'] + '(' + auxDict["zscale_str"] + ')' 
+    elif 'zscale_str' not in auxDict and 'zlabel' in auxDict:
+      zstr =  auxDict['zlabel'] 
+  elif(configs._G['scale'] == 'noscale'):
+    if 'xunit_str' in auxDict and 'xlabel' in auxDict:
+      xstr = auxDict['xlabel'] + '(' + auxDict["xunit_str"] + ')' 
+    elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
+       xstr = auxDict['xlabel']
+    if 'yunit_str' in auxDict and 'ylabel' in auxDict:
+      ystr = auxDict['ylabel']  + '(' + auxDict["yunit_str"] + ')' 
+    elif 'yunit_str' not in auxDict and 'ylabel' in auxDict:
+      ystr = auxDict['ylabel'] 
+    if 'zscale_str' in auxDict and 'zlabel' in auxDict:
+      zstr =  auxDict['zlabel'] + '(' + auxDict["zscale_str"] + ')' 
+    elif 'zscale_str' not in auxDict and 'zlabel' in auxDict:
+      zstr =  auxDict['zlabel'] 
+  elif(configs._G['scale'] == 'dimscale'):
+    if 'xunit_str' in auxDict and 'xlabel' in auxDict:
+      xstr = auxDict['xlabel'] + '(' + configs._G['xdimscale_str'] + auxDict["xunit_str"] + ')' 
+    elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
+      xstr = auxDict['xlabel'] + " [arb.]" 
+    if 'yunit_str' in auxDict and 'ylabel' in auxDict:
+      ystr = auxDict['ylabel'] + '(' + configs._G['ydimscale_str'] + auxDict["yunit_str"] + ')' 
+    elif 'yunit_str' not in auxDict and 'ylabel' in auxDict:
+      ystr = ystr + auxDict['ylabel'] + " [arb.]" 
+    if 'zunit_str' in auxDict and 'zlabel' in auxDict:
+      zstr = auxDict['zlabel'] + '(' + configs._G['zdimscale_str'] + auxDict["zunit_str"] + ')' 
+    elif 'zscale_str' not in auxDict and 'zlabel' in auxDict:
+      zstr = auxDict['zlabel'] + " [arb.]" 
+  return (xstr,ystr,zstr)
 
 
 def GetData2D(*arg):
@@ -157,14 +204,14 @@ def ProcessPointsXY(x,y,z,auxDict):
     sys.exit()
 
   indxStep = 1;
-  if nx > int(configs._G["PointsX_2D"]):
-    indxStep = int(np.ceil(float(nx)/int(configs._G["PointsX_2D"])))
+  if nx > int(configs._G["pointsX_2D"]):
+    indxStep = int(np.ceil(float(nx)/int(configs._G["pointsX_2D"])))
   x = x[0:nx:indxStep]
   z = z[0:nx:indxStep,:]
 
   indxStep = 1;
-  if ny > int(configs._G["PointsY_2D"]):
-    indxStep = int(np.ceil(float(ny)/int(configs._G["PointsY_2D"])))
+  if ny > int(configs._G["pointsY_2D"]):
+    indxStep = int(np.ceil(float(ny)/int(configs._G["pointsY_2D"])))
   y = y[0:ny:indxStep];
   z = z[:,0:ny:indxStep]
 
@@ -296,13 +343,11 @@ def AuxAxes3DLabel(ax,auxDict):
     elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
       zstr = auxDict['ylabel'] + " [arb.]" 
 
-  if 'ylim' in auxDict:
-    ylim = auxDict['ylim']
-    ax.set_zlim3d(ylim)
+  if 'zlim' in auxDict:
+    ax.set_zlim3d(auxDict['zlim'])
 
-  xstr = '$' + xstr + '$'
-  ystr = '$' + ystr + '$'
-  zstr = '$' + zstr + '$'
+  print(auxDict)
+
   ax.set_xlabel(xstr)
   ax.set_ylabel(ystr)
   ax.set_zlabel(zstr)
@@ -319,6 +364,9 @@ def AuxAxes3DLabel(ax,auxDict):
   ax.xaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
   ax.yaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
   ax.zaxis.set_major_formatter(ticker.FormatStrFormatter(labelType))
+
+
+
 
 
 

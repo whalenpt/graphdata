@@ -47,7 +47,8 @@ class PlotSettings(object):
           'PlotWidth':14,'PlotHeight':8,'SemilogyWidth':15,'SemilogyHeight':5,\
           'LogLogWidth':14,'LogLogHeight':8,\
           'SurfaceTickFormat':'%0.02e','NumberSurfaceTicks':6,'SurfaceTickFormat':'%0.02e',\
-          'SurfaceWidth':8,'SurfaceHeight':8,'WireframeHeight':8,'WireframeWidth':8,\
+          'SurfaceWidth':8,'SurfaceHeight':8,'SurfaceElevation':30,'SurfaceAzimuth' : -120,\
+          'WireframeHeight':8,'WireframeWidth':8,\
           'ContourfHeight':6,'ContourfWidth':15,'contours':50,\
           'WireframeLogHeight':5,'WireframeLogWidth':16,\
           'decades':12,\
@@ -241,9 +242,9 @@ class PlotSettings(object):
       self._G["contours"] = num
       self._writesettings()
 
-    def surfaceView(self,num1,num2):
-      self._G["surfaceElevation"] = num1
-      self._G["surfaceAzimuth"] = num2
+    def surfaceView(self,elev,azim):
+      self._G["SurfaceElevation"] = elev
+      self._G["SurfaceAzimuth"] = azim
       self._writesettings()
 
     def points1D(self,num):
