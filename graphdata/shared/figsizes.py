@@ -16,6 +16,10 @@ def LogLogSize(figsize=None):
         return figsize
     return (float(configs._G['LogLogWidth']),float(configs._G['LogLogHeight']))
 
+def SurfaceSize(figsize=None):
+    if figsize is not None: 
+        return figsize
+    return (float(configs._G['SurfaceWidth']),float(configs._G['SurfaceHeight']))
 
 
 

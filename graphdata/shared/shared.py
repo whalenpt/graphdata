@@ -14,6 +14,10 @@ from graphdata import np
 from graphdata.shared.datfile import ReadDatMetadata
 from graphdata.shared.jsonfile import ReadJSONMetadata
 
+def ExtendDictionary(dict1,**kwargs):
+    dict1.update(**kwargs)
+    return dict1
+
 def LoadMetadata(fileName):
     if not validateFileName(fileName):
         raise Exception('Failed to find file: {}'.format(fileName))
@@ -251,10 +255,6 @@ def fmtcols(mylist,cols):
   lines = ("\t".join(mylist[i:i+cols]) for i in range(0,len(mylist),cols))
   return '\n'.join(lines)
 
-
-def ExtendDictionary(dict1,**kwargs):
-    dict1.update(**kwargs)
-    return dict1
 
 
 def validateFileName(fileName):

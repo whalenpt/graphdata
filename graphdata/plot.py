@@ -20,7 +20,7 @@ def plot(filename,figsize=None,xlim=None,ylim=None,overwrite=False,**kwargs):
         xlim: np.array
             x-axis limits of graph
         ylim: np.array
-            x-axis limits of graph
+            y-axis limits of graph
         overwrite: bool
             add lines to an existing plt.plot graph if it exists
             (default is False which will plot graph on a new figure)

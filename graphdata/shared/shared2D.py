@@ -5,11 +5,12 @@ import os
 from graphdata.shared.shared import validateFileName,SetDecadeLimits
 from graphdata.shared.datfile import ReadDatFile2D
 from graphdata.shared.jsonfile import ReadJSONFile2D
+
 from graphdata import plt
 from graphdata import configs
 from graphdata import np
 
-def LoadData2D(file):
+def LoadData2D(fileName):
     if not validateFileName(fileName):
         raise Exception('Failed to find file: {}'.format(fileName))
     filepath,extension = os.path.splitext(fileName)
@@ -19,6 +20,20 @@ def LoadData2D(file):
         return ReadDatFile2D(fileName)
     else:
         raise Exception('Failed to recognize data format for file extension {}'.format(extension))
+
+def GetView(**kwargs):
+
+    if 'elev' in kwargs:
+        elev = kwargs['elev']
+    else:
+        elev = int(configs._G['SurfaceElevation'])
+    if 'azim' in kwargs:
+        azim = kwargs['azim']
+    else:
+        azim = int(configs._G['SurfaceAzimuth'])
+    return elev,azim
+
+
 
 def GetData2D(*arg):
   if len(arg) < 2:
@@ -235,18 +250,6 @@ def AuxContourLabel(CS,auxDict):
       ystr = auxDict['ylabel'] + " [arb.]" 
   CS.ax.set_xlabel(xstr)
   CS.ax.set_ylabel(ystr)
-
-def GetView(**kwargs):
-
-    if 'elev' in kwargs:
-        elev = kwargs['elev']
-    else:
-        elev = int(configs._G['SurfaceElevation'])
-    if 'azim' in kwargs:
-        azim = kwargs['azim']
-    else:
-        azim = int(configs._G['SurfaceAzimuth'])
-    return elev,azim
 
 
 def AuxAxes3DLabel(ax,auxDict):

@@ -4,81 +4,83 @@
 
 from matplotlib import ticker 
 from mpl_toolkits.mplot3d.axes3d import Axes3D 
-
-from graphdata.shared.shared2D import GetData2D 
-from graphdata.shared.shared2D import GetDataLog2D 
-from graphdata.shared.shared2D import ProcessData2D 
+from graphdata.shared.shared2D import LoadData2D
+from graphdata.shared.figsizes import PlotSize
 from graphdata.shared.shared2D import GetView
+from graphdata.shared.shared import ExtendDictionary
 from graphdata.shared.shared2D import AuxAxes3DLabel
+
+#from graphdata.shared.shared2D import GetDataLog2D 
+#from graphdata.shared.shared2D import ProcessData2D 
 
 from graphdata import plt
 from graphdata import configs 
 from graphdata import np 
 
-def surface(*args,**kwargs):
-  """
-  Surface plot of 2D data. 
+def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,overwrite=False,**kwargs)
+    """
+    Graph of 2D data file using Matplotlib plt.surface
 
-  Surface(fileID,fileNumber,plotLimits,**kwargs):
-  Args:
-    fileID: ID for data files where files look like fileID_fileNum.dat e.g.
-      if data files for RT data are SQ_RT_0.dat,SQ_RT_1.dat,
-      SQ_RT_2.dat,..., then the fileID is simply 'SQ_RT'
+    INPUTS:
+        filename: string
+            name of file containing 1D data to be plotted
+        figsize: tuple (width,height)
+            size of figure to be displayed
+        xlim: np.array
+            x-axis limits of graph
+        ylim: np.array
+            x-axis limits of graph
+        overwrite: bool
+            add lines to an existing plt.plot graph if it exists
+            (default is False which will plot graph on a new figure)
+        **kwargs: dictionary
+            (optional) arguments to be passed onto plt.loglog plot
 
-    fileNumber: Specifies which data file number to plot e.g.
-      Surface('RT',10) will make a surface plot of the data file 
-      'RT_10.dat' if this data file is available
+    OUTPUTS:
 
-    plotLimits = [minX,maxX,minY,maxY,minZ,maxZ]
-    plotLimits: Specifies the Surface plot limits 
-      minX:  Minimum x value limit
-      maxX:  Maximum x value limit
-      minY:  Minimum y value limit
-      maxY:  Maximum y value limit
-      minZ:  Minimum z value limit
-      maxZ:  Maximum z value limit
-      If no plotLimit list is given, then all data is used in the plots and
-      then minimum and maximum graph limits will depend on the minimum and
-      maximum data limits of the input and output variables. The plotLimits
-      list can be empty, contain just xmin and xmax limits, contain just
-      xmin,xmax,ymin,and ymax, or contain all limits
-        e.g. Surface('RT',10,[0,1]) will plot data with x-limits between 0 and 1 
-        e.g. Surface('RT',10,[0,1,-2,2]) will plot data with x-limits between 
-          0 and 1 and y-limits between -2 and 2. 
-        e.g. Surface('RT',10,[0,1,-2,2,0,10]) will plot data with x-limits
-          between 0 and 1, y-limits between -2 and 2, and z-limits from 0 to 10
-        e.g. Surface('RT',10,[]) is the same as Surface('RT',10)
+        ax : matplotlib.axes.Axes
+            Matplotlib axes object, allows for setting limits and other manipulation of the axes
+            (e.g. ax.set_xlim([0,1]) would set the graph x-limits to be between 0 and 1)
 
-  """
+    """
 
-  x,y,Z,auxDict = GetData2D(*args)
-  x,y,Z,auxDict = ProcessData2D(x,y,Z,auxDict)
-  if 'square' in kwargs:
-    if kwargs['square'] == 'on':
-      Z = pow(Z,2)
+    x,y,Z,auxDict = LoadData2D(filename)
+    figsize = PlotSize(figsize)
+    if xlim is None:
+        xlim = [x[0],x[-1]]
+    if ylim is None:
+        ylim = [y[0],y[-1]]
+    if zlim is None:
+        zlim = [np.min(Z),np.max(Z)]
 
-  X,Y = np.meshgrid(x,y)
-  elev,azim = GetView(**kwargs)
-  auxDict['elev'] = elev 
-  auxDict['azim'] = azim
+    elev,azim = GetView(**kwargs)
+    auxDict['elev'] = elev 
+    auxDict['azim'] = azim
+    ExtendDictionary(auxDict,figsize=figsize,xlim=xlim,ylim=ylim,zlim=zlim,overwrite=overwrite)
+    x,y,Z,auxDict = ProcessData2D(x,y,Z,auxDict)
+    X,Y = np.meshgrid(x,y)
 
-  width,height = _SurfaceSize(*args)
-  if 'overwrite' in kwargs and kwargs['overwrite']:
-      fig = plt.figure("Surface",figsize=(width,height))
-      fig.clf()
-  else:
-      fig = plt.figure(figsize=(width,height))
+    if 'cmap' in kwargs:
+        cmap = kwargs['cmap']
+    else
+        cmap = str(configs._G["cmap"])
 
-  ax = fig.gca(projection='3d')
-  ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
-  ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
-  ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
-  p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=str(configs._G["cmap"]),linewidth=0,antialiased=True,shade=True) 
+    if overwrite:
+        fig = plt.figure("Surface",figsize=figsize)
+        fig.clf()
+    else:
+        fig = plt.figure(figsize=figsize)
+
+    ax = fig.gca(projection='3d')
+    ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
+    ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
+    ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
+    p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=cmap,linewidth=0,antialiased=True,shade=True) 
   
-  AuxAxes3DLabel(ax,auxDict)
-  plt.ion()
-  plt.show()
-  return p 
+    AuxAxes3DLabel(ax,auxDict)
+    plt.ion()
+    plt.show()
+    return p 
 
 def _SurfaceSize(**kwargs):
     if 'figsize' in kwargs:
