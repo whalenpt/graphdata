@@ -2,7 +2,7 @@
 import sys
 import os
 import glob
-from graphdata.shared.shared import SetDecadeLimits
+from graphdata.shared.shared import ProcessDecadeLimits
 from graphdata.shared.shared import validateFileName
 from graphdata.shared.datfile import ReadDatFile1D
 from graphdata.shared.jsonfile import ReadJSONFile1D
@@ -85,7 +85,7 @@ def ProcessPointsY(x,y,auxDict):
     if(auxDict['ycordID'] == 'AU'):
       y = y/np.amax(y)
   if 'decades' in auxDict:
-    y = SetDecadeLimits(float(auxDict['decades']),y)
+    y = ProcessDecadeLimits(float(auxDict['decades']),y)
     
   return (x,y)
 

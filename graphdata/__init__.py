@@ -40,11 +40,11 @@ from graphdata.semilogy import semilogy
 from graphdata.loglog import loglog
 from graphdata import idnum
 from graphdata.surface import surface
+from graphdata.contourf import contourf
 from graphdata.shared.shared1D import LoadData1D
 from graphdata.shared.shared2D import LoadData2D
 from graphdata.shared.shared import LoadMetadata
 #from graphdata.shared.shared import GenFileList
-from graphdata.contourf import contourf
 
 #from graphdata.movie.plot import plotMovie
 #from graphdata.movie.plot import semilogyMovie

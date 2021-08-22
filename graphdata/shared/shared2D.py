@@ -96,13 +96,6 @@ def ProcessContourLimitZ(Z,zlim):
     Z[Z > zmax] = zmax
     return Z
 
-def ProcessDecadeLimitZ(Z,decades):
-    zmax = 10.0*np.amax(Z)
-    zmin = pow(10,-decades-1)*zmax
-    maxLevel = int(np.ceil(np.log10(zmax)))
-    minLevel = int(maxLevel - decades - 1)
-    Z[Z < pow(10,minLevel)] = pow(10,minLevel)
-    return Z
 
 def ContourLevels(levels,Z):
     if levels is not None:
@@ -116,7 +109,7 @@ def ContourLevels(levels,Z):
         levels[i] = zmin + i*dz
     return levels
 
-def ContourLevelTicks(levels)
+def ContourLevelTicks(levels):
     numCont = levels
     if not isinstance(levels,int):
         numCont = len(levels)

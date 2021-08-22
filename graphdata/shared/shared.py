@@ -29,6 +29,14 @@ def LoadMetadata(fileName):
     else:
         raise Exception('Failed to recognize data format for file extension {}'.format(extension))
 
+def ProcessDecadeLimits(y,decades):
+    ymax = 10.0*np.amax(y)
+    ymin = pow(10,-decades-1)*ymax
+    maxLevel = int(np.ceil(np.log10(ymax)))
+    minLevel = int(maxLevel - decades - 1)
+    y[y < pow(10,minLevel)] = pow(10,minLevel)
+    return y
+
 def LoadParams(file):
   paramDict = dict()
   with open(file) as f:

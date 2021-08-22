@@ -6,11 +6,11 @@ from graphdata.shared.figsizes import ContourfSize
 from graphdata.shared.shared2D import LoadData2D
 from graphdata.shared.shared2D import ProcessData2D
 from graphdata.shared.shared2D import ProcessContourLimitZ
-from graphdata.shared.shared2D import ProcessDecadeLimitZ
 from graphdata.shared.shared2D import ContourLevels
 from graphdata.shared.shared2D import ContourLevelTicks
 from graphdata.shared.shared import LabelX
 from graphdata.shared.shared import LabelY
+from graphdata.shared.shared import ProcessDecadeLimits
 
 from graphdata import plt
 from graphdata import configs 
@@ -59,7 +59,7 @@ def contourf(filename,levels=None,figsize=None,xlim=None,ylim=None,zlim=None,\
     if zlim is not None:
         Z = ProcessContourLimitZ(Z,zlim)
     if decades is not None:
-        Z = ProcessDecadeLimitZ(Z,decades)
+        Z = ProcessDecadeLimits(Z,decades)
     levels = ContourLevels(levels,Z)
     levelTicks = ContourLevelTicks(levels)
     if overwrite:
