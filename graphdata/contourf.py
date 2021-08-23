@@ -144,7 +144,7 @@ def contourflog(filename,numlevels,decades,figsize=None,xlim=None,ylim=None,
     ax = plt.gca()
     ax.set_xlabel(LabelX(auxDict))
     ax.set_ylabel(LabelY(auxDict))
-    CB = plt.colorbar(ticks=levelTicks)
+    CB = plt.colorbar(ticks = ticker.LogLocator())
     plt.ion()
     plt.show()
     return ax

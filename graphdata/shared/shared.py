@@ -78,6 +78,7 @@ def LabelY(auxDict):
       ystr = auxDict['ylabel']  + '(' + auxDict["yunit_str"] + ')' 
     elif 'yunit_str' not in auxDict and 'ylabel' in auxDict:
       ystr = auxDict['ylabel'] 
+    return ystr
 
 def LabelZ(auxDict):
     zstr = ''

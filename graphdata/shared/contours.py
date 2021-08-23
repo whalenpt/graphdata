@@ -24,6 +24,9 @@ def ContourLevels(levels,Z):
 
     if not isinstance(levels,int):
         numCont = len(levels)
+    else:
+        numCont = levels
+
     if zmin is not None:
         minTick = zmin
     else:
