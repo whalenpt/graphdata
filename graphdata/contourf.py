@@ -4,7 +4,7 @@ from mpl_toolkits.mplot3d.axes3d import Axes3D
 from graphdata.shared.shared2D import LoadData2D
 from graphdata.shared.shared2D import ProcessData2D
 
-from graphdata.shared.contours import ContourLevel
+from graphdata.shared.contours import ContourLevels
 from graphdata.shared.contours import ContourLevelsL
 from graphdata.shared.contours import ProcessContourLimitZ
 
@@ -88,7 +88,7 @@ def contourf(filename,levels=None,figsize=None,xlim=None,ylim=None,zlim=None,\
     return ax
 
 def contourflog(filename,numlevels,decades,figsize=None,xlim=None,ylim=None,
-        decades=None,cop='power',overwrite=False,**kwargs):
+        cop='power',overwrite=False,**kwargs):
     """
     Logged data contour plot of 2D data file using Matplotlib plt.contourf
 
