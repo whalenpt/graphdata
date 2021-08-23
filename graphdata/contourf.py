@@ -71,7 +71,6 @@ def contourf(filename,levels=None,figsize=None,xlim=None,ylim=None,zlim=None,\
         fig.clf()
     else:
         fig = plt.figure(figsize=figsize)
-    ax = plt.gca()
 
     if 'cmap' in kwargs:
         cmap = kwargs['cmap']
@@ -80,6 +79,7 @@ def contourf(filename,levels=None,figsize=None,xlim=None,ylim=None,zlim=None,\
         cmap = str(configs._G["cmap"])
 
     CS = plt.contourf(X,Y,Z,levels,cmap=cmap,**kwargs)
+    ax = plt.gca()
     ax.set_xlabel(LabelX(auxDict))
     ax.set_ylabel(LabelY(auxDict))
     CB = plt.colorbar(ticks=levelTicks,format='%0.2e')
@@ -129,11 +129,10 @@ def contourflog(filename,numlevels,decades,figsize=None,xlim=None,ylim=None,
     levels,levelTicks,levelLabels = ContourLevelsL(numlevels,decades,Z)
 
     if overwrite:
-        fig = plt.figure("Contourf",figsize=figsize)
+        fig = plt.figure("Contourflog",figsize=figsize)
         fig.clf()
     else:
         fig = plt.figure(figsize=figsize)
-    ax = plt.gca()
 
     if 'cmap' in kwargs:
         cmap = kwargs['cmap']
@@ -142,10 +141,10 @@ def contourflog(filename,numlevels,decades,figsize=None,xlim=None,ylim=None,
         cmap = str(configs._G["cmap"])
 
     CS = plt.contourf(X,Y,Z,levels,cmap=cmap,locator=ticker.LogLocator(),**kwargs)
+    ax = plt.gca()
     ax.set_xlabel(LabelX(auxDict))
     ax.set_ylabel(LabelY(auxDict))
     CB = plt.colorbar(ticks=levelTicks)
-    ax.set_yticklabels(levelLabels)
     plt.ion()
     plt.show()
     return ax
