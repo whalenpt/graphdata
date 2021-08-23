@@ -8,6 +8,7 @@ import re
 import sys
 import subprocess
 import operator
+import warnings
 from graphdata import plt
 from graphdata import configs
 from graphdata import np
@@ -28,6 +29,20 @@ def LoadMetadata(fileName):
         return ReadDatMetadata(fileName)
     else:
         raise Exception('Failed to recognize data format for file extension {}'.format(extension))
+
+def ProcessComplex(y,cop='power'):
+    if cop not in ['power','absolute','angle']:
+        warnings.warn("Didn't recognize complex operator " + cop + " will use power!")
+        cop = 'power'
+
+    if cop == 'power':
+        y = y.real**2 + y.imag**2
+    elif cop == 'absolute':
+        y = np.abs(y)
+    elif cop == 'angle':
+        y = np.angle(y)
+    return y
+
 
 def ProcessDecadeLimits(y,decades):
     ymax = 10.0*np.amax(y)

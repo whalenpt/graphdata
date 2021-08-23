@@ -38,8 +38,13 @@ def ReadDatFile2D(file):
         x,y = np.array(x), np.array(y)
         z = np.genfromtxt(f)
 
-    shape = (nD1,nD2)
-    z = z.reshape(shape)
+    try:
+        shape = (nD1,nD2)
+        z = z.reshape(shape)
+    except:
+        shape = (2*nD1,nD2)
+        zfull = z.reshape(shape)
+        z = np.array(zfull[:nD1,:] + 1j*zfull[nD1:],dtype=np.complex128)
     return (x,y,z,auxDict)
 
 

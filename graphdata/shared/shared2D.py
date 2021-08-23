@@ -89,41 +89,6 @@ def GetView(**kwargs):
         azim = int(configs._G['azim'])
     return elev,azim
 
-def ProcessContourLimitZ(Z,zlim):
-    zmin = float(zlim[0]) 
-    zmax = float(zlim[1])
-    Z[Z < zmin] = zmin
-    Z[Z > zmax] = zmax
-    return Z
-
-
-def ContourLevels(levels,Z):
-    if levels is not None:
-        return levels
-    numCont = int(configs._G['contours'])
-    zmin = float(np.amin(Z)) 
-    zmax = float(np.amax(Z))
-    dz = (zmax - zmin)/(numCont-1)
-    levels = np.zeros(numCont,dtype = float)
-    for i in range(numCont):
-        levels[i] = zmin + i*dz
-    return levels
-
-def ContourLevelTicks(levels,Z):
-    numCont = levels
-    if not isinstance(levels,int):
-        numCont = len(levels)
-    minTick = float(np.amin(Z)) 
-    maxTick = float(np.amax(Z))
-    levelTicks = list(np.linspace(minTick,maxTick,numCont))
-    maxLevTick = 6 
-    if len(levelTicks) > maxLevTick:
-        indxStep = int(np.ceil(float(len(levelTicks))/maxLevTick))
-        lastTick = levelTicks[-1]
-        levelTicks = levelTicks[0:-1:indxStep]
-        if lastTick not in levelTicks:
-            levelTicks.append(lastTick)
-    return levelTicks
 
 def Labels2D(auxDict):
     xstr = LabelX(auxDict)
@@ -229,39 +194,6 @@ def ProcessScaledData2D(x,y,z,auxDict):
 
 def ProcessNonScaledData2D(x,y,z,auxDict):
   return ProcessPointsXYZ(x,y,z,auxDict)
-
-def AuxContourLabel(CS,auxDict):
-  xstr = ""
-  ystr = ""
-  if(configs._G['scale'] == 'nonDim'):
-    if 'xscale_str' in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] + '[' + auxDict["xscale_str"] + ']' 
-    elif 'xscale_str' not in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] 
-    if 'yscale_str' in auxDict and 'ylabel' in auxDict:
-      ystr = auxDict['ylabel'] + '[' + auxDict["yscale_str"] + ']' 
-    elif 'yscale_str' not in auxDict and 'ylabel' in auxDict:
-      ystr = auxDict['ylabel'] 
-  elif(configs._G['scale'] == 'noscale'):
-    if 'xunit_str' in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel']  + '[' + auxDict["xunit_str"] + ']' 
-    elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] 
-    if 'yunit_str' in auxDict and 'ylabel' in auxDict:
-      ystr = auxDict['ylabel'] + '[' + auxDict["yunit_str"] + ']' 
-    elif 'yunit_str' not in auxDict and 'ylabel' in auxDict:
-      ystr = auxDict['ylabel']
-  elif(configs._G['scale'] == 'dimscale'):
-    if 'xunit_str' in auxDict and 'xlabel' in auxDict:
-      xstr = auxDict['xlabel'] + "[" + configs._G['xdimscale_str'] + auxDict["xunit_str"] + "]" 
-    elif 'xunit_str' not in auxDict and 'xlabel' in auxDict:
-      xstr = ystr + auxDict['xlabel'] + " [arb.]" 
-    if 'yunit_str' in auxDict and 'ylabel' in auxDict:
-      ystr = auxDict['ylabel'] + "[" + configs._G['ydimscale_str'] + auxDict["yunit_str"] + "]" 
-    elif 'yunit_str' not in auxDict and 'ylabel' in auxDict:
-      ystr = auxDict['ylabel'] + " [arb.]" 
-  CS.ax.set_xlabel(xstr)
-  CS.ax.set_ylabel(ystr)
 
 
 def AuxAxes3DLabel(ax,auxDict):

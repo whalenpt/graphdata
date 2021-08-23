@@ -11,12 +11,14 @@ from graphdata.shared.shared2D import LoadData2D
 from graphdata.shared.shared2D import ProcessData2D
 from graphdata.shared.shared2D import GetView
 from graphdata.shared.shared2D import Labels2D
+from graphdata.shared.shared import ProcessComplex
 
 from graphdata import plt
 from graphdata import configs 
 from graphdata import np 
 
-def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,overwrite=False,**kwargs):
+def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,\
+        overwrite=False,cop='power',**kwargs):
     """
     Graph of 2D data file using Matplotlib plt.surface
 
@@ -34,6 +36,11 @@ def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,overwrite=False,
         overwrite: bool
             false (default) -> create new surface plot figure
             true -> clear figure named 'Surface' and make new surface plot
+        cop : string (note this parameter is not used unless the data is complex)
+            cop = 'power' (default) -> for complex data graph the surface of the power of the data
+            cop = 'absolute' -> for complex data graph the surface of the absolute value (abs(data))
+            cop = 'angle' -> for complex data graph the surface of the absolute value (angle(data))
+            
         **kwargs: dictionary
             (optional) arguments to be passed onto plt.surface plot
 
@@ -45,6 +52,9 @@ def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,overwrite=False,
     """
 
     x,y,Z,auxDict = LoadData2D(filename)
+    if(np.iscomplexobj(Z)):
+        Z = ProcessComplex(Z)
+
     ExtendDictionary(auxDict,figsize=figsize,xlim=xlim,ylim=ylim,overwrite=overwrite)
     figsize = SurfaceSize(figsize)
 
@@ -97,7 +107,6 @@ def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,overwrite=False,
     plt.ion()
     plt.show()
     return ax
-
 
 
 
