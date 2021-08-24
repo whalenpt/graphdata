@@ -15,14 +15,31 @@ from graphdata import plt
 from graphdata import configs
 from graphdata import np
 
-def LoadData2D(fileName):
-    if not validateFileName(fileName):
-        raise Exception('Failed to find file: {}'.format(fileName))
-    filepath,extension = os.path.splitext(fileName)
+def LoadData2D(filename):
+    """
+    Loading of 2D data from a file into a numpy arrays
+
+    INPUTS:
+        filename: string
+            name of file containing 2D data to be loaded
+    OUTPUTS:
+        x : numpy array 
+            x - coordinate dependent variable 
+        y : numpy array
+            y - coordinate dependent variable 
+        data : numpy array
+            z - coordinate independent variable ("the data"), possibly of the float or complex type
+        auxDict : dictionary
+            metadata extracted from the data file (anything not data)
+    """
+
+    if not validateFileName(filename):
+        raise Exception('Failed to find file: {}'.format(filename))
+    filepath,extension = os.path.splitext(filename)
     if extension == '.json':
-        return ReadJSONFile2D(fileName)
+        return ReadJSONFile2D(filename)
     elif extension == '.dat':
-        return ReadDatFile2D(fileName)
+        return ReadDatFile2D(filename)
     else:
         raise Exception('Failed to recognize data format for file extension {}'.format(extension))
 

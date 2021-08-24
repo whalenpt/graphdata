@@ -13,14 +13,29 @@ from graphdata import np
 from matplotlib import ticker
 
         
-def LoadData1D(fileName):
-    if not validateFileName(fileName):
-        raise Exception('Failed to find file: {}'.format(fileName))
-    filepath,extension = os.path.splitext(fileName)
+def LoadData1D(filename):
+    """
+    Loading of 1D data from a file into numpy arrays
+
+    INPUTS:
+        filename: string
+            name of file containing 1D data to be loaded
+    OUTPUTS:
+        x : numpy array 
+            x - coordinate (dependent variable) data 
+        y : numpy array
+            y - coordinate (independent variable) data, possibly of the float or complex type
+        auxDict : dictionary
+            metadata extracted from the data file (anything not data)
+    """
+
+    if not validateFileName(filename):
+        raise Exception('Failed to find file: {}'.format(filename))
+    filepath,extension = os.path.splitext(filename)
     if extension == '.json':
-        return ReadJSONFile1D(fileName)
+        return ReadJSONFile1D(filename)
     elif extension == '.dat':
-        return ReadDatFile1D(fileName)
+        return ReadDatFile1D(filename)
     else:
         raise Exception('Failed to recognize data format for file extension {}'.format(extension))
 
