@@ -30,27 +30,33 @@ def LoadMetadata(fileName):
     else:
         raise Exception('Failed to recognize data format for file extension {}'.format(extension))
 
-def ProcessComplex(y,cop='power'):
-    if cop not in ['power','absolute','angle']:
-        warnings.warn("Didn't recognize complex operator " + cop + " will use power!")
-        cop = 'power'
+def ProcessComplex(complex_op,data):
+    # Check that data is actually complex
+    if not np.iscomplexobj(data):
+        return data
+    if complex_op not in ['real','imag','power','absolute','angle']:
+        raise RuntimeError("Didn't recognize complex operator {}, it must be one of the following\
+                'real','imag','power','absolute',or 'angle'".format(complex_op))
+    if complex_op == 'real':
+        data = data.real
+    elif complex_op == 'imag':
+        data = data.imag
+    elif complex_op == 'power':
+        data = data.real**2 + data.imag**2
+    elif complex_op == 'absolute':
+        data = np.abs(data)
+    elif complex_op == 'angle':
+        data = np.angle(data)
+    return data
 
-    if cop == 'power':
-        y = y.real**2 + y.imag**2
-    elif cop == 'absolute':
-        y = np.abs(y)
-    elif cop == 'angle':
-        y = np.angle(y)
-    return y
 
-
-def ProcessDecadeLimits(y,decades):
-    ymax = 10.0*np.amax(y)
-    ymin = pow(10,-decades-1)*ymax
-    maxLevel = int(np.ceil(np.log10(ymax)))
+def ProcessDecadeLimits(decades,data):
+    datamax = 10.0*np.amax(data)
+    datamin = pow(10,-decades-1)*datamax
+    maxLevel = int(np.ceil(np.log10(datamax)))
     minLevel = int(maxLevel - decades - 1)
-    y[y < pow(10,minLevel)] = pow(10,minLevel)
-    return y
+    data[data < pow(10,minLevel)] = pow(10,minLevel)
+    return data
 
 def LoadParams(file):
   paramDict = dict()

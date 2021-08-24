@@ -5,20 +5,20 @@
 from matplotlib import ticker 
 from mpl_toolkits.mplot3d.axes3d import Axes3D 
 
+from graphdata.shared.shared import ProcessComplex
 from graphdata.shared.shared import ExtendDictionary
 from graphdata.shared.figsizes import SurfaceSize
 from graphdata.shared.shared2D import LoadData2D
 from graphdata.shared.shared2D import ProcessData2D
 from graphdata.shared.shared2D import GetView
 from graphdata.shared.shared2D import Labels2D
-from graphdata.shared.shared import ProcessComplex
 
 from graphdata import plt
 from graphdata import configs 
 from graphdata import np 
 
 def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,\
-        overwrite=False,cop='power',**kwargs):
+        overwrite=False,complex_op=None,**kwargs):
     """
     Graph of 2D data file using Matplotlib plt.surface
 
@@ -36,10 +36,8 @@ def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,\
         overwrite: bool
             false (default) -> create new surface plot figure
             true -> clear figure named 'Surface' and make new surface plot
-        cop : string (note this parameter is not used unless the data is complex)
-            cop = 'power' (default) -> for complex data graph the surface of the power of the data
-            cop = 'absolute' -> for complex data graph the surface of the absolute value (abs(data))
-            cop = 'angle' -> for complex data graph the surface of the absolute value (angle(data))
+        complex_op : string in the following list ('real','imag','power','absolute','angle')
+            complex operation used to plot complex data
             
         **kwargs: dictionary
             (optional) arguments to be passed onto plt.surface plot
@@ -52,21 +50,20 @@ def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,\
     """
 
     x,y,Z,auxDict = LoadData2D(filename)
-    if(np.iscomplexobj(Z)):
-        Z = ProcessComplex(Z)
-
+    Z = ProcessComplex(complex_op,Z)
     ExtendDictionary(auxDict,figsize=figsize,xlim=xlim,ylim=ylim,overwrite=overwrite)
+    x,y,Z,auxDict = ProcessData2D(x,y,Z,auxDict)
+
     figsize = SurfaceSize(figsize)
+    elev,azim = GetView(**kwargs)
+    auxDict['elev'] = elev 
+    auxDict['azim'] = azim
 
     if xlim is None:
         xlim = [x[0],x[-1]]
     if ylim is None:
         ylim = [y[0],y[-1]]
 
-    elev,azim = GetView(**kwargs)
-    auxDict['elev'] = elev 
-    auxDict['azim'] = azim
-    x,y,Z,auxDict = ProcessData2D(x,y,Z,auxDict)
     X,Y = np.meshgrid(x,y)
 
     if 'cmap' in kwargs:

@@ -4,12 +4,14 @@ from graphdata.shared.shared1D import AuxPlotLabel1D
 from graphdata.shared.shared1D import ProcessData1D 
 from graphdata.shared.shared1D import LoadData1D 
 from graphdata.shared.figsizes import SemilogySize
+from graphdata.shared.shared import ProcessComplex
 from graphdata.shared.shared import ExtendDictionary
 from graphdata import plt
 from graphdata import np 
 from graphdata import configs 
 
-def semilogy(filename,figsize=None,decades=None,xlim=None,ylim=None,overwrite=False,**kwargs):
+def semilogy(filename,figsize=None,decades=None,xlim=None,ylim=None,\
+        overwrite=False,complex_op=None,**kwargs):
     """
     Semilogy graph of 1D data file using Matplotlib plt.semilogy
 
@@ -28,6 +30,9 @@ def semilogy(filename,figsize=None,decades=None,xlim=None,ylim=None,overwrite=Fa
         overwrite: bool
             add lines to an existing plt.semilogy graph if it exists
             (default is False which will create graph on a new figure)
+        complex_op : string in the following list ('real','imag','power','absolute','angle')
+            complex operation used to plot complex data
+            
         **kwargs: dictionary 
             (optional) arguments to be passed onto plt.loglog plot
 
@@ -39,31 +44,32 @@ def semilogy(filename,figsize=None,decades=None,xlim=None,ylim=None,overwrite=Fa
 
     """
 
-
- 
     x,y,auxDict = LoadData1D(filename)
-    figsize = SemilogySize(figsize)
-    if xlim is None:
-        xlim = [x[0],x[-1]]
+    y = ProcessComplex(complex_op,y)
     if decades is None:
         decades = configs._G['decades']
     ExtendDictionary(auxDict,figsize=figsize,decades=decades,\
             xlim=xlim,ylim=ylim,overwrite=overwrite)
     x,y,auxDict = ProcessData1D(x,y,auxDict)
+
+    if xlim is None:
+        xlim = [x[0],x[-1]]
     if ylim is None:
         ylim = [np.min(y),np.max(y)]
 
+    figsize = SemilogySize(figsize)
     if overwrite:
         labs = plt.get_figlabels() 
         if "Semilogy" not in labs:
-          configs.defaultLS()
+            configs.defaultLS()
         else:
-          configs.toggleLS()
+            configs.toggleLS()
         plt.figure("Semilogy",figsize=figsize)
     else:
         configs.defaultLS()
         plt.figure(figsize=figsize)
   
+
     plt.semilogy(x,y,configs.LS,**kwargs)
     plt.grid(True)
     AuxPlotLabel1D(auxDict)

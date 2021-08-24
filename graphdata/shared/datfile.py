@@ -17,10 +17,22 @@ def ReadDatMetadata(file):
 
 def ReadDatFile1D(file):
     auxDict = ReadDatMetadata(file)
-    with open(file,'rb') as f:
+    with open(file) as f:
         data = np.genfromtxt(f,skip_header=len(auxDict))
-    x = np.array(data[:,0]); y = np.array(data[:,1]);
-    return (x,y,auxDict)
+    rows,cols = data.shape
+    if cols == 2:
+        x = np.array(data[:,0]); y = np.array(data[:,1]);
+        return (x,y,auxDict)
+    elif cols == 3:
+        x = np.array(data[:,0]); 
+        yreal = np.array(data[:,1]);
+        yimag = np.array(data[:,2]);
+        ycmplx = np.array(yreal + 1j*yimag,dtype=np.complex128)
+        return (x,ycmplx,auxDict)
+    else:
+        raise RuntimeError(\
+                'Failed to read the data file {}: is not in a DAT file format'.format(file))
+
 
 def ReadDatFile2D(file):
     auxDict = ReadDatMetadata(file)
@@ -38,14 +50,15 @@ def ReadDatFile2D(file):
         x,y = np.array(x), np.array(y)
         z = np.genfromtxt(f)
 
-    try:
-        shape = (nD1,nD2)
-        z = z.reshape(shape)
-    except:
-        shape = (2*nD1,nD2)
-        zfull = z.reshape(shape)
-        z = np.array(zfull[:nD1,:] + 1j*zfull[nD1:],dtype=np.complex128)
-    return (x,y,z,auxDict)
+    rows,cols = z.shape
+    if rows == nD1:
+        return (x,y,z,auxDict)
+    elif rows == 2*nD1:
+        zcmplx = np.array(z[:nD1,:] + 1j*z[nD1:],dtype=np.complex128)
+        return (x,y,zcmplx,auxDict)
+    else:
+        raise RuntimeError(\
+                'Failed to read the data file {}: is not in a DAT file format'.format(file))
 
 
 

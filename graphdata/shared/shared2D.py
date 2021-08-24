@@ -8,7 +8,6 @@ from graphdata.shared.shared import validateFileName
 from graphdata.shared.shared import LabelX
 from graphdata.shared.shared import LabelY
 from graphdata.shared.shared import LabelZ
-
 from graphdata.shared.datfile import ReadDatFile2D
 from graphdata.shared.jsonfile import ReadJSONFile2D
 
@@ -26,6 +25,17 @@ def LoadData2D(fileName):
         return ReadDatFile2D(fileName)
     else:
         raise Exception('Failed to recognize data format for file extension {}'.format(extension))
+
+def ProcessData2D(x,y,z,auxDict):
+    if 'swapxy' in auxDict:
+        tempy = y
+        y = x
+        x = tempy
+        z = np.transpose(z)
+    x,y,z = ProcessNonScaledData2D(x,y,z,auxDict)
+    z = np.transpose(z)
+    return (x,y,z,auxDict)
+
 
 def ProcessPointsXYZ(x,y,z,auxDict): 
     if 'xlim' in auxDict and auxDict['xlim'] is not None:
@@ -74,17 +84,20 @@ def ProcessPointsXYZ(x,y,z,auxDict):
         if(auxDict['ycordID'] == 'R' or auxDict['ycordID'] == 'SR'):
             y = np.hstack([-np.flipud(y),y])
             z = np.hstack([np.fliplr(z),z])
+  
+    if 'decades' in auxDict and auxDict['decades'] is not None:
+        z = ProcessDecadeLimits(float(auxDict['decades']),z)
 
     return (x,y,z)
 
 
 def GetView(**kwargs):
     if 'elev' in kwargs:
-        elev = kwargs['elev']
+        elev = int(kwargs['elev'])
     else:
         elev = int(configs._G['elev'])
     if 'azim' in kwargs:
-        azim = kwargs['azim']
+        azim = int(kwargs['azim'])
     else:
         azim = int(configs._G['azim'])
     return elev,azim
@@ -147,16 +160,6 @@ def GetDataLog2D(*arg):
   return (x,y,z,auxDict)
 
 
-def ProcessData2D(x,y,z,auxDict,**kwargs):
-    if 'swapxy' in auxDict:
-        tempy = y
-        y = x
-        x = tempy
-        z = np.transpose(z)
-    x,y,z = ProcessNonScaledData2D(x,y,z,auxDict)
-    z = np.transpose(z)
-    return (x,y,z,auxDict)
-
 #def ProcessPointsZ(x,y,z,auxDict): 
 #    if 'zcordID' in auxDict:
 #        if(auxDict['zcordID'] == 'AU'):
@@ -189,7 +192,6 @@ def ProcessScaledData2D(x,y,z,auxDict):
   y = y/float(configs._G["ydimscale"]) 
   z = z/float(configs._G["zdimscale"]) 
   return ProcessPointsXYZ(x,y,z,auxDict)
-#  x,y,z = ProcessPointsZ(x,y,z,auxDict)
 
 
 def ProcessNonScaledData2D(x,y,z,auxDict):

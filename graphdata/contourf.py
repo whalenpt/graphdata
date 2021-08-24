@@ -1,6 +1,14 @@
 
 from matplotlib import ticker 
 from mpl_toolkits.mplot3d.axes3d import Axes3D 
+
+from graphdata.shared.figsizes import ContourfSize
+from graphdata.shared.shared import ProcessComplex
+from graphdata.shared.shared import ExtendDictionary
+from graphdata.shared.shared import LabelX
+from graphdata.shared.shared import LabelY
+from graphdata.shared.shared import ProcessDecadeLimits
+
 from graphdata.shared.shared2D import LoadData2D
 from graphdata.shared.shared2D import ProcessData2D
 
@@ -8,19 +16,13 @@ from graphdata.shared.contours import ContourLevels
 from graphdata.shared.contours import ContourLevelsL
 from graphdata.shared.contours import ProcessContourLimitZ
 
-from graphdata.shared.figsizes import ContourfSize
-from graphdata.shared.shared import ExtendDictionary
-from graphdata.shared.shared import LabelX
-from graphdata.shared.shared import LabelY
-from graphdata.shared.shared import ProcessDecadeLimits
-from graphdata.shared.shared import ProcessComplex
 
 from graphdata import plt
 from graphdata import configs 
 from graphdata import np 
 
 def contourf(filename,levels=None,figsize=None,xlim=None,ylim=None,zlim=None,\
-        decades=None,cop='power',overwrite=False,**kwargs):
+        decades=None,complex_op=None,overwrite=False,**kwargs):
     """
     Graph of 2D data file using Matplotlib plt.contourf
 
@@ -43,6 +45,8 @@ def contourf(filename,levels=None,figsize=None,xlim=None,ylim=None,zlim=None,\
         overwrite: bool
             false (default) -> create new contourf plot figure
             true -> clear figure named 'Contourf' and make new contourf plot
+        complex_op : string in the following list ('real','imag','power','absolute','angle')
+            complex operation used to plot complex data
         **kwargs: dictionary
             (optional) arguments to be passed onto plt.contourf plot
 
@@ -53,17 +57,14 @@ def contourf(filename,levels=None,figsize=None,xlim=None,ylim=None,zlim=None,\
     """
 
     x,y,Z,auxDict = LoadData2D(filename)
-    if(np.iscomplexobj(Z)):
-        Z = ProcessComplex(Z,cop)
+    Z = ProcessComplex(complex_op,Z)
     ExtendDictionary(auxDict,levels=levels,figsize=figsize,xlim=xlim,ylim=ylim,zlim=zlim,\
             decades=decades,overwrite=overwrite)
-    figsize = ContourfSize(figsize)
     x,y,Z,auxDict = ProcessData2D(x,y,Z,auxDict)
+    figsize = ContourfSize(figsize)
     X,Y = np.meshgrid(x,y)
     if zlim is not None:
         Z = ProcessContourLimitZ(zlim,Z)
-    if decades is not None:
-        Z = ProcessDecadeLimits(Z,decades)
 
     levels,levelTicks,levelLabels = ContourLevels(levels,Z)
     if overwrite:
@@ -88,7 +89,7 @@ def contourf(filename,levels=None,figsize=None,xlim=None,ylim=None,zlim=None,\
     return ax
 
 def contourflog(filename,numlevels,decades,figsize=None,xlim=None,ylim=None,
-        cop='power',overwrite=False,**kwargs):
+        complex_op=None,overwrite=False,**kwargs):
     """
     Logged data contour plot of 2D data file using Matplotlib plt.contourf
 
@@ -105,6 +106,10 @@ def contourflog(filename,numlevels,decades,figsize=None,xlim=None,ylim=None,
             x-axis limits of graph
         ylim: np.array
             y-axis limits of graph
+        complex_op : string (note this parameter is not used unless the data is complex)
+            cop = 'power' -> for complex data graph the surface of the power of the data
+            cop = 'absolute' -> for complex data graph the surface of the absolute value (abs(data))
+            cop = 'angle' -> for complex data graph the surface of the absolute value (angle(data))
         overwrite: bool
             false (default) -> create new contourf plot figure
             true -> clear figure named 'Contourf' and make new contourf plot
@@ -118,14 +123,14 @@ def contourflog(filename,numlevels,decades,figsize=None,xlim=None,ylim=None,
     """
 
     x,y,Z,auxDict = LoadData2D(filename)
-    if(np.iscomplexobj(Z)):
-        Z = ProcessComplex(Z,cop)
+    Z = ProcessComplex(complex_op,Z)
     ExtendDictionary(auxDict,decades=decades,figsize=figsize,\
             xlim=xlim,ylim=ylim,overwrite=overwrite)
-    figsize = ContourfSize(figsize)
     x,y,Z,auxDict = ProcessData2D(x,y,Z,auxDict)
+#    Z = ProcessDecadeLimits(decades,Z)
+
+    figsize = ContourfSize(figsize)
     X,Y = np.meshgrid(x,y)
-    Z = ProcessDecadeLimits(Z,decades)
     levels,levelTicks,levelLabels = ContourLevelsL(numlevels,decades,Z)
 
     if overwrite:

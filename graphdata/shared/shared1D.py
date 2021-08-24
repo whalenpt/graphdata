@@ -3,6 +3,7 @@ import sys
 import os
 import glob
 from graphdata.shared.shared import ProcessDecadeLimits
+from graphdata.shared.shared import ProcessComplex
 from graphdata.shared.shared import validateFileName
 from graphdata.shared.datfile import ReadDatFile1D
 from graphdata.shared.jsonfile import ReadJSONFile1D
@@ -25,16 +26,16 @@ def LoadData1D(fileName):
 
 
 def ProcessData1D(x,y,auxDict):
-  if 'mirror horizontal' in auxDict:
-      x = np.hstack([np.flipud(-x),x])
-      y = np.hstack([np.flipud(y),y])
-  if(configs.scale() == 'nonDim'):
-      x,y = ProcessNonDimData1D(x,y,auxDict)
-  elif(configs.scale() == 'dimscale'):
-      x,y = ProcessScaledData1D(x,y,auxDict)
-  elif(configs.scale() == 'noscale'):
-      x,y = ProcessNonScaledData1D(x,y,auxDict)
-  return (x,y,auxDict)
+    if 'mirror horizontal' in auxDict:
+        x = np.hstack([np.flipud(-x),x])
+        y = np.hstack([np.flipud(y),y])
+    if(configs.scale() == 'nonDim'):
+        x,y = ProcessNonDimData1D(x,y,auxDict)
+    elif(configs.scale() == 'dimscale'):
+        x,y = ProcessScaledData1D(x,y,auxDict)
+    elif(configs.scale() == 'noscale'):
+        x,y = ProcessNonScaledData1D(x,y,auxDict)
+    return (x,y,auxDict)
 
 def ProcessPointsX(x,y,auxDict): 
 
@@ -84,8 +85,8 @@ def ProcessPointsY(x,y,auxDict):
   if 'ycordID' in auxDict:
     if(auxDict['ycordID'] == 'AU'):
       y = y/np.amax(y)
-  if 'decades' in auxDict:
-    y = ProcessDecadeLimits(float(auxDict['decades']),y)
+  if 'decades' in auxDict and auxDict['decades'] is not None:
+      y = ProcessDecadeLimits(float(auxDict['decades']),y)
     
   return (x,y)
 

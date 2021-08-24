@@ -4,11 +4,13 @@ from graphdata.shared.shared1D import ProcessData1D
 from graphdata.shared.shared1D import LoadData1D
 from graphdata.shared.figsizes import PlotSize
 from graphdata.shared.shared import ExtendDictionary
+from graphdata.shared.shared import ProcessComplex
 from graphdata import plt
 from graphdata import np
 from graphdata import configs
 
-def plot(filename,figsize=None,xlim=None,ylim=None,overwrite=False,**kwargs):
+def plot(filename,figsize=None,xlim=None,ylim=None,\
+        overwrite=False,complex_op=None,**kwargs):
     """
     Graph of 1D data file using Matplotlib plt.plot
 
@@ -24,6 +26,8 @@ def plot(filename,figsize=None,xlim=None,ylim=None,overwrite=False,**kwargs):
         overwrite: bool
             add lines to an existing plt.plot graph if it exists
             (default is False which will plot graph on a new figure)
+        complex_op : string in the following list ('real','imag','power','absolute','angle')
+            complex operation used to plot complex data
         **kwargs: dictionary
             (optional) arguments to be passed onto plt.loglog plot
 
@@ -34,15 +38,17 @@ def plot(filename,figsize=None,xlim=None,ylim=None,overwrite=False,**kwargs):
             (e.g. ax.set_xlim([0,1]) would set the graph x-limits to be between 0 and 1)
 
     """
-
     x,y,auxDict = LoadData1D(filename)
+    y = ProcessComplex(complex_op,y)
+    ExtendDictionary(auxDict,figsize=figsize,xlim=xlim,ylim=ylim,overwrite=overwrite)
+    x,y,auxDict = ProcessData1D(x,y,auxDict)
+
     figsize = PlotSize(figsize)
     if xlim is None:
         xlim = [x[0],x[-1]]
     if ylim is None:
         ylim = [np.min(y),np.max(y)]
-    ExtendDictionary(auxDict,figsize=figsize,xlim=xlim,ylim=ylim,overwrite=overwrite)
-    x,y,auxDict = ProcessData1D(x,y,auxDict)
+
     labs = plt.get_figlabels()
     if overwrite:
         if "Plot" not in labs:
