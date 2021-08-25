@@ -8,6 +8,7 @@ from graphdata.shared.shared import validateFileName
 from graphdata.shared.shared import LabelX
 from graphdata.shared.shared import LabelY
 from graphdata.shared.shared import LabelZ
+from graphdata.shared.shared import ProcessDecadeLimits
 from graphdata.shared.datfile import ReadDatFile2D
 from graphdata.shared.jsonfile import ReadJSONFile2D
 

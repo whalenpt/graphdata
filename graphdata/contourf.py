@@ -52,7 +52,7 @@ def contourf(filename,levels=None,figsize=None,xlim=None,ylim=None,zlim=None,\
 
     OUTPUTS:
 
-        ax : matplotlib.axes._base._AxesBase
+        None
 
     """
 
@@ -86,7 +86,6 @@ def contourf(filename,levels=None,figsize=None,xlim=None,ylim=None,zlim=None,\
     CB = plt.colorbar(ticks=levelTicks,format='%0.2e')
     plt.ion()
     plt.show()
-    return ax
 
 def contourflog(filename,numlevels,decades,figsize=None,xlim=None,ylim=None,
         complex_op=None,overwrite=False,**kwargs):
@@ -118,7 +117,7 @@ def contourflog(filename,numlevels,decades,figsize=None,xlim=None,ylim=None,
 
     OUTPUTS:
 
-        ax : matplotlib.axes._base._AxesBase
+        None
 
     """
 
@@ -152,6 +151,5 @@ def contourflog(filename,numlevels,decades,figsize=None,xlim=None,ylim=None,
     CB = plt.colorbar(ticks = ticker.LogLocator())
     plt.ion()
     plt.show()
-    return ax
 
 

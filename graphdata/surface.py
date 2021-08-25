@@ -44,8 +44,7 @@ def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,\
 
     OUTPUTS:
 
-        ax : mpl_toolkits.mplot3d.axes3d.Axes3D
-            Matplotlib axes object, allows for setting limits and other manipulation of the axes
+        None
 
     """
 
@@ -103,7 +102,6 @@ def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,\
 
     plt.ion()
     plt.show()
-    return ax
 
 
 
