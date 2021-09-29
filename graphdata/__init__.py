@@ -1,7 +1,6 @@
 """Top-level package for GraphData"""
 __author__ = """Patrick Whalen"""
 __email__ = 'whalenpt@gmail.com'
-__version__ = '0.0.1'
 
 from matplotlib import rc,rcParams
 import matplotlib as mpl
@@ -12,18 +11,16 @@ global configs
 from graphdata.settings.settings import PlotSettings
 configs = PlotSettings()
 
-#rc('text',usetex=True)
 rc('text',usetex=False)
 rcParams['contour.negative_linestyle'] = 'solid' 
 rcParams['image.cmap'] = 'hot'
 rcParams['lines.antialiased'] = True
-#rcParams['legend.frameon'] = True 
 rcParams['figure.facecolor'] = 'white'   
-newbonemap = mpl.colors.LinearSegmentedColormap.from_list('bone',
+newbonemap = mpl.colors.LinearSegmentedColormap.from_list('bone2',
    [(0.81234674617027558, 0.87990196078431371, 0.87990193376227044),
        (0.4392156862745098, 0.48412986868103691, 0.56421558822309559),
   (0.12009803921568628, 0.12009799222075436, 0.16709292412617219) ])
-plt.register_cmap(cmap = newbonemap)
+plt.register_cmap(cmap = newbonemap,override_builtin=False)
 mpl.colors.colorConverter.colors['f'] = (0.0/256,0.0/256,205.0/256)
 mpl.colors.colorConverter.colors['t'] = (105.0/256,105.0/256,105.0/256)
 
@@ -31,9 +28,8 @@ cdict = {'blue': ((0.0, 0.0, 0.0), (0.74, 0.0, 0.0), (1.0, 0.7, 0.7)),
  'green': ((0.0, 0.0, 0.0), (0.365079, 0.0, 0.0), (0.746032, 1.0, 1.0), (1.0, 1.0, 1.0)), 
  'red': ((0.0, 0.0416, 0.0416), (0.365079, 1.0, 1.0), (1.0, 1.0, 1.0))}
 
-newhotmap = mpl.colors.LinearSegmentedColormap('hot',cdict)
-plt.register_cmap(cmap = newhotmap)
-
+newhotmap = mpl.colors.LinearSegmentedColormap('hot2',cdict)
+plt.register_cmap(cmap = newhotmap,override_builtin=False)
 
 from graphdata.plot import plot 
 from graphdata.semilogy import semilogy

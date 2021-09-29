@@ -74,7 +74,7 @@ def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,\
     else:
         fig = plt.figure(figsize=figsize)
 
-    ax = fig.gca(projection='3d')
+    ax = fig.add_subplot(projection='3d')
     ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
     ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
     ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 

@@ -25,7 +25,7 @@ class PlotSettings(object):
                 'converge4':['t-p','k-d','c-v','g-*']}
         self._LSvec = copy.deepcopy(self._LSoptions[self._G['LSvec']])
         self._LS = self._LSvec[0]
-        self._cmapvec = ['hot','jet','bone','gray','binary','gist_yarg']
+        self._cmapvec = ['hot2','jet','bone2','gray','binary','gist_yarg']
         self.legendList = []
         self._modeVec = ['basic','paper']
         self.setMode(self._G["Mode"])
@@ -206,7 +206,7 @@ class PlotSettings(object):
 
     def setCmap(self,val):
       """
-      Cmap styles:  hot,jet,bone,gray,binary,gist_yarg,etc.
+      Cmap styles:  hot2,jet,bone2,gray,binary,gist_yarg,etc.
       """
       self._G["cmap"] = val 
       print(("Colormap set to " + str(self._G["cmap"])))

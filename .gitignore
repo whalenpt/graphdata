@@ -6,7 +6,7 @@ CONTRIBUTING.rst
 docs
 requirements_dev.txt
 setup.cfg
-setup.py
+# setup.py
 tests
 tox.ini
 *.swp

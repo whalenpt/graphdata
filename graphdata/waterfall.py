@@ -58,8 +58,8 @@ def waterfall(fileID : str, fileNumbers : list,figsize=None,xlim=None,ylim=None,
     x1 = [0]*len(fileList)
     figsize = WaterfallSize(figsize)
     fig = plt.figure(figsize=figsize)
+    ax = fig.add_subplot(projection='3d')
 
-    ax = fig.gca(projection='3d')
     ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
     ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
     ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
