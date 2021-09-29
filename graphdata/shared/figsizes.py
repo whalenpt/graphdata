@@ -27,5 +27,10 @@ def ContourfSize(figsize):
     return (float(configs._G['ContourfWidth']),float(configs._G['ContourfHeight']))
 
 
+def WaterfallSize(figsize):
+    if figsize is not None: 
+        return figsize
+    return (float(configs._G['WaterfallWidth']),float(configs._G['WaterfallHeight']))
+
 
 

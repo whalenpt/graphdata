@@ -1,4 +1,3 @@
-
 #!/usr/bin/python
 # Filename: surface.py
 
@@ -52,7 +51,6 @@ def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,\
     Z = ProcessComplex(complex_op,Z)
     ExtendDictionary(auxDict,figsize=figsize,xlim=xlim,ylim=ylim,overwrite=overwrite)
     x,y,Z,auxDict = ProcessData2D(x,y,Z,auxDict)
-
     figsize = SurfaceSize(figsize)
     elev,azim = GetView(**kwargs)
     auxDict['elev'] = elev 
@@ -80,7 +78,7 @@ def surface(filename,figsize=None,xlim=None,ylim=None,zlim=None,\
     ax.w_xaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
     ax.w_yaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
     ax.w_zaxis.set_pane_color((0.0,0.0,0.0,0.0)) 
-    p = ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=cmap,linewidth=0,antialiased=True,shade=True) 
+    ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=cmap,linewidth=0,antialiased=True,shade=True,**kwargs) 
     if zlim:
         ax.set_zlim3d(zlim)
   

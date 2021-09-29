@@ -50,6 +50,7 @@ class PlotSettings(object):
           'SurfaceTickFormat':'%0.02e','NumberSurfaceTicks':6,'SurfaceTickFormat':'%0.02e',\
           'SurfaceWidth':8,'SurfaceHeight':8,\
           'WireframeHeight':8,'WireframeWidth':8,\
+          'WaterfallHeight':8,'WaterfallWidth':8,\
           'ContourfHeight':6,'ContourfWidth':15,\
           'WireframeLogHeight':5,'WireframeLogWidth':16,\
           'Mode':'basic'}
@@ -163,6 +164,12 @@ class PlotSettings(object):
       self._G["SurfaceWidth"] = w
       self._G["SurfaceHeight"] = h
       self._writesettings()
+
+    def waterfallSize(self,w,h):
+      self._G["WaterfallWidth"] = w
+      self._G["WaterfallHeight"] = h
+      self._writesettings()
+
 
     def plotSize(self,w,h):
       self._G["PlotWidth"] = w

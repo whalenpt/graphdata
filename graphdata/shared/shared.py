@@ -94,121 +94,123 @@ def LabelZ(auxDict):
         zstr =  auxDict['zlabel'] 
     return zstr
 
-def GenFileList(*args):
+#def GenFileList(fileID,fileNumbers):
 
-  fileList = []
-  if len(args) == 0:
-    print('Please enter at least one argument to GenFileList')
-    return False
-
-  fileID = ''
-  if len(args) > 0:
-    fileID = args[0]
-    fileList = glob.glob(fileID + '_' + '*.dat')
-    if len(fileList) == 0:
-      print('No files detected for fileID: ' + fileID)
-      print('Files in directory are: ')
-      dirFiles = os.listdir('.')
-      dirFiles = SortNumericStringList(dirFiles)
-      print(fmtcols(dirFiles,1))
-      return False
-    else:
-      fileList = SortNumericStringList(fileList)
-
-  updateList = []
-  if len(args) == 1:
-    return fileList
-  elif len(args) == 2:
-    fileID = args[0] 
-    fileSpec = args[1]
-    if isinstance(fileSpec,int): 
-      numFiles = fileSpec 
-      repNums = set() 
-      for file in fileList:
-        idstr,repNum = GetDataFileInfo(file)
-        repNums.add(int(repNum))
-      indx1 = min(repNums)
-      indx2 = max(repNums)
-      tot = indx2 - indx1 + 1
-      if tot <= numFiles:
-        return fileList
-
-      mult = int(np.floor(float(tot)/numFiles))
-      if(mult == 0):
-        mult = 1
-      filenums = list(range(indx1,indx2,mult))
-      if indx2 not in filenums:
-        filenums.append(indx2)
-      for i in filenums: 
-        name = fileID + '_' + str(i) + '.dat'
-        updateList.append(name)
-      fileList = SortNumericStringList(updateList)
-      return fileList
-    elif len(fileSpec) == 0:
-      fileID = args[0] 
-      return fileList
-    elif len(fileSpec) == 1:
-      numFiles = int(fileSpec[0])
-      repNums = set() 
-      for file in fileList:
-        idstr,repNum = GetDataFileInfo(file)
-        repNums.add(int(repNum))
-      indx1 = min(repNums)
-      indx2 = max(repNums)
-      tot = indx2 - indx1 + 1
-      if tot <= numFiles:
-        return fileList
-      mult = int(np.floor(float(tot)/numFiles))
-      if(mult == 0):
-        mult = 1
-      filenums = list(range(indx1,indx2,mult))
-      if indx2 not in filenums:
-        filenums.append(indx2)
-      for i in filenums: 
-        name = fileID + '_' + str(i) + '.dat'
-        updateList.append(name)
-      fileList = SortNumericStringList(updateList)
-      return fileList
-    elif len(fileSpec) > 1:
-      repNums = set() 
-      for file in fileList:
-        idstr,repNum = GetDataFileInfo(file)
-        repNums.add(int(repNum))
-      numFiles = fileSpec[0] 
-      minindx = min(repNums)
-      maxindx = max(repNums)
-
-      indx1 = max(fileSpec[1],minindx)
-      indx2 = maxindx
-      if len(fileSpec) > 2:
-        indx2 = min(fileSpec[2],maxindx)
-
-      tot = indx2 - indx1 + 1
-      mult = int(np.floor(float(tot)/numFiles))
-      if(mult == 0):
-        mult = 1
-      filenums = list(range(indx1,indx2,mult))
-      if indx2 not in filenums:
-        filenums.append(indx2)
-      for i in filenums: 
-        name = fileID + '_' + str(i) + '.dat'
-        updateList.append(name)
-      fileList = SortNumericStringList(updateList)
-      return fileList
-    else:
-      print("Did not recognize number of arguments in GenFileList. ") 
-      return False
+#def GenFileList(*args):
+#
+#    fileList = []
+#    if len(args) == 0:
+#        print('Please enter at least one argument to GenFileList')
+#        return False
+#
+#    fileID = ''
+#    if len(args) > 0:
+#        fileID = args[0]
+#        fileList = glob.glob(fileID + '_' + '*.dat')
+#        if len(fileList) == 0:
+#            print('No files detected for fileID: ' + fileID)
+#            print('Files in directory are: ')
+#            dirFiles = os.listdir('.')
+#            dirFiles = SortNumericStringList(dirFiles)
+#            print(fmtcols(dirFiles,1))
+#            return False
+#        else:
+#            fileList = SortNumericStringList(fileList)
+#  
+#    updateList = []
+#    if len(args) == 1:
+#      return fileList
+#    elif len(args) == 2:
+#      fileID = args[0] 
+#      fileSpec = args[1]
+#      if isinstance(fileSpec,int): 
+#        numFiles = fileSpec 
+#        repNums = set() 
+#        for file in fileList:
+#          idstr,repNum = GetDataFileInfo(file)
+#          repNums.add(int(repNum))
+#        indx1 = min(repNums)
+#        indx2 = max(repNums)
+#        tot = indx2 - indx1 + 1
+#        if tot <= numFiles:
+#          return fileList
+#  
+#        mult = int(np.floor(float(tot)/numFiles))
+#        if(mult == 0):
+#          mult = 1
+#        filenums = list(range(indx1,indx2,mult))
+#        if indx2 not in filenums:
+#          filenums.append(indx2)
+#        for i in filenums: 
+#          name = fileID + '_' + str(i) + '.dat'
+#          updateList.append(name)
+#        fileList = SortNumericStringList(updateList)
+#        return fileList
+#      elif len(fileSpec) == 0:
+#        fileID = args[0] 
+#        return fileList
+#      elif len(fileSpec) == 1:
+#        numFiles = int(fileSpec[0])
+#        repNums = set() 
+#        for file in fileList:
+#          idstr,repNum = GetDataFileInfo(file)
+#          repNums.add(int(repNum))
+#        indx1 = min(repNums)
+#        indx2 = max(repNums)
+#        tot = indx2 - indx1 + 1
+#        if tot <= numFiles:
+#          return fileList
+#        mult = int(np.floor(float(tot)/numFiles))
+#        if(mult == 0):
+#          mult = 1
+#        filenums = list(range(indx1,indx2,mult))
+#        if indx2 not in filenums:
+#          filenums.append(indx2)
+#        for i in filenums: 
+#          name = fileID + '_' + str(i) + '.dat'
+#          updateList.append(name)
+#        fileList = SortNumericStringList(updateList)
+#        return fileList
+#      elif len(fileSpec) > 1:
+#        repNums = set() 
+#        for file in fileList:
+#          idstr,repNum = GetDataFileInfo(file)
+#          repNums.add(int(repNum))
+#        numFiles = fileSpec[0] 
+#        minindx = min(repNums)
+#        maxindx = max(repNums)
+#  
+#        indx1 = max(fileSpec[1],minindx)
+#        indx2 = maxindx
+#        if len(fileSpec) > 2:
+#          indx2 = min(fileSpec[2],maxindx)
+#  
+#        tot = indx2 - indx1 + 1
+#        mult = int(np.floor(float(tot)/numFiles))
+#        if(mult == 0):
+#          mult = 1
+#        filenums = list(range(indx1,indx2,mult))
+#        if indx2 not in filenums:
+#          filenums.append(indx2)
+#        for i in filenums: 
+#          name = fileID + '_' + str(i) + '.dat'
+#          updateList.append(name)
+#        fileList = SortNumericStringList(updateList)
+#        return fileList
+#      else:
+#        print("Did not recognize number of arguments in GenFileList. ") 
+#        return False
 
 
 def GetDataFileInfo(fileName):
-  splitList = re.split('[.]',fileName)
-  fName = splitList[0]
-  splitList = re.split('[_]',fName)
-  repNum = splitList[-1] 
-  fileID = splitList[0] 
-  for i in range(1,len(splitList)-1):
-    fileID = fileID + '_' + str(splitList[i])
-  return (fileID,repNum)
+    splitList = re.split('[.]',fileName)
+    fName = splitList[0]
+    splitList = re.split('[_]',fName)
+    repNum = splitList[-1] 
+    fileID = splitList[0] 
+    for i in range(1,len(splitList)-1):
+        fileID = fileID + '_' + str(splitList[i])
+    return (fileID,repNum)
 
 def GetRepNums(fileList):
   repNums = set()

@@ -42,9 +42,11 @@ from graphdata import idnum
 from graphdata.surface import surface
 from graphdata.contourf import contourf
 from graphdata.contourf import contourflog
+from graphdata.waterfall import waterfall
 from graphdata.shared.shared1D import LoadData1D
 from graphdata.shared.shared2D import LoadData2D
 from graphdata.shared.shared import LoadMetadata
+
 #from graphdata.shared.shared import GenFileList
 
 #from graphdata.movie.plot import plotMovie

@@ -9,7 +9,7 @@
 --------------------------------------------------------------------------"""
 import glob
 
-def GetDataFileName(fileID,fileNumber):
+def GetDataFileName(fileID : str,fileNumber : int) -> str:
     search_string = fileID + '_' + str(fileNumber) + '.*'
     fileList = glob.glob(search_string)
     if not fileList:
@@ -21,6 +21,11 @@ def GetDataFileName(fileID,fileNumber):
                 Here are the files: {}'.format(fileID,fileNumber,files_string))
     return fileList[0]
 
+def GetDataFileList(fileID : str,fileNumbers : list) -> list:
+    fileList = []
+    for fileNumber in fileNumbers:
+        fileList.append(GetDataFileName(fileID,fileNumber))
+    return fileList
 
 
 

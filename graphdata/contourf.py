@@ -66,7 +66,7 @@ def contourf(filename,levels=None,figsize=None,xlim=None,ylim=None,zlim=None,\
     if zlim is not None:
         Z = ProcessContourLimitZ(zlim,Z)
 
-    levels,levelTicks,levelLabels = ContourLevels(levels,Z)
+    levels,levelTicks,_ = ContourLevels(levels,Z)
     if overwrite:
         fig = plt.figure("Contourf",figsize=figsize)
         fig.clf()
@@ -79,11 +79,11 @@ def contourf(filename,levels=None,figsize=None,xlim=None,ylim=None,zlim=None,\
     else:
         cmap = str(configs._G["cmap"])
 
-    CS = plt.contourf(X,Y,Z,levels,cmap=cmap,**kwargs)
+    plt.contourf(X,Y,Z,levels,cmap=cmap,**kwargs)
     ax = plt.gca()
     ax.set_xlabel(LabelX(auxDict))
     ax.set_ylabel(LabelY(auxDict))
-    CB = plt.colorbar(ticks=levelTicks,format='%0.2e')
+    plt.colorbar(ticks=levelTicks,format='%0.2e')
     plt.ion()
     plt.show()
 
@@ -130,7 +130,7 @@ def contourflog(filename,numlevels,decades,figsize=None,xlim=None,ylim=None,
 
     figsize = ContourfSize(figsize)
     X,Y = np.meshgrid(x,y)
-    levels,levelTicks,levelLabels = ContourLevelsL(numlevels,decades,Z)
+    levels,levelTicks,_ = ContourLevelsL(numlevels,decades,Z)
 
     if overwrite:
         fig = plt.figure("Contourflog",figsize=figsize)
@@ -144,11 +144,11 @@ def contourflog(filename,numlevels,decades,figsize=None,xlim=None,ylim=None,
     else:
         cmap = str(configs._G["cmap"])
 
-    CS = plt.contourf(X,Y,Z,levels,cmap=cmap,locator=ticker.LogLocator(),**kwargs)
+    plt.contourf(X,Y,Z,levels,cmap=cmap,locator=ticker.LogLocator(),**kwargs)
     ax = plt.gca()
     ax.set_xlabel(LabelX(auxDict))
     ax.set_ylabel(LabelY(auxDict))
-    CB = plt.colorbar(ticks = ticker.LogLocator())
+    plt.colorbar(ticks = ticker.LogLocator())
     plt.ion()
     plt.show()
 

@@ -3,14 +3,7 @@ import graphdata.plot
 import graphdata.semilogy
 import graphdata.loglog
 from graphdata.shared.idnum import GetDataFileName
-#from graphdata.shared.shared1D import AuxPlotLabelLL1D 
-#from graphdata.shared.shared1D import ProcessData1D 
-#from graphdata.shared.shared1D import GetData1D 
-#import os 
-#from graphdata import plt
-#from graphdata import np 
-#from graphdata import configs 
-#
+
 
 def plot(fileID,fileNumber,figsize=None,xlim=None,ylim=None,overwrite=False,**kwargs):
     """
@@ -19,7 +12,7 @@ def plot(fileID,fileNumber,figsize=None,xlim=None,ylim=None,overwrite=False,**kw
         fileID: string
             ID for data files where files look like fileID_fileNum.dat e.g.
             if data files for T data are T_0.dat,T_1.dat, T_2.dat,..., then the
-            fileID is simply 'T' (or .txt or some other extension)
+            fileID is simply 'T' (extension is a catchall, doesnt have to be dat)
         fileNumber: int
             Specifies which data file number to plot 
             e.g.  plot('T',10) will make a plot of the data file 'T_10.dat' if this
