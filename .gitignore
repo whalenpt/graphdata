@@ -5,7 +5,7 @@ Makefile
 CONTRIBUTING.rst
 docs
 requirements_dev.txt
-setup.cfg
+# setup.cfg
 # setup.py
 tests
 tox.ini
