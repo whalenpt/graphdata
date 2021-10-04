@@ -91,12 +91,12 @@ def waterfall(fileID : str, fileNumbers : list,figsize=None,xlim=None,ylim=None,
     if 'xlabel' in auxDict:
         ax.set_xlabel(auxDict['xlabel'])
     else:
-        ax.set_xlabel(auxDict['x'])
+        ax.set_xlabel('x')
 
     if 'ylabel' in auxDict:
         ax.set_zlabel(auxDict['ylabel'])
     else:
-        ax.set_zlabel(auxDict['y'])
+        ax.set_zlabel('y')
 
     if zvalstr is not None:
         ax.set_ylabel(zvalstr)
