@@ -31,9 +31,6 @@ def LoadMetadata(fileName):
         raise Exception('Failed to recognize data format for file extension {}'.format(extension))
 
 def ProcessComplex(complex_op,data):
-    # Check that data is actually complex
-    if not np.iscomplexobj(data):
-        return data
     if complex_op not in ['real','imag','power','absolute','angle']:
         raise RuntimeError("Didn't recognize complex operator {}, it must be one of the following\
                 'real','imag','power','absolute',or 'angle'".format(complex_op))

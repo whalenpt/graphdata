@@ -57,7 +57,8 @@ def contourf(filename,levels=None,figsize=None,xlim=None,ylim=None,zlim=None,\
     """
 
     x,y,Z,auxDict = LoadData2D(filename)
-    Z = ProcessComplex(complex_op,Z)
+    if complex_op is not None:
+        Z = ProcessComplex(complex_op,Z)
     ExtendDictionary(auxDict,levels=levels,figsize=figsize,xlim=xlim,ylim=ylim,zlim=zlim,\
             decades=decades,overwrite=overwrite)
     x,y,Z,auxDict = ProcessData2D(x,y,Z,auxDict)
