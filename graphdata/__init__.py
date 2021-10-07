@@ -29,7 +29,7 @@ cdict = {'blue': ((0.0, 0.0, 0.0), (0.74, 0.0, 0.0), (1.0, 0.7, 0.7)),
  'red': ((0.0, 0.0416, 0.0416), (0.365079, 1.0, 1.0), (1.0, 1.0, 1.0))}
 
 newhotmap = mpl.colors.LinearSegmentedColormap('hot2',cdict)
-plt.register_cmap(cmap = newhotmap,override_builtin=False)
+plt.register_cmap(cmap = newhotmap)
 
 from graphdata.plot import plot 
 from graphdata.semilogy import semilogy
