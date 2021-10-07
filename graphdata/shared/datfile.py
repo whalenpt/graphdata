@@ -51,10 +51,10 @@ def ReadDatFile2D(file):
         z = np.genfromtxt(f)
 
     rows,cols = z.shape
-    if rows == nD1:
+    if cols == nD2:
         return (x,y,z,auxDict)
-    elif rows == 2*nD1:
-        zcmplx = np.array(z[:nD1,:] + 1j*z[nD1:],dtype=np.complex128)
+    elif cols == 2*nD2:
+        zcmplx = np.array(z[:,::2] + 1j*z[:,1::2],dtype=np.complex128)
         return (x,y,zcmplx,auxDict)
     else:
         raise RuntimeError(\
