@@ -20,7 +20,7 @@ newbonemap = mpl.colors.LinearSegmentedColormap.from_list('bone2',
    [(0.81234674617027558, 0.87990196078431371, 0.87990193376227044),
        (0.4392156862745098, 0.48412986868103691, 0.56421558822309559),
   (0.12009803921568628, 0.12009799222075436, 0.16709292412617219) ])
-plt.register_cmap(cmap = newbonemap,override_builtin=False)
+plt.register_cmap(cmap = newbonemap)
 mpl.colors.colorConverter.colors['f'] = (0.0/256,0.0/256,205.0/256)
 mpl.colors.colorConverter.colors['t'] = (105.0/256,105.0/256,105.0/256)
 
