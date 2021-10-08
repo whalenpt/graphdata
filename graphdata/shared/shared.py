@@ -34,6 +34,8 @@ def ProcessComplex(complex_op,data):
     if complex_op not in ['real','imag','power','absolute','angle']:
         raise RuntimeError("Didn't recognize complex operator {}, it must be one of the following\
                 'real','imag','power','absolute',or 'angle'".format(complex_op))
+    if not np.iscomplexobj(data):
+        raise RuntimeError("ProcessComplex error, data is not complex")
     if complex_op == 'real':
         data = data.real
     elif complex_op == 'imag':
