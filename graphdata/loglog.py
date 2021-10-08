@@ -4,11 +4,13 @@ from graphdata.shared.shared1D import ProcessData1D
 from graphdata.shared.shared1D import LoadData1D 
 from graphdata.shared.figsizes import LogLogSize
 from graphdata.shared.shared import ExtendDictionary
+from graphdata.shared.shared import ProcessComplex
 from graphdata import plt
 from graphdata import np 
 from graphdata import configs 
 
-def loglog(filename,figsize=None,decades=None,xlim=None,ylim=None,overwrite=False,**kwargs):
+def loglog(filename,figsize=None,decades=None,xlim=None,ylim=None,\
+        complex_op=None,overwrite=False,**kwargs):
     """
     Loglog graph of 1D data file using Matplotlib plt.loglog
 
@@ -40,13 +42,15 @@ def loglog(filename,figsize=None,decades=None,xlim=None,ylim=None,overwrite=Fals
 
  
     x,y,auxDict = LoadData1D(filename)
-    figsize = LogLogSize(figsize)
+    if complex_op is not None:
+        y = ProcessComplex(complex_op,y)
     if decades is None:
         decades = configs._G['decades']
     if xlim is None:
         xlim = [x[0],x[-1]]
     if ylim is None:
         ylim = [np.min(y),np.max(y)]
+    figsize = LogLogSize(figsize)
   
     ExtendDictionary(auxDict,figsize=figsize,decades=decades,\
             xlim=xlim,ylim=ylim,overwrite=overwrite)

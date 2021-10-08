@@ -45,7 +45,8 @@ def semilogy(filename,figsize=None,decades=None,xlim=None,ylim=None,\
     """
 
     x,y,auxDict = LoadData1D(filename)
-    y = ProcessComplex(complex_op,y)
+    if complex_op is not None:
+        y = ProcessComplex(complex_op,y)
     if decades is None:
         decades = configs._G['decades']
     ExtendDictionary(auxDict,figsize=figsize,decades=decades,\

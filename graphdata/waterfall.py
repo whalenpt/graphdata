@@ -67,7 +67,8 @@ def waterfall(fileID : str, fileNumbers : list,figsize=None,xlim=None,ylim=None,
     normFact = 1.0
     for i,filename in enumerate(fileList):
         x,y,auxDict = LoadData1D(filename)
-        y = ProcessComplex(complex_op,y)
+        if complex_op is not None:
+            y = ProcessComplex(complex_op,y)
         ExtendDictionary(auxDict,figsize=figsize,xlim=xlim,\
                 ylim=ylim,complex_op=complex_op)
         x,y,auxDict = ProcessData1D(x,y,auxDict)

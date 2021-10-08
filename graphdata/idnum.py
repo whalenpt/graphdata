@@ -5,7 +5,8 @@ import graphdata.loglog
 from graphdata.shared.idnum import GetDataFileName
 
 
-def plot(fileID,fileNumber,figsize=None,xlim=None,ylim=None,overwrite=False,**kwargs):
+def plot(fileID,fileNumber,figsize=None,xlim=None,ylim=None,\
+        complex_op=None,overwrite=False,**kwargs):
     """
     Graph of 1D data file using Matplotlib plt.plot with fileID and fileNumber format
     INPUTS:
@@ -26,9 +27,11 @@ def plot(fileID,fileNumber,figsize=None,xlim=None,ylim=None,overwrite=False,**kw
 
     """
     filename = GetDataFileName(fileID,fileNumber)
-    return graphdata.plot(filename,figsize=figsize,xlim=xlim,ylim=ylim,overwrite=overwrite,**kwargs)
+    return graphdata.plot(filename,figsize=figsize,xlim=xlim,ylim=ylim,\
+            overwrite=overwrite,complex_op=complex_op,**kwargs)
 
-def semilogy(fileID,fileNumber,figsize=None,decades=None,xlim=None,ylim=None,overwrite=False,**kwargs):
+def semilogy(fileID,fileNumber,figsize=None,decades=None,xlim=None,ylim=None,\
+        overwrite=False,complex_op=None,**kwargs):
     """
     Log graph of 1D data file (log in y-axis) using Matplotlib plt.semilogy 
     with fileID and fileNumber format
@@ -51,10 +54,11 @@ def semilogy(fileID,fileNumber,figsize=None,decades=None,xlim=None,ylim=None,ove
     """
     filename = GetDataFileName(fileID,fileNumber)
     return graphdata.semilogy(filename,figsize=figsize,decades=decades,\
-            xlim=xlim,ylim=ylim,overwrite=overwrite,**kwargs)
+            xlim=xlim,ylim=ylim,overwrite=overwrite,complex_op=complex_op,**kwargs)
 
 
-def loglog(fileID,fileNumber,figsize=None,decades=None,xlim=None,ylim=None,overwrite=False,**kwargs):
+def loglog(fileID,fileNumber,figsize=None,decades=None,xlim=None,ylim=None,\
+        overwrite=False,complex_op=None,**kwargs):
     """
     Log graph of 1D data file (log in both x-axis and y-axis) using Matplotlib plt.semilogy 
     with fileID and fileNumber format
@@ -77,7 +81,7 @@ def loglog(fileID,fileNumber,figsize=None,decades=None,xlim=None,ylim=None,overw
     """
     filename = GetDataFileName(fileID,fileNumber)
     return graphdata.loglog(filename,figsize=figsize,decades=decades,\
-            xlim=xlim,ylim=ylim,overwrite=overwrite,**kwargs)
+            xlim=xlim,ylim=ylim,overwrite=overwrite,complex_op=complex_op,**kwargs)
 
 
 
