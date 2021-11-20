@@ -66,7 +66,8 @@ class PlotSettings(object):
                     dictionary of configuration values. 
         """
         configs = dict()
-        hm = os.environ.get("HOME")
+        #hm = os.environ.get("HOME")
+        hm = os.path.expanduser('~')
         pr_dir = os.path.join(hm,'.config','graphdata')
         pr_file = os.path.join(pr_dir,'settings.conf')
         try:
@@ -91,7 +92,8 @@ class PlotSettings(object):
 
     def _writesettings(self):
       """ Writes a json configuration file. """
-      hm = os.environ.get("HOME")
+      #hm = os.environ.get("HOME")
+      hm = os.path.expanduser('~')
       pr_file = os.path.join(hm,'.config','graphdata','settings.conf')
       with open(pr_file,'w') as outfile:
           json.dump(self._G,outfile)
