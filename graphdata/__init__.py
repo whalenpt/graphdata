@@ -42,6 +42,7 @@ from graphdata.waterfall import waterfall
 from graphdata.shared.shared1D import LoadData1D
 from graphdata.shared.shared2D import LoadData2D
 from graphdata.shared.shared import LoadMetadata
+from graphdata.movie import movie
 
 #from graphdata.shared.shared import GenFileList
 
